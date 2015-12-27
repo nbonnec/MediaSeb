@@ -10,11 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.dev.nbonnec.mediaseb.MainActivity">
 
-    <TextView
-        android:id="@+id/my_text"
-        android:maxLines="1000"
-        android:scrollbars="vertical"
+
+    <ListView
+        android:id="@+id/list"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

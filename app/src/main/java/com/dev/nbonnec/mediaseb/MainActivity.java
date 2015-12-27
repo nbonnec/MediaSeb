@@ -5,6 +5,8 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -13,12 +15,23 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
     private final OkHttpClient client = new OkHttpClient();
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36";
-    private TextView text;
+    private ListView list;
+    private Document doc = null;
+    private Elements titles;
+    private List<String> list_title = new ArrayList<String>();
 
     public String run() throws Exception {
         RequestBody formBody = new FormEncodingBuilder()
@@ -62,16 +75,20 @@ public class MainActivity extends AppCompatActivity {
 
         client.networkInterceptors().add(new UserAgentInterceptor(USER_AGENT));
 
-        text = (TextView) findViewById(R.id.my_text);
-        text.setMovementMethod(new ScrollingMovementMethod());
+        list = (ListView) findViewById(R.id.list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_title);
 
         try {
-            answ = this.run();
+            doc = Jsoup.parse(this.run());
         } catch (Exception e){
             Log.e("MEDIASEB", "exception", e);
         }
 
-        if (answ != null)
-            text.setText(answ);
+        if (doc != null) {
+            titles = doc.select("div[class=\"fll span8\"] > a[title]");
+            for (Element element : titles)
+                list_title.add(element.ownText());
+            list.setAdapter(adapter);
+        }
     }
 }
