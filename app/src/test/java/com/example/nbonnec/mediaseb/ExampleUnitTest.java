@@ -1,4 +1,4 @@
-package com.dev.nbonnec.mediaseb;
+package com.nbonnec.mediaseb;
 
 import org.junit.Test;
 

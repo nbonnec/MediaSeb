@@ -1,4 +1,4 @@
-package com.dev.nbonnec.mediaseb;
+package com.nbonnec.mediaseb;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

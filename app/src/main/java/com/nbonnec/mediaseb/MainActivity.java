@@ -1,4 +1,4 @@
-package com.dev.nbonnec.mediaseb;
+package com.nbonnec.mediaseb;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.dev.nbonnec.mediaseb.data.MediaList;
-import com.dev.nbonnec.mediaseb.network.Finder;
+import com.nbonnec.mediaseb.models.MediaList;
+import com.nbonnec.mediaseb.network.Finder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
