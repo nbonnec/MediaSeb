@@ -105,4 +105,12 @@ public class Media implements Parcelable{
     public void setSummary(String summary) {
         this.summary = summary;
     }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
+    }
 }

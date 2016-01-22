@@ -80,9 +80,7 @@ public class Finder {
 
         doc = Jsoup.parse(response.body().string());
         titles = doc.select("div[class=\"fll span8\"] > a[title]");
-        for (Element element : titles) {
-            list_title.add(new MediaList(element.ownText()));
-        }
+        
         return list_title;
     }
 }

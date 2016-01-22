@@ -24,11 +24,40 @@ import java.util.List;
 public class MediaList implements Parcelable {
     public static final String TAG = MediaList.class.getSimpleName();
     private List<Media> medias;
-    private boolean nextPage;
+    private String nextPageUrl;
+
+    public MediaList() {}
 
     protected MediaList(Parcel in) {
         medias = in.createTypedArrayList(Media.CREATOR);
-        nextPage = in.readByte() != 0;
+        nextPageUrl = in.readString();
+    }
+
+    public List<Media> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<Media> medias) {
+        this.medias = medias;
+    }
+
+    public String getNextPageUrl() {
+        return nextPageUrl;
+    }
+
+    public void setNextPageUrl(String nextPageUrl) {
+        this.nextPageUrl = nextPageUrl;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(medias);
+        dest.writeString(nextPageUrl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<MediaList> CREATOR = new Creator<MediaList>() {
@@ -42,15 +71,4 @@ public class MediaList implements Parcelable {
             return new MediaList[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(medias);
-        dest.writeByte((byte) (nextPage ? 1 : 0));
-    }
 }
