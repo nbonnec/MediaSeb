@@ -1,4 +1,4 @@
-package com.nbonnec.mediaseb;
+package com.nbonnec.mediaseb.ui;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.network.Finder;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        Document doc = null;
+        /*Document doc = null;
         ListView list;
         Elements titles;
         Finder finder = new Finder();
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
                 list.setAdapter(adapter);
             }
-        }
+        }*/
     }
 
 }

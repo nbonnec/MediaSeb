@@ -80,7 +80,7 @@ public class Finder {
 
         doc = Jsoup.parse(response.body().string());
         titles = doc.select("div[class=\"fll span8\"] > a[title]");
-        
+
         return list_title;
     }
 }

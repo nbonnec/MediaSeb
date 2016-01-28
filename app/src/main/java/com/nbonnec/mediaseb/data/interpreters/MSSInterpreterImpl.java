@@ -16,6 +16,8 @@
 
 package com.nbonnec.mediaseb.data.interpreters;
 
+import android.util.Log;
+
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
@@ -35,7 +37,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
 
     @Override
     public MediaList interpretMediaResultsFromHtml(String html) {
-        final String LINE_ELEMENT = "div.ligne";
+        final String LINE_ELEMENT = "div.result-ntc.media";
         final String TITLE_ELEMENT = "span.titre_complet";
         final String EDITOR_ELEMENT = "span.editeur";
         final String COLLECTION_ELEMENT = "span.collection";
@@ -44,37 +46,37 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
 
         final MediaList mediaResults = DefaultFactory.MediaList.constructDefaultInstance();
         List<Media> medias = null;
-        String nextPageUrl = null;
+        Element nextPageUrl = null;
 
         Document parseHtml = Jsoup.parse(html);
         Elements lines = parseHtml.select(LINE_ELEMENT);
 
         medias = new ArrayList<>();
         for (Element e : lines) {
-            String title = e.select(TITLE_ELEMENT).first().text();
-            String editor = e.select(EDITOR_ELEMENT).first().text();
-            String collection = e.select(COLLECTION_ELEMENT).first().text();
-            String year = e.select(YEAR_ELEMENT).first().text();
+            Element title = e.select(TITLE_ELEMENT).first();
+            Element editor = e.select(EDITOR_ELEMENT).first();
+            Element year = e.select(YEAR_ELEMENT).first();
+            Element collection = e.select(COLLECTION_ELEMENT).first();
 
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
             if (title != null)
-                currentMedia.setTitle(title);
+                currentMedia.setTitle(title.text());
             if (editor != null)
-                currentMedia.setTitle(editor);
+                currentMedia.setTitle(editor.text());
             if (collection != null)
-                currentMedia.setCollection(collection);
+                currentMedia.setCollection(collection.text());
             if (year != null)
-                currentMedia.setYear(year);
+                currentMedia.setYear(year.text());
 
             medias.add(currentMedia);
         }
 
         mediaResults.setMedias(medias);
 
-        nextPageUrl = parseHtml.select(NEXT_URL_ELEMENT).first().text();
+        nextPageUrl = parseHtml.select(NEXT_URL_ELEMENT).first();
         if (nextPageUrl != null)
-            mediaResults.setNextPageUrl(nextPageUrl);
+            mediaResults.setNextPageUrl(nextPageUrl.attr("href"));
 
         return mediaResults;
     }
