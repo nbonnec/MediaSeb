@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.nbonnec.mediaseb.data.interpreters;
-
-import android.util.Log;
+package com.nbonnec.mediaseb.data.api.interpreters;
 
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
@@ -39,6 +37,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
     public MediaList interpretMediaResultsFromHtml(String html) {
         final String LINE_ELEMENT = "div.result-ntc.media";
         final String TITLE_ELEMENT = "span.titre_complet";
+        final String AUTHOR_ELEMENT = "span.auteur";
         final String EDITOR_ELEMENT = "span.editeur";
         final String COLLECTION_ELEMENT = "span.collection";
         final String YEAR_ELEMENT = "span.date_edi";
@@ -54,6 +53,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         medias = new ArrayList<>();
         for (Element e : lines) {
             Element title = e.select(TITLE_ELEMENT).first();
+            Element author = e.select(AUTHOR_ELEMENT).first();
             Element editor = e.select(EDITOR_ELEMENT).first();
             Element year = e.select(YEAR_ELEMENT).first();
             Element collection = e.select(COLLECTION_ELEMENT).first();
@@ -62,8 +62,10 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
 
             if (title != null)
                 currentMedia.setTitle(title.text());
+            if (author != null)
+                currentMedia.setAuthor(author.text());
             if (editor != null)
-                currentMedia.setTitle(editor.text());
+                currentMedia.setEditor(editor.text());
             if (collection != null)
                 currentMedia.setCollection(collection.text());
             if (year != null)

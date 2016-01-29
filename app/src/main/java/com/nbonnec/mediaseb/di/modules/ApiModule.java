@@ -19,13 +19,16 @@ package com.nbonnec.mediaseb.di.modules;
 import android.app.Application;
 import android.util.Log;
 
-import com.nbonnec.mediaseb.data.interpreters.MSSInterpreter;
-import com.nbonnec.mediaseb.data.interpreters.MSSInterpreterImpl;
+import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
+import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpointsImpl;
+import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
+import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreterImpl;
+import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.data.services.MSSServiceImpl;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -38,6 +41,18 @@ public class ApiModule {
 
     public static final int DISK_CACHE_SIZE = 50 * 1024 * 1024;
     public static final int PULL_TOLERANCE = 10;
+
+    @Provides
+    @Singleton
+    public static MSSService provideMSSService() {
+        return new MSSServiceImpl();
+    }
+
+    @Provides
+    @Singleton
+    public static MSSEndpoints provideMSSEndpoints() {
+        return new MSSEndpointsImpl();
+    }
 
     @Provides
     @Singleton

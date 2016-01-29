@@ -44,4 +44,7 @@ dependencies {
         // with the version used by the app
         exclude module: 'support-annotations'
     }
+
+    // misc
+    compile 'com.squareup.phrase:phrase:1.1.0'
 }

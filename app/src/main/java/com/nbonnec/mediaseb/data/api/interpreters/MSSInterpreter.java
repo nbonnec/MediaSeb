@@ -1,4 +1,4 @@
-package com.nbonnec.mediaseb.data.interpreters;
+package com.nbonnec.mediaseb.data.api.interpreters;
 
 import com.nbonnec.mediaseb.models.MediaList;
 

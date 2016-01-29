@@ -20,6 +20,9 @@ import android.os.Build;
 
 import com.nbonnec.mediaseb.BaseTestCase;
 import com.nbonnec.mediaseb.BuildConfig;
+import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreterImpl;
+import com.nbonnec.mediaseb.data.factories.DefaultFactory;
+import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
 import org.junit.Test;
@@ -28,6 +31,8 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -36,9 +41,14 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     @Test
     public void test_resultsParsing() throws IOException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl();
-        MediaList medias = null;
+        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("results.html"));
+        List<Media> medias = mediaList.getMedias();
 
-        medias = interpreter.interpretMediaResultsFromHtml(readAssetFile("results.html"));
-        assertThat(medias.getNextPageUrl()).isEqualTo("/recherche/facettes/walking+dead/ligne?start=10");
+        assertThat(mediaList.getNextPageUrl()).isEqualTo("/recherche/facettes/walking+dead/ligne?start=10");
+        assertThat(medias.get(0).getTitle()).isEqualTo("Dead man walking : bande originale du film");
+        assertThat(medias.get(0).getAuthor()).isEqualTo("Robbins, Tim");
+        assertThat(medias.get(0).getEditor()).isEqualTo("Sony Music");
+        assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
+        assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
     }
 }

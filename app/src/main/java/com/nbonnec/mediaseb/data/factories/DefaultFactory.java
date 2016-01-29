@@ -51,9 +51,11 @@ public class DefaultFactory {
         public static final String TAG = com.nbonnec.mediaseb.models.Media.class.getSimpleName();
 
         public static final String EMPTY_FIELD_TITLE = "No Title";
+        public static final String EMPTY_FIELD_AUTHOR = "No Author";
         public static final String EMPTY_FIELD_EDITOR = "No Editor";
         public static final String EMPTY_FIELD_COLLECTION = "No Collection";
         public static final String EMPTY_FIELD_YEAR = "No Year";
+        public static final String EMPTY_FIELD_SUMMARY = "No Summary";
 
         private Media() {
             throw new AssertionError(TAG + ": Cannot be initialized.");
@@ -63,9 +65,11 @@ public class DefaultFactory {
             final com.nbonnec.mediaseb.models.Media temporaryInstance = new com.nbonnec.mediaseb.models.Media();
 
             temporaryInstance.setTitle(EMPTY_FIELD_TITLE);
+            temporaryInstance.setAuthor(EMPTY_FIELD_AUTHOR);
             temporaryInstance.setEditor(EMPTY_FIELD_EDITOR);
             temporaryInstance.setCollection(EMPTY_FIELD_COLLECTION);
             temporaryInstance.setYear(EMPTY_FIELD_YEAR);
+            temporaryInstance.setSummary(EMPTY_FIELD_SUMMARY);
 
             return temporaryInstance;
         }
