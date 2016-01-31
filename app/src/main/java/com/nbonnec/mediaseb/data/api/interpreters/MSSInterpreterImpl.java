@@ -44,13 +44,12 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         final String NEXT_URL_ELEMENT = "a[title=Page:Suivant]";
 
         final MediaList mediaResults = DefaultFactory.MediaList.constructDefaultInstance();
-        List<Media> medias = null;
-        Element nextPageUrl = null;
+        List<Media> medias = new ArrayList<>();
+        Element nextPageUrl;
 
         Document parseHtml = Jsoup.parse(html);
         Elements lines = parseHtml.select(LINE_ELEMENT);
 
-        medias = new ArrayList<>();
         for (Element e : lines) {
             Element title = e.select(TITLE_ELEMENT).first();
             Element author = e.select(AUTHOR_ELEMENT).first();
@@ -70,6 +69,9 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 currentMedia.setCollection(collection.text());
             if (year != null)
                 currentMedia.setYear(year.text());
+
+            String imageUrl = e.select("img").first().attr("src");
+            currentMedia.setImageUrl(imageUrl);
 
             medias.add(currentMedia);
         }

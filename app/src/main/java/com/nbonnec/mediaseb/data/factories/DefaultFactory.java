@@ -56,6 +56,7 @@ public class DefaultFactory {
         public static final String EMPTY_FIELD_COLLECTION = "No Collection";
         public static final String EMPTY_FIELD_YEAR = "No Year";
         public static final String EMPTY_FIELD_SUMMARY = "No Summary";
+        public static final String EMPTY_FIELD_IMAGE_URL = "No image";
 
         private Media() {
             throw new AssertionError(TAG + ": Cannot be initialized.");

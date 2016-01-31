@@ -78,7 +78,7 @@ public class MSSServiceImpl implements MSSService {
                 try {
                     subscriber.onNext(response.body().string());
                     subscriber.onCompleted();
-                } catch (Throwable e) {
+                } catch (IOException e) {
                     subscriber.onError(e);
                 }
             }

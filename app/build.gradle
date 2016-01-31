@@ -23,7 +23,11 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    // android support
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile "com.android.support:recyclerview-v7:23.1.0"
+
+    // html
     compile 'com.squareup.okhttp:okhttp:2.7.0'
     compile 'org.jsoup:jsoup:1.8.3'
 
@@ -47,4 +51,6 @@ dependencies {
 
     // misc
     compile 'com.squareup.phrase:phrase:1.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

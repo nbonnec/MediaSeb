@@ -27,6 +27,7 @@ public class Media implements Parcelable{
     private String collection;
     private String year;
     private String summary;
+    private String imageUrl;
 
     public Media() {}
 
@@ -121,5 +122,13 @@ public class Media implements Parcelable{
 
     public void setCollection(String collection) {
         this.collection = collection;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

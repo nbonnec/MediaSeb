@@ -14,7 +14,7 @@ package com.nbonnec.mediaseb.di.components;/*
  * limitations under the License.
  */
 
-import com.nbonnec.mediaseb.ui.MainActivity;
+import com.nbonnec.mediaseb.ui.activity.MainActivity;
 import com.nbonnec.mediaseb.di.modules.ApiModule;
 
 import javax.inject.Singleton;

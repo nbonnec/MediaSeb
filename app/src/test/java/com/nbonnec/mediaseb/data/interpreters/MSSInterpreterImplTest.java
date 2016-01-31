@@ -50,5 +50,15 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(0).getEditor()).isEqualTo("Sony Music");
         assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
+        assertThat(medias.get(0).getImageUrl()).isEqualTo("/templates/c3rb_alpha_25/html/com_opac/assets/images/icones_support/ico_sup_03.png");
+    }
+
+    @Test
+    public void test_noResultsParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl();
+        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("no-results.html"));
+
+        assertThat(mediaList.getMedias()).isEmpty();
+        assertThat(mediaList.getNextPageUrl()).isEqualTo(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL);
     }
 }
