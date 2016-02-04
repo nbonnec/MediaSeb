@@ -25,7 +25,9 @@ dependencies {
 
     // android support
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile "com.android.support:recyclerview-v7:23.1.0"
+    compile "com.android.support:recyclerview-v7:23.1.1"
+    compile 'com.android.support:support-annotations:23.1.1'
+    compile 'com.android.support:design:23.1.1'
 
     // html
     compile 'com.squareup.okhttp:okhttp:2.7.0'
@@ -36,9 +38,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
 
     // dependency injection
-    apt 'com.google.dagger:dagger-compiler:2.0.1'
-    compile 'com.google.dagger:dagger:2.0.1'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    apt 'com.squareup.dagger:dagger-compiler:1.2.2'
 
     // tests
     testCompile 'junit:junit:4.12'

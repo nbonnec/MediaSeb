@@ -17,20 +17,31 @@
 package com.nbonnec.mediaseb;
 
 import android.app.Application;
+import android.content.Context;
 
-import com.nbonnec.mediaseb.di.components.AppComponent;
-import com.nbonnec.mediaseb.di.components.DaggerAppComponent;
+import dagger.ObjectGraph;
 
 public class MediasebApp extends Application {
-    AppComponent component;
+    private ObjectGraph objectGraph;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerAppComponent.builder().build();
+        buildObjectGraphAndInject();
     }
 
-    public AppComponent getComponent() {
-        return component;
+    public void buildObjectGraphAndInject() {
+        objectGraph = ObjectGraph.create(
+                new MediasebModule(this)
+        );
+        objectGraph.inject(this);
+    }
+
+    public static MediasebApp get(Context context) {
+        return (MediasebApp) context.getApplicationContext();
+    }
+
+    public void inject(Object o) {
+        objectGraph.inject(o);
     }
 }

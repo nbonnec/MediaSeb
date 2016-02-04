@@ -20,7 +20,6 @@ import android.app.DownloadManager;
 
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
-import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -37,11 +36,18 @@ import rx.functions.Func1;
 public class MSSServiceImpl implements MSSService {
     public static final String TAG = MSSServiceImpl.class.getSimpleName();
 
-    @Inject MSSEndpoints mssEndpoints;
+    MSSEndpoints mssEndpoints;
 
-    @Inject OkHttpClient client;
+    OkHttpClient client;
 
-    @Inject MSSInterpreter interpreter;
+    MSSInterpreter interpreter;
+
+    @Inject
+    public MSSServiceImpl(MSSEndpoints mssEndpoints, OkHttpClient okHttpClient, MSSInterpreter mssInterpreter){
+        this.mssEndpoints = mssEndpoints;
+        this.client = okHttpClient;
+        this.interpreter = mssInterpreter;
+    }
 
     @Override public Observable<MediaList> getResults(String search) {
         return getHtml(mssEndpoints.getSimpleSearchUrl(search))
@@ -62,7 +68,7 @@ public class MSSServiceImpl implements MSSService {
                             .url(url)
                             .build();
                     Response response = client.newCall(request).execute();
-                    subscriber.onNext(response.body().toString());
+                    subscriber.onNext(response.body().string());
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);

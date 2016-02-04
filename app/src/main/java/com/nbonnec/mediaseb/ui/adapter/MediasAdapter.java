@@ -33,8 +33,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
-    private static final String LOG_TAG = ResultsAdapter.class.getSimpleName();
+public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder> {
+    private static final String LOG_TAG = MediasAdapter.class.getSimpleName();
 
     private Context context;
     private List<Media> medias;
@@ -49,14 +49,15 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public ResultsAdapter(Context context, List<Media> medias) {
+    public MediasAdapter(Context context, List<Media> medias) {
         this.context = context;
         this.medias = medias;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_results, parent, false));
@@ -68,15 +69,29 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
         holder.title.setText(media.getTitle());
         holder.year.setText(media.getYear());
-
+/*
         Picasso.with(context)
                 .load(media.getImageUrl())
                 .placeholder(R.id.icon)
                 .into(holder.icon);
+                */
     }
 
     @Override
     public int getItemCount() {
         return medias.size();
+    }
+
+    public List<Media> getMedias() {
+        return medias;
+    }
+
+    public void addMedias(List<Media> medias) {
+        int currentSize = this.medias.size();
+        int amountInserted = medias.size();
+
+        this.medias.addAll(medias);
+
+        notifyItemRangeInserted(currentSize, amountInserted);
     }
 }

@@ -35,7 +35,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-@Module
+@Module(
+        complete = false,
+        library = true
+)
 public class ApiModule {
     public static final String TAG = ApiModule.class.getSimpleName();
 
@@ -44,25 +47,25 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public static MSSService provideMSSService() {
-        return new MSSServiceImpl();
-    }
-
-    @Provides
-    @Singleton
-    public static MSSEndpoints provideMSSEndpoints() {
+    public MSSEndpoints provideMSSEndpoints() {
         return new MSSEndpointsImpl();
     }
 
     @Provides
     @Singleton
-    public static OkHttpClient provideOkHttpClient(Application app) {
+    public MSSService provideMSSService(MSSEndpoints mssEndpoints, OkHttpClient okHttpClient, MSSInterpreter mssInterpreter) {
+        return new MSSServiceImpl(mssEndpoints, okHttpClient, mssInterpreter);
+    }
+
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient(Application app) {
         return createOkHttpClient(app);
     }
 
     @Provides
     @Singleton
-    public static MSSInterpreter provideMSSInterpreter() {
+    public MSSInterpreter provideMSSInterpreter() {
         return new MSSInterpreterImpl();
     }
 

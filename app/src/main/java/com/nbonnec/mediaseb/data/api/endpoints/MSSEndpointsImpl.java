@@ -33,11 +33,12 @@ public class MSSEndpointsImpl implements MSSEndpoints {
 
     @Override
     public String getSimpleSearchUrl(String search) {
-        return Phrase.from(SIMPLE_SEARCH_URL)
+        String request = Phrase.from(SIMPLE_SEARCH_URL)
                 .put("api_url", API_URL)
                 .put("search", search)
                 .put("order", RESULTS_ORDER)
                 .format()
                 .toString();
+        return request;
     }
 }

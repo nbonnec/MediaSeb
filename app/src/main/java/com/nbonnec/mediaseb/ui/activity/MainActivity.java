@@ -13,7 +13,10 @@ import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.data.services.MSSServiceImpl;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.network.Finder;
 
@@ -25,19 +28,32 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity {
     private List<MediaList> list_title = new ArrayList<>();
+
+    private static Observable<MediaList> resultsObservable;
+    private Subscription resultsSubscription;
+
+    @Inject
+    MSSService mssService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
+        // Inject dependencies
+        MediasebApp app = MediasebApp.get(getApplicationContext());
+        app.inject(this);
         setContentView(R.layout.activity_main);
-
-        handleIntent(getIntent());
     }
 
     @Override
@@ -55,38 +71,28 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-    }
+    /*public void loadNews() {
+        resultsObservable = mssService
+                .getResults("walking")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-    private void handleIntent(Intent intent) {
-        /*Document doc = null;
-        ListView list;
-        Elements titles;
-        Finder finder = new Finder();
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-            list = (ListView) findViewById(R.id.list);
-            ArrayAdapter<MediaList> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list_title);
-
-            try {
-                doc = Jsoup.parse(finder.easySearch(query));
-            } catch (Exception e){
-                Log.e("MEDIASEB", "exception", e);
+        resultsSubscription = resultsObservable.subscribe(new Observer<MediaList>() {
+            @Override
+            public void onCompleted() {
+                resultsObservable = null;
             }
 
-            if (doc != null) {
-                titles = doc.select("div[class=\"fll span8\"] > a[title]");
-                for (Element element : titles) {
-                    list_title.add(new MediaList(element.ownText()));
-                }
-
-                list.setAdapter(adapter);
+            @Override
+            public void onError(Throwable e) {
+                resultsObservable = null;
             }
-        }*/
-    }
 
+            @Override
+            public void onNext(MediaList news) {
+                Log.d("MEDIASEB", String.format("First title = %s", news.getMedias().get(0).getTitle()));
+            }
+        });
+    }
+    */
 }
