@@ -69,12 +69,10 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
         holder.title.setText(media.getTitle());
         holder.year.setText(media.getYear());
-/*
+
         Picasso.with(context)
                 .load(media.getImageUrl())
-                .placeholder(R.id.icon)
                 .into(holder.icon);
-                */
     }
 
     @Override

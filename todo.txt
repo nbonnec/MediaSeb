@@ -1,3 +1,4 @@
 Look at dependencies in ApiModule.
 Look at id/icon.
+MSSEndpoints, getSimpleSearchUrl.
 Clean.

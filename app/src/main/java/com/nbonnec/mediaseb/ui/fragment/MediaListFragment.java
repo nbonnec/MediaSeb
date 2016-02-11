@@ -85,7 +85,7 @@ public class MediaListFragment extends BaseFragment {
 
     public void loadNews() {
         resultsObservable = mssService
-                .getResults("walking")
+                .getResults("prout")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
