@@ -16,8 +16,6 @@
 
 package com.nbonnec.mediaseb.data.services;
 
-import android.app.DownloadManager;
-
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
 import com.nbonnec.mediaseb.models.MediaList;
@@ -36,21 +34,28 @@ import rx.functions.Func1;
 public class MSSServiceImpl implements MSSService {
     public static final String TAG = MSSServiceImpl.class.getSimpleName();
 
-    MSSEndpoints mssEndpoints;
+    @Inject MSSEndpoints mssEndpoints;
 
-    OkHttpClient client;
+    @Inject OkHttpClient client;
 
-    MSSInterpreter interpreter;
+    @Inject MSSInterpreter interpreter;
 
-    @Inject
-    public MSSServiceImpl(MSSEndpoints mssEndpoints, OkHttpClient okHttpClient, MSSInterpreter mssInterpreter){
-        this.mssEndpoints = mssEndpoints;
-        this.client = okHttpClient;
-        this.interpreter = mssInterpreter;
+    @Override
+    public Observable<MediaList> getResults(String search) {
+        /* TODO map is reused. */
+        return getHtml(mssEndpoints.simpleSearchUrl(search))
+                .map(new Func1<String, MediaList>() {
+                    @Override
+                    public MediaList call(String s) {
+                        return interpreter.interpretMediaResultsFromHtml(s);
+                    }
+                });
     }
 
-    @Override public Observable<MediaList> getResults(String search) {
-        return getHtml(mssEndpoints.getSimpleSearchUrl(search))
+    @Override
+    public Observable<MediaList> getNews() {
+        /* TODO map is reused. */
+        return getHtml(mssEndpoints.newsUrl())
                 .map(new Func1<String, MediaList>() {
                     @Override
                     public MediaList call(String s) {
@@ -68,20 +73,6 @@ public class MSSServiceImpl implements MSSService {
                             .url(url)
                             .build();
                     Response response = client.newCall(request).execute();
-                    subscriber.onNext(response.body().string());
-                    subscriber.onCompleted();
-                } catch (IOException e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
-    }
-
-    private Observable<String> responseToHtml(final Response response) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                try {
                     subscriber.onNext(response.body().string());
                     subscriber.onCompleted();
                 } catch (IOException e) {

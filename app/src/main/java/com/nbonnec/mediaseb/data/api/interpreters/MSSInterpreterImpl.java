@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.data.api.interpreters;
 
+import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
@@ -28,10 +29,13 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import javax.inject.Inject;
+
 public final class MSSInterpreterImpl implements MSSInterpreter {
     public static final String TAG = MSSInterpreterImpl.class.getSimpleName();
 
-    public MSSInterpreterImpl() {}
+    @Inject MSSEndpoints endpoints;
 
     @Override
     public MediaList interpretMediaResultsFromHtml(String html) {
@@ -71,7 +75,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 currentMedia.setYear(year.text());
 
             String imageUrl = e.select("img").first().attr("src");
-            currentMedia.setImageUrl(imageUrl);
+            currentMedia.setImageUrl(endpoints.imageUrl(imageUrl));
 
             medias.add(currentMedia);
         }

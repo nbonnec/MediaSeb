@@ -21,10 +21,14 @@ import com.squareup.phrase.Phrase;
 public class MSSEndpointsImpl implements MSSEndpoints {
     public static final String TAG = MSSEndpointsImpl.class.getSimpleName();
 
-    private static final String RESULTS_ORDER = "ligne";
+    private static final String LAYOUT = "ligne";
+    private static final int SEARCH_SIZE = 10;
 
     private static final String API_URL = "http://mediatheque.saintsebastien.fr";
-    private static final String SIMPLE_SEARCH_URL = "{api_url}/recherche/facettes/{search}/{order}";
+    private static final String NEWS_URL =
+            "{api_url}/catalogue/nouveautes?layout={layout}&scrit=&task=rechnouveautes&limit={limit}";
+    private static final String SIMPLE_SEARCH_URL =
+            "{api_url}/recherche/facettes/{search}/{layout}?limit={limit}";
 
     @Override
     public String baseUrl() {
@@ -32,13 +36,31 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     }
 
     @Override
-    public String getSimpleSearchUrl(String search) {
-        String request = Phrase.from(SIMPLE_SEARCH_URL)
+    public String simpleSearchUrl(String search) {
+        return Phrase.from(SIMPLE_SEARCH_URL)
                 .put("api_url", API_URL)
                 .put("search", search)
-                .put("order", RESULTS_ORDER)
+                .put("layout", LAYOUT)
+                .put("limit", String.valueOf(SEARCH_SIZE))
                 .format()
                 .toString();
-        return request;
+    }
+
+    @Override
+    public String imageUrl(String href) {
+        if (href.contains("/com_opac/assets/images/"))
+            return API_URL + href;
+        else
+            return href;
+    }
+
+    @Override
+    public String newsUrl() {
+        return Phrase.from(NEWS_URL)
+                .put("api_url", API_URL)
+                .put("layout", LAYOUT)
+                .put("limit", SEARCH_SIZE)
+                .format()
+                .toString();
     }
 }

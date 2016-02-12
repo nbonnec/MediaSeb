@@ -19,5 +19,9 @@ public interface MSSEndpoints {
 
     public String baseUrl();
 
-    public String getSimpleSearchUrl(String search);
+    public String simpleSearchUrl(String search);
+
+    public String imageUrl(String href);
+
+    public String newsUrl();
 }

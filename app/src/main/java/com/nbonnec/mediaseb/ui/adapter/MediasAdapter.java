@@ -42,8 +42,8 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.title)
         public TextView title;
-        @Bind(R.id.year)
-        public TextView year;
+        @Bind(R.id.author)
+        public TextView author;
         @Bind(R.id.icon)
         public ImageView icon;
 
@@ -68,7 +68,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         final Media media = medias.get(position);
 
         holder.title.setText(media.getTitle());
-        holder.year.setText(media.getYear());
+        holder.author.setText(media.getAuthor());
 
         Picasso.with(context)
                 .load(media.getImageUrl())

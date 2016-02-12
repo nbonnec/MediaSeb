@@ -47,26 +47,26 @@ public class ApiModule {
 
     @Provides
     @Singleton
+    public MSSService provideMSSService(MSSServiceImpl mssService) {
+        return mssService;
+    }
+
+    @Provides
+    @Singleton
     public MSSEndpoints provideMSSEndpoints() {
         return new MSSEndpointsImpl();
     }
 
     @Provides
     @Singleton
-    public MSSService provideMSSService(MSSEndpoints mssEndpoints, OkHttpClient okHttpClient, MSSInterpreter mssInterpreter) {
-        return new MSSServiceImpl(mssEndpoints, okHttpClient, mssInterpreter);
+    public MSSInterpreter provideMSSInterpreter(MSSInterpreterImpl mssInterpreter) {
+        return mssInterpreter;
     }
 
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient(Application app) {
         return createOkHttpClient(app);
-    }
-
-    @Provides
-    @Singleton
-    public MSSInterpreter provideMSSInterpreter() {
-        return new MSSInterpreterImpl();
     }
 
     private static OkHttpClient createOkHttpClient(Application app) {

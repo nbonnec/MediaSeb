@@ -20,4 +20,5 @@ import rx.Observable;
 
 public interface MSSService {
     public Observable<MediaList> getResults(String pattern);
+    public Observable<MediaList> getNews();
 }
