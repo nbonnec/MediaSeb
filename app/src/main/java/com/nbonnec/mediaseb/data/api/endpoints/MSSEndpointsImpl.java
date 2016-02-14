@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class MSSEndpointsImpl implements MSSEndpoints {
     public static final String TAG = MSSEndpointsImpl.class.getSimpleName();
 
-    private static final Pattern AUTHORIZED_CHAR = Pattern.compile("[a-z0-9 ]*");
+    private static final Pattern AUTHORIZED_CHAR = Pattern.compile("[a-zA-Z0-9 ]*");
 
     private static final String LAYOUT = "ligne";
     private static final int RESULTS_SIZE = 10;

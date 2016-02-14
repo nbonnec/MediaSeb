@@ -38,7 +38,11 @@ public class MSSEndpointsImplTest extends BaseTestCase {
         String result;
 
         expected = "http://mediatheque.saintsebastien.fr/recherche/facettes/walking+dead/ligne?limit=10";
-        result = mssEndpoints.simpleSearchUrl("walking dead");
+        result = mssEndpoints.simpleSearchUrl("walking  dead");
+        assertThat(result).isEqualTo(expected);
+
+        expected = "http://mediatheque.saintsebastien.fr/recherche/facettes/WALKING+DEAD/ligne?limit=10";
+        result = mssEndpoints.simpleSearchUrl("WALKING  DEAD");
         assertThat(result).isEqualTo(expected);
 
         expected = "http://mediatheque.saintsebastien.fr/recherche/facettes/walking/ligne?limit=10";
