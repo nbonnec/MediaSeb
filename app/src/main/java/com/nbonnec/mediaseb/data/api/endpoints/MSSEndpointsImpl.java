@@ -18,11 +18,17 @@ package com.nbonnec.mediaseb.data.api.endpoints;
 
 import com.squareup.phrase.Phrase;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MSSEndpointsImpl implements MSSEndpoints {
     public static final String TAG = MSSEndpointsImpl.class.getSimpleName();
 
+    private static final Pattern AUTHORIZED_CHAR = Pattern.compile("[a-z0-9 ]*");
+
     private static final String LAYOUT = "ligne";
-    private static final int SEARCH_SIZE = 10;
+    private static final int RESULTS_SIZE = 10;
+    private static final int SEARCH_STRING_CHAR_MAX = 40;
 
     private static final String API_URL = "http://mediatheque.saintsebastien.fr";
     private static final String NEWS_URL =
@@ -37,11 +43,24 @@ public class MSSEndpointsImpl implements MSSEndpoints {
 
     @Override
     public String simpleSearchUrl(String search) {
+        StringBuilder s = new StringBuilder(SEARCH_STRING_CHAR_MAX);
+        Matcher m = AUTHORIZED_CHAR.matcher(search);
+
+        /* get rid of special character */
+        while (m.find())
+            s.append(m.group(0));
+
+        search = s.toString().replaceAll("\\s+", "+");
+
+        /* should rarely happen */
+        if (search.isEmpty())
+            search = "abc";
+
         return Phrase.from(SIMPLE_SEARCH_URL)
                 .put("api_url", API_URL)
                 .put("search", search)
                 .put("layout", LAYOUT)
-                .put("limit", String.valueOf(SEARCH_SIZE))
+                .put("limit", String.valueOf(RESULTS_SIZE))
                 .format()
                 .toString();
     }
@@ -59,7 +78,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
         return Phrase.from(NEWS_URL)
                 .put("api_url", API_URL)
                 .put("layout", LAYOUT)
-                .put("limit", SEARCH_SIZE)
+                .put("limit", RESULTS_SIZE)
                 .format()
                 .toString();
     }
