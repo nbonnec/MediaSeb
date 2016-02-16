@@ -19,6 +19,8 @@ package com.nbonnec.mediaseb;
 import android.app.Application;
 import android.content.Context;
 
+import com.nbonnec.mediaseb.di.modules.MediasebModule;
+
 import dagger.ObjectGraph;
 
 public class MediasebApp extends Application {

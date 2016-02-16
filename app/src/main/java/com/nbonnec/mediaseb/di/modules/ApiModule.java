@@ -25,6 +25,7 @@ import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreterImpl;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.data.services.MSSServiceImpl;
+import com.nbonnec.mediaseb.network.UserAgentInterceptor;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -41,6 +42,8 @@ import dagger.Provides;
 )
 public class ApiModule {
     public static final String TAG = ApiModule.class.getSimpleName();
+
+    private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36";
 
     public static final int DISK_CACHE_SIZE = 50 * 1024 * 1024;
     public static final int PULL_TOLERANCE = 10;
@@ -59,8 +62,8 @@ public class ApiModule {
 
     @Provides
     @Singleton
-    public MSSInterpreter provideMSSInterpreter(MSSInterpreterImpl mssInterpreter) {
-        return mssInterpreter;
+    public MSSInterpreter provideMSSInterpreter(MSSEndpoints mssEndpoints) {
+        return new MSSInterpreterImpl(mssEndpoints);
     }
 
     @Provides
@@ -71,6 +74,7 @@ public class ApiModule {
 
     private static OkHttpClient createOkHttpClient(Application app) {
         OkHttpClient client = new OkHttpClient();
+        client.networkInterceptors().add(new UserAgentInterceptor(USER_AGENT));
 
         try {
             File cacheDir = new File(app.getCacheDir(), "http");

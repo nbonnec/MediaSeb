@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,10 +27,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.factories.InitialFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
+import com.nbonnec.mediaseb.ui.event.BusProvider;
+import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
+import com.squareup.otto.Subscribe;
 
 
 import javax.inject.Inject;
@@ -51,18 +56,42 @@ public class MediaListFragment extends BaseFragment {
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
-    private MediasAdapter mediasAdapter;
+    private MediasAdapter newsAdapter;
 
-    private MediaList mediaList;
-    private Subscription resultsSubscription;
-    private static Observable<MediaList> resultsObservable;
+    private MediaList newsList;
+    private Subscription getMediasSubscription;
+    private static Observable<MediaList> getMediasObservable;
+    private Observer<MediaList> getMediasObserver = new Observer<MediaList>() {
+        @Override
+        public void onCompleted() {
+            getMediasObservable = null;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            getMediasObservable = null;
+        }
+
+        @Override
+        public void onNext(MediaList news) {
+            Log.d(TAG, "Loading results completed.");
+
+            newsList.setNextPageUrl(news.getNextPageUrl());
+
+            if (newsAdapter != null) {
+                newsAdapter.addMedias(news.getMedias());
+
+                newsList.setMedias(newsAdapter.getMedias());
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mediaList = InitialFactory.MediaList.constructInitialInstance();
-        mediasAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
+        newsList = InitialFactory.MediaList.constructInitialInstance();
+        newsAdapter = new MediasAdapter(getActivity(), newsList.getMedias());
     }
 
     @Override
@@ -71,9 +100,11 @@ public class MediaListFragment extends BaseFragment {
 
         ButterKnife.bind(this, rootView);
 
-        mediasAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
-        recyclerView.setAdapter(mediasAdapter);
+        newsAdapter = new MediasAdapter(getActivity(), newsList.getMedias());
+        recyclerView.setAdapter(newsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         return rootView;
     }
 
@@ -83,35 +114,54 @@ public class MediaListFragment extends BaseFragment {
         loadNews();
     }
 
-    public void loadNews() {
-        resultsObservable = mssService
+    @Override
+    public void onResume() {
+        super.onResume();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Subscribe
+    public void onMediasLatestPositionEvent(MediasLatestPostionEvent event) {
+        if (canPullNextMedias(event.getPosition()))
+            pullNextMedias();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BusProvider.getInstance().unregister(this);
+    }
+
+    private void loadNews() {
+        if (getMediasSubscription != null) {
+            getMediasSubscription.unsubscribe();
+            getMediasSubscription = null;
+        }
+
+        getMediasObservable = mssService
                 .getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+        getMediasSubscription = getMediasObservable.subscribe(getMediasObserver);
+    }
 
-        resultsSubscription = resultsObservable.subscribe(new Observer<MediaList>() {
-            @Override
-            public void onCompleted() {
-                resultsObservable = null;
-            }
+    private boolean canPullNextMedias(int position) {
+        return newsList != null &&
+                !newsList.getNextPageUrl()
+                        .equals(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL) &&
+                position > (newsAdapter.getItemCount() - 10);
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                resultsObservable = null;
-            }
+    private void pullNextMedias() {
+        if (getMediasSubscription != null) {
+            getMediasSubscription.unsubscribe();
+            getMediasSubscription = null;
+        }
 
-            @Override
-            public void onNext(MediaList news) {
-                Log.d(TAG, "Loading results completed.");
-
-                mediaList.setNextPageUrl(news.getNextPageUrl());
-
-                if (mediasAdapter != null) {
-                    mediasAdapter.addMedias(news.getMedias());
-
-                    mediaList.setMedias(mediasAdapter.getMedias());
-                }
-            }
-        });
+        getMediasObservable = mssService
+                .getMediaListFromUrl(newsList.getNextPageUrl())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        getMediasSubscription = getMediasObservable.subscribe(getMediasObserver);
     }
 }

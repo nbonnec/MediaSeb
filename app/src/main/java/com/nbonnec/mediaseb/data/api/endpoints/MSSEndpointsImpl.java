@@ -35,6 +35,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
             "{api_url}/catalogue/nouveautes?layout={layout}&scrit=&task=rechnouveautes&limit={limit}";
     private static final String SIMPLE_SEARCH_URL =
             "{api_url}/recherche/facettes/{search}/{layout}?limit={limit}";
+    private static final String NEXT_URL = "{api_url}{next_url}";
 
     @Override
     public String baseUrl() {
@@ -79,6 +80,15 @@ public class MSSEndpointsImpl implements MSSEndpoints {
                 .put("api_url", API_URL)
                 .put("layout", LAYOUT)
                 .put("limit", RESULTS_SIZE)
+                .format()
+                .toString();
+    }
+
+    @Override
+    public String nextUrl(String nextUrl) {
+        return Phrase.from(NEXT_URL)
+                .put("api_url", API_URL)
+                .put("next_url", nextUrl)
                 .format()
                 .toString();
     }

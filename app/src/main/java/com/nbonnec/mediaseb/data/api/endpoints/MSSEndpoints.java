@@ -24,4 +24,6 @@ public interface MSSEndpoints {
     public String imageUrl(String href);
 
     public String newsUrl();
+
+    public String nextUrl(String nextUrl);
 }

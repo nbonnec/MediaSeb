@@ -35,7 +35,11 @@ import javax.inject.Inject;
 public final class MSSInterpreterImpl implements MSSInterpreter {
     public static final String TAG = MSSInterpreterImpl.class.getSimpleName();
 
-    @Inject MSSEndpoints endpoints;
+    MSSEndpoints endpoints;
+
+    public MSSInterpreterImpl(MSSEndpoints mssEndpoints) {
+        this.endpoints = mssEndpoints;
+    }
 
     @Override
     public MediaList interpretMediaResultsFromHtml(String html) {
@@ -60,6 +64,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             Element editor = e.select(EDITOR_ELEMENT).first();
             Element year = e.select(YEAR_ELEMENT).first();
             Element collection = e.select(COLLECTION_ELEMENT).first();
+            Element imageUrl = e.select("img").first();
 
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
@@ -73,9 +78,8 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 currentMedia.setCollection(collection.text());
             if (year != null)
                 currentMedia.setYear(year.text());
-
-            String imageUrl = e.select("img").first().attr("src");
-            currentMedia.setImageUrl(endpoints.imageUrl(imageUrl));
+            if (imageUrl != null)
+                currentMedia.setImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
 
             medias.add(currentMedia);
         }
@@ -84,7 +88,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
 
         nextPageUrl = parseHtml.select(NEXT_URL_ELEMENT).first();
         if (nextPageUrl != null)
-            mediaResults.setNextPageUrl(nextPageUrl.attr("href"));
+            mediaResults.setNextPageUrl(endpoints.nextUrl(nextPageUrl.attr("href")));
 
         return mediaResults;
     }

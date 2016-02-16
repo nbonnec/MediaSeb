@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.nbonnec.mediaseb;
+package com.nbonnec.mediaseb.di.modules;
 
 import android.app.Application;
 
-import com.nbonnec.mediaseb.di.modules.ApiModule;
+import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.ui.activity.MainActivity;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
@@ -29,7 +29,7 @@ import dagger.Provides;
 
 @Module(
         includes = {
-                ApiModule.class
+                ApiModule.class,
         },
         injects = {
                 MediasebApp.class,

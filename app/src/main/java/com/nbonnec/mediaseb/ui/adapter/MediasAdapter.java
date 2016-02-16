@@ -26,9 +26,14 @@ import android.widget.TextView;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
+import com.nbonnec.mediaseb.ui.event.BusProvider;
+import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
+import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,6 +71,8 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Media media = medias.get(position);
+
+        BusProvider.getInstance().post(new MediasLatestPostionEvent(position));
 
         holder.title.setText(media.getTitle());
         holder.author.setText(media.getAuthor());
