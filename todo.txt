@@ -1,2 +1,8 @@
 Clean.
 I think I need cookies : the next page for news is not the good one.
+
+Download images in observable ?
+Use lint.
+Check subscriptions.
+Check time spent in fucntions (use AS).
+Use headless fragment ?
