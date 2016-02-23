@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +31,8 @@ import com.nbonnec.mediaseb.data.factories.InitialFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
-import com.nbonnec.mediaseb.ui.event.BusProvider;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
 import com.squareup.otto.Subscribe;
-
 
 import javax.inject.Inject;
 
@@ -43,7 +40,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -61,7 +57,6 @@ public class MediaListFragment extends BaseFragment {
     private MediasAdapter newsAdapter;
 
     private MediaList newsList;
-    private Subscription getMediasSubscription;
     private static Observable<MediaList> getMediasObservable;
     private Observer<MediaList> getMediasObserver = new Observer<MediaList>() {
         @Override
@@ -78,8 +73,6 @@ public class MediaListFragment extends BaseFragment {
 
         @Override
         public void onNext(MediaList news) {
-            Log.d(TAG, "Loading results completed.");
-
             newsList.setNextPageUrl(news.getNextPageUrl());
 
             if (newsAdapter != null) {
@@ -113,15 +106,9 @@ public class MediaListFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         loadNews();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        BusProvider.getInstance().register(this);
     }
 
     @Subscribe
@@ -130,25 +117,14 @@ public class MediaListFragment extends BaseFragment {
             pullNextMedias();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        BusProvider.getInstance().unregister(this);
-    }
-
     private void loadNews() {
-        if (getMediasSubscription != null) {
-            getMediasSubscription.unsubscribe();
-            getMediasSubscription = null;
-        }
-
         isLoading = true;
 
         getMediasObservable = mssService
                 .getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-        getMediasSubscription = getMediasObservable.subscribe(getMediasObserver);
+        addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 
     private boolean canPullNextMedias(int position) {
@@ -158,17 +134,12 @@ public class MediaListFragment extends BaseFragment {
     }
 
     private void pullNextMedias() {
-        if (getMediasSubscription != null) {
-            getMediasSubscription.unsubscribe();
-            getMediasSubscription = null;
-        }
-
         isLoading = true;
 
         getMediasObservable = mssService
                 .getMediaListFromUrl(newsList.getNextPageUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-        getMediasSubscription = getMediasObservable.subscribe(getMediasObserver);
+        addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 }

@@ -20,8 +20,14 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import com.nbonnec.mediaseb.MediasebApp;
+import com.nbonnec.mediaseb.ui.event.BusProvider;
+
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 public class BaseFragment extends Fragment {
+
+    private CompositeSubscription subscriptions;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,5 +36,25 @@ public class BaseFragment extends Fragment {
         // Inject dependencies
         MediasebApp app = MediasebApp.get(getActivity());
         app.inject(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        subscriptions = new CompositeSubscription();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        BusProvider.getInstance().unregister(this);
+        subscriptions.unsubscribe();
+    }
+
+    protected void addSubscription(Subscription s) {
+        subscriptions.add(s);
     }
 }

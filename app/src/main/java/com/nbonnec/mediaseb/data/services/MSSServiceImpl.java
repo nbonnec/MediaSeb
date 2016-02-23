@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.data.services;
 
 import android.util.Log;
 
+import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
 import com.nbonnec.mediaseb.models.MediaList;
@@ -54,7 +55,9 @@ public class MSSServiceImpl implements MSSService {
 
     @Override
     public Observable<MediaList> getMediaListFromUrl(String url) {
-        Log.d(TAG, String.format("Get page : %s", url));
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format("Get page : %s", url));
+        }
 
         return getHtml(url)
                 .map(new Func1<String, MediaList>() {
