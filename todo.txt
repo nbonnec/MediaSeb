@@ -3,6 +3,8 @@ I think I need cookies : the next page for news is not the good one.
 
 Download images in observable ?
 Use lint.
-Check subscriptions.
 Check time spent in fucntions (use AS).
 Use headless fragment ?
+
+Tips : ./emulator -tcpdump emulator.cap -avd Nexus_5_API_23_x86
+       avd in C://User/nico/.android

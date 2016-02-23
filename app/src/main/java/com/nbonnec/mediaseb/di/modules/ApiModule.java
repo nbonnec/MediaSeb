@@ -30,6 +30,8 @@ import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.File;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 import javax.inject.Singleton;
 
@@ -74,6 +76,10 @@ public class ApiModule {
 
     private static OkHttpClient createOkHttpClient(Application app) {
         OkHttpClient client = new OkHttpClient();
+        CookieManager cookieManager = new CookieManager();
+
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        client.setCookieHandler(cookieManager);
         client.networkInterceptors().add(new UserAgentInterceptor(USER_AGENT));
 
         try {
