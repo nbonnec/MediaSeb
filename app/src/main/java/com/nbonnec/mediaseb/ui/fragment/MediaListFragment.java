@@ -50,6 +50,8 @@ import rx.schedulers.Schedulers;
 public class MediaListFragment extends BaseFragment {
     private static final String TAG = MediaListFragment.class.getSimpleName();
 
+    private boolean isLoading;
+
     @Inject
     MSSService mssService;
 
@@ -65,11 +67,13 @@ public class MediaListFragment extends BaseFragment {
         @Override
         public void onCompleted() {
             getMediasObservable = null;
+            isLoading = false;
         }
 
         @Override
         public void onError(Throwable e) {
             getMediasObservable = null;
+            isLoading = false;
         }
 
         @Override
@@ -138,6 +142,8 @@ public class MediaListFragment extends BaseFragment {
             getMediasSubscription = null;
         }
 
+        isLoading = true;
+
         getMediasObservable = mssService
                 .getNews()
                 .subscribeOn(Schedulers.io())
@@ -146,9 +152,8 @@ public class MediaListFragment extends BaseFragment {
     }
 
     private boolean canPullNextMedias(int position) {
-        return newsList != null &&
-                !newsList.getNextPageUrl()
-                        .equals(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL) &&
+        return !isLoading && newsList != null &&
+                !newsList.getNextPageUrl().equals(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL) &&
                 position > (newsAdapter.getItemCount() - 10);
     }
 
@@ -157,6 +162,8 @@ public class MediaListFragment extends BaseFragment {
             getMediasSubscription.unsubscribe();
             getMediasSubscription = null;
         }
+
+        isLoading = true;
 
         getMediasObservable = mssService
                 .getMediaListFromUrl(newsList.getNextPageUrl())
