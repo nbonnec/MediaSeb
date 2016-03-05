@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Mediaseb</string>
     <string name="hint">Rechercher dans le catalogue</string>
+    <string name="search"> Rechercher</string>
 </resources>
