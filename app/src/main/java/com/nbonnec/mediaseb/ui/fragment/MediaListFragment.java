@@ -117,6 +117,7 @@ public class MediaListFragment extends BaseFragment {
             pullNextMedias();
     }
 
+    /* TODO make it public and use this in the activity. */
     private void loadNews() {
         isLoading = true;
 

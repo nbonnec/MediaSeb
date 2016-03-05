@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Mediaseb</string>
-    <string name="hint">ex: Walking Dead</string>
+    <string name="app_name" translatable="false">Mediaseb</string>
+    <string name="hint">Rechercher dans le catalogue</string>
 </resources>

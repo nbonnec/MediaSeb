@@ -28,12 +28,9 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.event.BusProvider;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
-import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,7 +62,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_results, parent, false));
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_list_item, parent, false));
     }
 
     @Override

@@ -37,11 +37,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
-    private List<MediaList> list_title = new ArrayList<>();
-
-    private static Observable<MediaList> resultsObservable;
-    private Subscription resultsSubscription;
-
     @Inject
     MSSService mssService;
 
@@ -70,29 +65,4 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-    /*public void loadNews() {
-        resultsObservable = mssService
-                .getResults("walking")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        resultsSubscription = resultsObservable.subscribe(new Observer<MediaList>() {
-            @Override
-            public void onCompleted() {
-                resultsObservable = null;
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                resultsObservable = null;
-            }
-
-            @Override
-            public void onNext(MediaList news) {
-                Log.d("MEDIASEB", String.format("First title = %s", news.getMedias().get(0).getTitle()));
-            }
-        });
-    }
-    */
 }
