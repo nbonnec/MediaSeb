@@ -2,41 +2,22 @@ package com.nbonnec.mediaseb.ui.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.services.MSSService;
-import com.nbonnec.mediaseb.data.services.MSSServiceImpl;
-import com.nbonnec.mediaseb.models.MediaList;
-import com.nbonnec.mediaseb.network.Finder;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 public class MainActivity extends AppCompatActivity {
+    private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";
+
     @Inject
     MSSService mssService;
 
@@ -49,6 +30,17 @@ public class MainActivity extends AppCompatActivity {
         MediasebApp app = MediasebApp.get(getApplicationContext());
         app.inject(this);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+            MediaListFragment firstFragment = new MediaListFragment();
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, firstFragment, MEDIALIST_FRAGMENT_TAG)
+                    .commit();
+        }
     }
 
     @Override
@@ -64,5 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 searchManager.getSearchableInfo(getComponentName()));
 
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        MediaListFragment fragment;
+        fragment = (MediaListFragment) getSupportFragmentManager()
+                .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
+        fragment.loadNews();
     }
 }

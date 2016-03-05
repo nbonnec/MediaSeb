@@ -108,7 +108,6 @@ public class MediaListFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadNews();
     }
 
     @Subscribe
@@ -118,7 +117,7 @@ public class MediaListFragment extends BaseFragment {
     }
 
     /* TODO make it public and use this in the activity. */
-    private void loadNews() {
+    public void loadNews() {
         isLoading = true;
 
         getMediasObservable = mssService

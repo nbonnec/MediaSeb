@@ -16,8 +16,8 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.ui.event.BusProvider;
