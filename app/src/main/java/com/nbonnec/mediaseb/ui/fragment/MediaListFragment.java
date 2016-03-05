@@ -116,12 +116,20 @@ public class MediaListFragment extends BaseFragment {
             pullNextMedias();
     }
 
-    /* TODO make it public and use this in the activity. */
     public void loadNews() {
         isLoading = true;
 
         getMediasObservable = mssService
                 .getNews()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        addSubscription(getMediasObservable.subscribe(getMediasObserver));
+    }
+    public void loadResults(String search) {
+        isLoading = true;
+
+        getMediasObservable = mssService
+                .getResults(search)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));

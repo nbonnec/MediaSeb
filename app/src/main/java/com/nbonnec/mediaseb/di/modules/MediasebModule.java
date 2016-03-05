@@ -20,6 +20,7 @@ import android.app.Application;
 
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.ui.activity.MainActivity;
+import com.nbonnec.mediaseb.ui.activity.SearchActivity;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
 import javax.inject.Singleton;
@@ -34,6 +35,7 @@ import dagger.Provides;
         injects = {
                 MediasebApp.class,
                 MainActivity.class,
+                SearchActivity.class,
                 MediaListFragment.class
         }
 )
