@@ -7,14 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";
+public class MainActivity extends AppCompatActivity implements MediaListFragment.OnFragmentStartedListener {
+    private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
+
+    private MediaListFragment resFragment;
+
+    private boolean restoredInstanceState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,44 +29,41 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-
-
-        if (findViewById(R.id.container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-            MediaListFragment firstFragment = new MediaListFragment();
-
+        if (savedInstanceState != null) {
+            restoredInstanceState = true;
+            resFragment = (MediaListFragment) getSupportFragmentManager()
+                    .findFragmentByTag(NEWS_FRAGMENT_TAG);
+        } else if (findViewById(R.id.container) != null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, firstFragment, MEDIALIST_FRAGMENT_TAG)
+                    .add(R.id.container, new MediaListFragment(), NEWS_FRAGMENT_TAG)
                     .commit();
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.news));
+        setSupportActionBar(toolbar);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        getMenuInflater().inflate(R.menu.options_menu, menu);
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
+                (SearchView) menu.findItem(R.id.item_search).getActionView();
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        MediaListFragment fragment;
-        fragment = (MediaListFragment) getSupportFragmentManager()
-                .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
-        fragment.loadNews();
+    public void onFragmentStarted() {
+        if (!restoredInstanceState) {
+            resFragment = (MediaListFragment) getSupportFragmentManager()
+                    .findFragmentByTag(NEWS_FRAGMENT_TAG);
+            resFragment.loadNews();
+        }
     }
 }
