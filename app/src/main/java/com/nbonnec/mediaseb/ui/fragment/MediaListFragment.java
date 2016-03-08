@@ -22,10 +22,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.factories.InitialFactory;
@@ -44,10 +47,16 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@FragmentWithArgs
 public class MediaListFragment extends BaseFragment {
     private static final String TAG = MediaListFragment.class.getSimpleName();
 
     private static final String STATE_MEDIALIST = "state_medialist";
+
+    private static final String STATE_PAGE_LOADED = "page_loaded";
+
+    @Arg
+    String page;
 
     @Inject
     MSSService mssService;
@@ -55,9 +64,9 @@ public class MediaListFragment extends BaseFragment {
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
-    private OnFragmentStartedListener onFragmentStartedListener;
-
     private boolean isLoading;
+
+    private boolean pageLoaded;
 
     private MediasAdapter newsAdapter;
 
@@ -81,17 +90,14 @@ public class MediaListFragment extends BaseFragment {
         @Override
         public void onNext(MediaList nextList) {
             mediaList.setNextPageUrl(nextList.getNextPageUrl());
-
             if (newsAdapter != null) {
                 newsAdapter.addMedias(nextList.getMedias());
                 mediaList.setMedias(newsAdapter.getMedias());
             }
+
+            pageLoaded = true;
         }
     };
-
-    public interface OnFragmentStartedListener {
-        void onFragmentStarted();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,7 @@ public class MediaListFragment extends BaseFragment {
 
         if (savedInstanceState != null) {
             mediaList = savedInstanceState.getParcelable(STATE_MEDIALIST);
+            pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
         }
 
         initAdapters();
@@ -118,27 +125,11 @@ public class MediaListFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onResume() {
+        super.onResume();
 
-        if (activity instanceof OnFragmentStartedListener) {
-            onFragmentStartedListener = null;
-            onFragmentStartedListener = (OnFragmentStartedListener) activity;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        onFragmentStartedListener = null;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (onFragmentStartedListener != null) {
-            onFragmentStartedListener.onFragmentStarted();
+        if (!pageLoaded) {
+            loadPage(page);
         }
     }
 
@@ -147,6 +138,7 @@ public class MediaListFragment extends BaseFragment {
         super.onSaveInstanceState(saveInstanceState);
         if (mediaList != null) {
             saveInstanceState.putParcelable(STATE_MEDIALIST, mediaList);
+            saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
         }
     }
 
@@ -156,25 +148,12 @@ public class MediaListFragment extends BaseFragment {
             pullNextMedias();
     }
 
-    public void loadNews() {
+    public void loadPage(String page) {
         isLoading = true;
-
         resetAdapters();
 
         getMediasObservable = mssService
-                .getNews()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        addSubscription(getMediasObservable.subscribe(getMediasObserver));
-    }
-
-    public void loadResults(String search) {
-        isLoading = true;
-
-        resetAdapters();
-
-        getMediasObservable = mssService
-                .getResults(search)
+                .getMediaListFromUrl(page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
@@ -202,6 +181,7 @@ public class MediaListFragment extends BaseFragment {
         }
         newsAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
     }
+
     private void resetAdapters() {
         mediaList = InitialFactory.MediaList.constructInitialInstance();
         if (newsAdapter != null) {

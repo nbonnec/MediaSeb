@@ -22,53 +22,55 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
+import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
-public class SearchActivity extends AppCompatActivity implements MediaListFragment.OnFragmentStartedListener {
+import javax.inject.Inject;
+
+public class SearchActivity extends BaseActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
     private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";
 
     private static final String STATE_SEARCH = "state_search";
 
+    @Inject
+    MSSEndpoints mssEndpoints;
+
     private Toolbar toolbar;
 
     private MenuItem searchItem;
 
+    // TODO get rid of
     private String search;
 
-    MediaListFragment resFragment;
+    private boolean reload = false;
 
-    boolean restoredInstanceState = false;
+    MediaListFragment resFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Inject dependencies
-        MediasebApp app = MediasebApp.get(getApplicationContext());
-        app.inject(this);
-
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null) {
             search = savedInstanceState.getString(STATE_SEARCH);
-            resFragment = (MediaListFragment) getSupportFragmentManager()
-                    .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
-            restoredInstanceState = true;
         } else if (findViewById(R.id.container) != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MediaListFragment(), MEDIALIST_FRAGMENT_TAG)
-                    .commit();
             handleIntent(getIntent());
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container,
+                            new MediaListFragmentBuilder(mssEndpoints.simpleSearchUrl(search))
+                                    .build(),
+                            MEDIALIST_FRAGMENT_TAG)
+                    .commit();
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -98,15 +100,23 @@ public class SearchActivity extends AppCompatActivity implements MediaListFragme
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    public void onResume() {
+        super.onResume();
+        resFragment = (MediaListFragment) getSupportFragmentManager()
+                .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
 
-        handleIntent(intent);
-
-        if (search != null) {
+        if (reload && search != null) {
             toolbar.setTitle(search);
             MenuItemCompat.collapseActionView(searchItem);
-            resFragment.loadResults(search);
+            resFragment.loadPage(mssEndpoints.simpleSearchUrl(search));
         }
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+        reload = true;
     }
 
     @Override
@@ -120,15 +130,6 @@ public class SearchActivity extends AppCompatActivity implements MediaListFragme
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             search = intent.getStringExtra(SearchManager.QUERY);
-        }
-    }
-
-    @Override
-    public void onFragmentStarted() {
-        if (!restoredInstanceState) {
-            resFragment = (MediaListFragment) getSupportFragmentManager()
-                    .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
-            resFragment.loadResults(search);
         }
     }
 }

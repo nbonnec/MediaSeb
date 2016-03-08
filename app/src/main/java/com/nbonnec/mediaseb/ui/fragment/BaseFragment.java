@@ -19,6 +19,7 @@ package com.nbonnec.mediaseb.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.ui.event.BusProvider;
 
@@ -32,6 +33,8 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FragmentArgs.inject(this);
 
         // Inject dependencies
         MediasebApp app = MediasebApp.get(getActivity());
