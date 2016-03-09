@@ -29,12 +29,13 @@ import android.view.MenuItem;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
+import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
 import javax.inject.Inject;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements MediaListFragment.OnClickedListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
     private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";
@@ -131,5 +132,10 @@ public class SearchActivity extends BaseActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             search = intent.getStringExtra(SearchManager.QUERY);
         }
+    }
+
+    @Override
+    public void onItemClicked(Media media) {
+        // TODO
     }
 }

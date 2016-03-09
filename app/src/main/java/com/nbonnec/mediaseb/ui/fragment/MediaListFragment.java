@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,7 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.factories.InitialFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
@@ -48,7 +48,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @FragmentWithArgs
-public class MediaListFragment extends BaseFragment {
+public class MediaListFragment extends BaseFragment implements MediasAdapter.OnItemClickListener {
     private static final String TAG = MediaListFragment.class.getSimpleName();
 
     private static final String STATE_MEDIALIST = "state_medialist";
@@ -64,16 +64,15 @@ public class MediaListFragment extends BaseFragment {
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
-    private boolean isLoading;
+    private OnClickedListener listener;
 
+    private boolean isLoading;
     private boolean pageLoaded;
 
     private MediasAdapter newsAdapter;
-
     private MediaList mediaList;
 
     private static Observable<MediaList> getMediasObservable;
-
     private Observer<MediaList> getMediasObserver = new Observer<MediaList>() {
         @Override
         public void onCompleted() {
@@ -99,6 +98,10 @@ public class MediaListFragment extends BaseFragment {
         }
     };
 
+    public interface OnClickedListener {
+        void onItemClicked(Media media);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +125,24 @@ public class MediaListFragment extends BaseFragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            listener = (OnClickedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+            + " must implement OnClickedListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     @Override
@@ -180,6 +201,12 @@ public class MediaListFragment extends BaseFragment {
             mediaList = InitialFactory.MediaList.constructInitialInstance();
         }
         newsAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
+        newsAdapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(View itemView, int position) {
+        listener.onItemClicked(mediaList.getMedias().get(position));
     }
 
     private void resetAdapters() {

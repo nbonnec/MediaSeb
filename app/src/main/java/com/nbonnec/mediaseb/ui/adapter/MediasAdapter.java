@@ -41,6 +41,16 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     private Context context;
     private List<Media> medias;
 
+    private static OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.title)
         public TextView title;
@@ -49,9 +59,17 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         @Bind(R.id.icon)
         public ImageView icon;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(itemView, getLayoutPosition());
+                    }
+                }
+            });
         }
     }
 

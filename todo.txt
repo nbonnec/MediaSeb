@@ -4,3 +4,6 @@ Use headless fragment ?
 
 Tips : ./emulator -tcpdump emulator.cap -avd Nexus_5_API_23_x86
        avd in C://User/nico/.android
+
+
+PERFORMANCE : layout is too slow to draw, maybe use LinearLayout.

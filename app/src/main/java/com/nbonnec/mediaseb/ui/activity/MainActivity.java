@@ -3,6 +3,7 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -12,13 +13,17 @@ import android.view.MenuItem;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
+import com.nbonnec.mediaseb.models.Media;
+import com.nbonnec.mediaseb.ui.fragment.DetailsFragment;
+import com.nbonnec.mediaseb.ui.fragment.DetailsFragmentBuilder;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MediaListFragment.OnClickedListener {
     private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
+    private static final String DETAILS_FRAGMENT_TAG = "details_fragmet_tag";
 
     private MediaListFragment resFragment;
 
@@ -69,4 +74,19 @@ public class MainActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void loadMedia(Media media) {
+        DetailsFragment fragment = new DetailsFragmentBuilder(media).build();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        getSupportActionBar().setTitle(media.getTitle());
+        transaction.replace(R.id.container, fragment, DETAILS_FRAGMENT_TAG);
+        transaction.addToBackStack(DETAILS_FRAGMENT_TAG);
+        transaction.commit();
+    }
+
+    @Override
+    public void onItemClicked(Media media) {
+        Log.d(TAG, "ITEM CLICKED, LOL");
+        loadMedia(media);
+    }
 }
