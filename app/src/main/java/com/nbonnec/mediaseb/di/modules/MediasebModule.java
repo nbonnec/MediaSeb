@@ -19,8 +19,10 @@ package com.nbonnec.mediaseb.di.modules;
 import android.app.Application;
 
 import com.nbonnec.mediaseb.MediasebApp;
+import com.nbonnec.mediaseb.ui.activity.DetailsActivity;
 import com.nbonnec.mediaseb.ui.activity.MainActivity;
 import com.nbonnec.mediaseb.ui.activity.SearchActivity;
+import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
 import com.nbonnec.mediaseb.ui.fragment.DetailsFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
@@ -32,13 +34,16 @@ import dagger.Provides;
 @Module(
         includes = {
                 ApiModule.class,
+                ContextModule.class
         },
         injects = {
                 MediasebApp.class,
                 MainActivity.class,
+                DetailsActivity.class,
                 SearchActivity.class,
                 MediaListFragment.class,
-                DetailsFragment.class
+                DetailsFragment.class,
+                MediasAdapter.class,
         }
 )
 public class MediasebModule {

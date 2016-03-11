@@ -19,6 +19,7 @@ package com.nbonnec.mediaseb;
 import android.app.Application;
 import android.content.Context;
 
+import com.nbonnec.mediaseb.di.modules.ContextModule;
 import com.nbonnec.mediaseb.di.modules.MediasebModule;
 
 import dagger.ObjectGraph;
@@ -34,6 +35,7 @@ public class MediasebApp extends Application {
 
     public void buildObjectGraphAndInject() {
         objectGraph = ObjectGraph.create(
+                new ContextModule(),
                 new MediasebModule(this)
         );
         objectGraph.inject(this);

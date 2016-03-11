@@ -24,19 +24,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
-import com.nbonnec.mediaseb.ui.event.BusProvider;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
+import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder> {
-    private static final String LOG_TAG = MediasAdapter.class.getSimpleName();
+    private static final String TAG = MediasAdapter.class.getSimpleName();
+
+    @Inject
+    Bus bus;
 
     private Context context;
     private List<Media> medias;
@@ -76,6 +82,9 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     public MediasAdapter(Context context, List<Media> medias) {
         this.context = context;
         this.medias = medias;
+
+        MediasebApp app = MediasebApp.get(context);
+        app.inject(this);
     }
 
     @Override
@@ -87,13 +96,12 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Media media = medias.get(position);
 
-        BusProvider.getInstance().post(new MediasLatestPostionEvent(position));
+        bus.post(new MediasLatestPostionEvent(position));
 
         holder.title.setText(media.getTitle());
         holder.author.setText(media.getAuthor());
 
-        Picasso.with(context)
-                .load(media.getImageUrl())
+        Picasso.with(context).load(media.getImageUrl())
                 .into(holder.icon);
     }
 

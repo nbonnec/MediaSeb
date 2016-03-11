@@ -17,13 +17,10 @@
 package com.nbonnec.mediaseb.ui.activity;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -45,8 +42,6 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
     @Inject
     MSSEndpoints mssEndpoints;
 
-    private Toolbar toolbar;
-
     private MenuItem searchItem;
 
     // TODO get rid of
@@ -60,7 +55,7 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_base);
 
         if (savedInstanceState != null) {
             search = savedInstanceState.getString(STATE_SEARCH);
@@ -74,30 +69,10 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
                     .commit();
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(search);
-        setSupportActionBar(toolbar);
-
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-
-        searchItem = menu.findItem(R.id.item_search);
-
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.item_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -107,12 +82,35 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
                 .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
 
         if (reload && search != null) {
-            toolbar.setTitle(search);
-            MenuItemCompat.collapseActionView(searchItem);
+            getSearchView().setQuery(search, false);
+            // TODO sometimes search is thrown twice
             resFragment.loadPage(mssEndpoints.simpleSearchUrl(search));
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                getSearchView().clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+
+        // TODO up as home
+        getSearchMenuItem().expandActionView();
+        getSearchView().setQuery(search, false);
+        getSearchView().clearFocus();
+
+        return true;
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

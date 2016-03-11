@@ -21,12 +21,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,14 +40,18 @@ public class DetailsFragment extends BaseFragment {
     @Arg
     Media media;
 
-    @Bind(R.id.detail_title)
+    @Bind(R.id.details_title)
     TextView viewTitle;
+
+    @Bind(R.id.details_image)
+    ImageView imageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_media_details, container, false);
@@ -53,6 +59,10 @@ public class DetailsFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
 
         viewTitle.setText(media.getTitle());
+
+        Picasso.with(getContext())
+                .load(media.getImageUrl())
+                .into(imageView);
 
         return rootView;
     }

@@ -8,7 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/AppTheme"
         >
         <activity
             android:name=".ui.activity.MainActivity"
@@ -20,6 +20,11 @@
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data android:name="android.app.default_searchable"
                 android:value=".ui.activity.SearchActivity" />
+        </activity>
+        <activity android:name=".ui.activity.DetailsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activity.MainActivity" />
         </activity>
         <activity
             android:name=".ui.activity.SearchActivity"

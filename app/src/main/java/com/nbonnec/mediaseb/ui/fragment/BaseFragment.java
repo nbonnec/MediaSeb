@@ -21,7 +21,9 @@ import android.support.v4.app.Fragment;
 
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.nbonnec.mediaseb.MediasebApp;
-import com.nbonnec.mediaseb.ui.event.BusProvider;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -29,6 +31,9 @@ import rx.subscriptions.CompositeSubscription;
 public class BaseFragment extends Fragment {
 
     private CompositeSubscription subscriptions;
+
+    @Inject
+    Bus bus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,14 +51,14 @@ public class BaseFragment extends Fragment {
         super.onStart();
 
         subscriptions = new CompositeSubscription();
-        BusProvider.getInstance().register(this);
+        bus.register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        BusProvider.getInstance().unregister(this);
+        bus.unregister(this);
         subscriptions.unsubscribe();
     }
 

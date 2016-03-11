@@ -1,12 +1,11 @@
 package com.nbonnec.mediaseb.ui.activity;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
 
     private MediaListFragment resFragment;
 
-    private MenuItem searchItem;
 
     private boolean restoredInstanceState = false;
 
@@ -38,7 +36,7 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_base);
 
         if (savedInstanceState != null) {
             restoredInstanceState = true;
@@ -52,36 +50,41 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
                     .commit();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.news));
-        setSupportActionBar(toolbar);
+        getToolbar().setTitle(R.string.news);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
+        super.onCreateOptionsMenu(menu);
 
-        searchItem = menu.findItem(R.id.item_search);
-        MenuItemCompat.collapseActionView(searchItem);
+        getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                MenuItem searchMenuItem = getSearchMenuItem();
+                if (searchMenuItem != null) {
+                    searchMenuItem.collapseActionView();
+                }
+                return false;
+            }
 
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.item_search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
-
-        return super.onCreateOptionsMenu(menu);
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        return true;
     }
 
-    private void loadMedia(Media media) {
-        DetailsFragment fragment = new DetailsFragmentBuilder(media).build();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        getSupportActionBar().setTitle(media.getTitle());
-        transaction.replace(R.id.container, fragment, DETAILS_FRAGMENT_TAG);
-        transaction.addToBackStack(DETAILS_FRAGMENT_TAG);
-        transaction.commit();
+   private void loadMedia(Media media) {
+       Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+       intent.putExtra(DetailsActivity.MEDIA, media);
+       /*
+       ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+             MainActivity.this, transitionView, DetailActivity.EXTRA_IMAGE);
+       ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
+             options.toBundle());
+             */
+       startActivity(intent);
     }
 
     @Override

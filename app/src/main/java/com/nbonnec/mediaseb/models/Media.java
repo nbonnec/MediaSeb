@@ -33,19 +33,23 @@ public class Media implements Parcelable{
 
     protected Media(Parcel in) {
         title = in.readString();
+        author = in.readString();
         editor = in.readString();
         collection = in.readString();
         year = in.readString();
         summary = in.readString();
+        imageUrl = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
+        dest.writeString(author);
         dest.writeString(editor);
         dest.writeString(collection);
         dest.writeString(year);
         dest.writeString(summary);
+        dest.writeString(imageUrl);
     }
 
     @Override
