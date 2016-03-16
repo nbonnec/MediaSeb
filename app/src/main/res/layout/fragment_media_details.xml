@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/details_image"
+        android:id="@+id/details_background"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
@@ -19,9 +19,9 @@
         android:padding="@dimen/activity_vertical_margin">
 
         <ImageView
-            android:id="@+id/DETAILS_circle"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:id="@+id/details_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             />
@@ -30,12 +30,11 @@
             android:id="@+id/details_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jonh Doe"
-            android:layout_toRightOf="@+id/DETAILS_circle"
+            android:layout_toRightOf="@+id/details_image"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
             android:textColor="#000"
-            android:textSize="25sp"/>
+            android:textSize="12sp"/>
 
     </RelativeLayout>
 
@@ -44,80 +43,34 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:padding="@dimen/activity_horizontal_margin"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:orientation="vertical"
+        >
 
             <TextView
-                android:id="@+id/DETAILS_phone_label"
+                android:id="@+id/details_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Phone:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/DETAILS_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_phone_label"
+                android:layout_toRightOf="@+id/d"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="+01 123456789"
                 android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+                android:textSize="20sp"
+                />
 
             <TextView
-                android:id="@+id/DETAILS_email_label"
+                android:id="@+id/details_collection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/DETAILS_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_email_label"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="jonh.doe@example.com"
                 android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+                android:textSize="20sp"
+                />
 
             <TextView
-                android:id="@+id/DETAILS_city_label"
+                android:id="@+id/details_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="City:"
-                android:textColor="#000"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:id="@+id/DETAILS_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DETAILS_city_label"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:text="Rome"
                 android:textColor="#9f9f9f"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                />
 
-        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

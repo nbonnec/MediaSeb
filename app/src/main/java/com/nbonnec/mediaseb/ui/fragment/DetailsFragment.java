@@ -18,7 +18,6 @@ package com.nbonnec.mediaseb.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +27,19 @@ import android.widget.TextView;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
+import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @FragmentWithArgs
 public class DetailsFragment extends BaseFragment {
@@ -41,11 +48,40 @@ public class DetailsFragment extends BaseFragment {
     @Arg
     Media media;
 
-    @Bind(R.id.details_title)
-    TextView viewTitle;
+    @Inject
+    MSSService mssService;
 
+    @Inject
+    MSSEndpoints mssEndpoints;
+
+    @Bind(R.id.details_background)
+    ImageView imageViewBack;
     @Bind(R.id.details_image)
     ImageView imageView;
+    @Bind(R.id.details_title)
+    TextView titleView;
+    @Bind(R.id.details_author)
+    TextView authorView;
+    @Bind(R.id.details_collection)
+    TextView collectionView;
+    @Bind(R.id.details_year)
+    TextView yearView;
+
+    private Observer<Media> getNoticeObserver = new Observer<Media>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+        }
+
+        @Override
+        public void onNext(Media nextMedia) {
+            media.setDetails(nextMedia);
+            refreshViews();
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,13 +95,38 @@ public class DetailsFragment extends BaseFragment {
 
         ButterKnife.bind(this, rootView);
 
-        viewTitle.setText(media.getTitle());
+        titleView.setText(media.getTitle());
+        authorView.setText(media.getAuthor());
+        collectionView.setText(media.getCollection());
+        yearView.setText(media.getYear());
+
+        Picasso.with(getContext())
+                .load(media.getImageUrl())
+                .into(imageViewBack);
 
         Picasso.with(getContext())
                 .load(media.getImageUrl())
                 .into(imageView);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadNotice(media.getNoticeUrl());
+    }
+
+    private void loadNotice(String page) {
+
+        Observable<Media> getMediasObservable = mssService
+                .getMediaDetailsFromUrl(page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        addSubscription(getMediasObservable.subscribe(getNoticeObserver));
+    }
+
+    private void refreshViews() {
     }
 
     @Override

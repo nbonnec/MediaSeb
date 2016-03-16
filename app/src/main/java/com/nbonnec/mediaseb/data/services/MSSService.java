@@ -14,12 +14,14 @@ package com.nbonnec.mediaseb.data.services;/*
  * limitations under the License.
  */
 
+import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
 import rx.Observable;
 
 public interface MSSService {
-    public Observable<MediaList> getMediaListFromUrl(String url);
-    public Observable<MediaList> getResults(String pattern);
-    public Observable<MediaList> getNews();
+    Observable<MediaList> getMediaListFromUrl(String url);
+    Observable<Media> getMediaDetailsFromUrl(String url);
+    Observable<MediaList> getResults(String pattern);
+    Observable<MediaList> getNews();
 }

@@ -58,6 +58,7 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
 
         if (savedInstanceState != null) {
             search = savedInstanceState.getString(STATE_SEARCH);
+            reload = false;
         } else if (findViewById(R.id.container) != null) {
             handleIntent(getIntent());
             getSupportFragmentManager().beginTransaction()

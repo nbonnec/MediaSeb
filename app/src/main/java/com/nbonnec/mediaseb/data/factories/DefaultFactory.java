@@ -19,6 +19,7 @@ package com.nbonnec.mediaseb.data.factories;
 import com.nbonnec.mediaseb.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DefaultFactory {
     public static final String TAG = DefaultFactory.class.getSimpleName();
@@ -56,7 +57,7 @@ public class DefaultFactory {
         public static final String EMPTY_FIELD_COLLECTION = "No Collection";
         public static final String EMPTY_FIELD_YEAR = "No Year";
         public static final String EMPTY_FIELD_SUMMARY = "No Summary";
-        public static final String EMPTY_FIELD_IMAGE_URL = "No image";
+        public static final String EMPTY_FIELD_IMAGE_URL = "No Image Url";
 
         private Media() {
             throw new AssertionError(TAG + ": Cannot be initialized.");
@@ -71,6 +72,8 @@ public class DefaultFactory {
             temporaryInstance.setCollection(EMPTY_FIELD_COLLECTION);
             temporaryInstance.setYear(EMPTY_FIELD_YEAR);
             temporaryInstance.setSummary(EMPTY_FIELD_SUMMARY);
+            temporaryInstance.setImageUrl(EMPTY_FIELD_IMAGE_URL);
+            temporaryInstance.setReturnDate(new Date());
 
             return temporaryInstance;
         }

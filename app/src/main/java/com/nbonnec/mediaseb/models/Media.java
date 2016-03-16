@@ -215,8 +215,13 @@ public class Media implements Parcelable{
         this.available = available;
     }
 
-    public void getDetails(Media media) {
+    public void setDetails(Media media) {
         summary = media.summary;
+        type = media.type;
+        section = media.section;
+        location = media.location;
+        rating = media.rating;
         available = media.available;
+        returnDate = media.returnDate;
     }
 }

@@ -21,6 +21,7 @@ import android.util.Log;
 import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
+import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -55,10 +56,6 @@ public class MSSServiceImpl implements MSSService {
 
     @Override
     public Observable<MediaList> getMediaListFromUrl(String url) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("Get page : %s", url));
-        }
-
         return getHtml(url)
                 .map(new Func1<String, MediaList>() {
                     @Override
@@ -68,7 +65,22 @@ public class MSSServiceImpl implements MSSService {
                 });
     }
 
+    @Override
+    public Observable<Media> getMediaDetailsFromUrl(String url) {
+        return getHtml(url)
+                .map(new Func1<String, Media>() {
+                    @Override
+                    public Media call(String s) {
+                        return interpreter.interpretNoticeFromHtml(s);
+                    }
+                });
+    }
+
     private Observable<String> getHtml(final String url) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format("Get page : %s", url));
+        }
+
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {

@@ -16,10 +16,10 @@
 
 package com.nbonnec.mediaseb.ui.event;
 
-public class MediasLatestPostionEvent {
+public class MediasLatestPositionEvent {
     private int position;
 
-    public MediasLatestPostionEvent(int position) {
+    public MediasLatestPositionEvent(int position) {
         this.position = position;
     }
 

@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
-import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
+import com.nbonnec.mediaseb.ui.event.MediasLatestPositionEvent;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -171,7 +170,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Subscribe
-    public void onMediasLatestPositionEvent(MediasLatestPostionEvent event) {
+    public void onMediasLatestPositionEvent(MediasLatestPositionEvent event) {
         if (canPullNextMedias(event.getPosition()))
             pullNextMedias();
     }

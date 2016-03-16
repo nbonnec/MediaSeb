@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
-import com.nbonnec.mediaseb.ui.event.MediasLatestPostionEvent;
+import com.nbonnec.mediaseb.ui.event.MediasLatestPositionEvent;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
@@ -93,7 +93,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Media media = medias.get(position);
 
-        bus.post(new MediasLatestPostionEvent(position));
+        bus.post(new MediasLatestPositionEvent(position));
 
         holder.title.setText(media.getTitle());
         holder.author.setText(media.getAuthor());
