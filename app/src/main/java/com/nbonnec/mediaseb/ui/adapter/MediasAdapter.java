@@ -47,10 +47,10 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     private Context context;
     private List<Media> medias;
 
-    private static OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -68,14 +68,10 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(itemView, getLayoutPosition());
-                    }
-                }
-            });
+        }
+
+        public void setOnClickListener(View.OnClickListener listener) {
+            itemView.setOnClickListener(listener);
         }
     }
 
@@ -89,17 +85,24 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_list_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_list_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final Media media = medias.get(position);
 
         bus.post(new MediasLatestPostionEvent(position));
 
         holder.title.setText(media.getTitle());
         holder.author.setText(media.getAuthor());
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(position);
+            }
+        });
 
         Picasso.with(context).load(media.getImageUrl())
                 .into(holder.icon);

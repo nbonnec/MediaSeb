@@ -17,11 +17,13 @@
 package com.nbonnec.mediaseb.ui.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private MediasAdapter newsAdapter;
     private MediaList mediaList;
 
-    private static Observable<MediaList> getMediasObservable;
+    private Observable<MediaList> getMediasObservable;
     private Observer<MediaList> getMediasObserver = new Observer<MediaList>() {
         @Override
         public void onCompleted() {
@@ -128,14 +130,19 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
-        try {
-            listener = (OnClickedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-            + " must implement OnClickedListener");
+        Activity activity;
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            try {
+                listener = (OnClickedListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnClickedListener");
+            }
         }
     }
 
@@ -205,7 +212,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Override
-    public void onItemClick(View itemView, int position) {
+    public void onItemClick(int position) {
         listener.onItemClicked(mediaList.getMedias().get(position));
     }
 

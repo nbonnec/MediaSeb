@@ -19,6 +19,8 @@ package com.nbonnec.mediaseb.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 public class Media implements Parcelable{
     public static final String TAG = Media.class.getSimpleName();
     private String title;
@@ -27,7 +29,14 @@ public class Media implements Parcelable{
     private String collection;
     private String year;
     private String summary;
+    private String type;
+    private String section;
+    private String location;
+    private String rating;
+    private Date return_date;
     private String imageUrl;
+    private String noticeUrl;
+    private boolean available;
 
     public Media() {}
 
@@ -38,7 +47,14 @@ public class Media implements Parcelable{
         collection = in.readString();
         year = in.readString();
         summary = in.readString();
+        type = in.readString();
+        section = in.readString();
+        location = in.readString();
+        rating = in.readString();
         imageUrl = in.readString();
+        noticeUrl = in.readString();
+        available = in.readByte() != 0;
+        return_date = new Date(in.readLong());
     }
 
     @Override
@@ -49,7 +65,14 @@ public class Media implements Parcelable{
         dest.writeString(collection);
         dest.writeString(year);
         dest.writeString(summary);
+        dest.writeString(type);
+        dest.writeString(section);
+        dest.writeString(location);
+        dest.writeString(rating);
         dest.writeString(imageUrl);
+        dest.writeString(noticeUrl);
+        dest.writeByte((byte) (available ? 1 : 0));
+        dest.writeLong(return_date.getTime());
     }
 
     @Override
@@ -128,11 +151,64 @@ public class Media implements Parcelable{
         this.collection = collection;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSection() {
+        return section;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getNoticeUrl() {
+        return noticeUrl;
+    }
+
+    public void setNoticeUrl(String noticeUrl) {
+        this.noticeUrl = noticeUrl;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public void getDetails(Media media) {
+        summary = media.summary;
+        available = media.available;
     }
 }

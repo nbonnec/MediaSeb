@@ -68,8 +68,10 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
 
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
-            if (title != null)
+            if (title != null) {
                 currentMedia.setTitle(title.text());
+                currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
+            }
             if (author != null)
                 currentMedia.setAuthor(author.text());
             if (editor != null)
@@ -91,5 +93,54 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             mediaResults.setNextPageUrl(endpoints.nextUrl(nextPageUrl.attr("href")));
 
         return mediaResults;
+    }
+
+    public Media interpretNoticeFromHtml(String html) {
+        final String DETAILS_ELEMENT = "div#detail-ntc";
+        final String COPY_DETAILS_ELEMENT = "div.detail-ntc-exemplaire tr td";
+        final String SUMMURAY_ELEMENT = "p:contains(Résumé)";
+        final String TEXT_ELEMENT = "span.aff-public-texte";
+        final int TYPE_INDEX = 0;
+        final int SECTION_INDEX = 1;
+        final int LOCATION_INDEX = 2;
+        final int RATING_INDEX = 3;
+        final int AVAILABLE_INDEX = 4;
+        final int RETURN_DATE_INDEX = 5;
+
+        final Media media = DefaultFactory.Media.constructDefaultInstance();
+
+        Document parseHtml = Jsoup.parse(html);
+        Element details = parseHtml.select(DETAILS_ELEMENT).first();
+
+        if (details != null) {
+            Element summary = details.select(SUMMURAY_ELEMENT).select(TEXT_ELEMENT).first();
+            Element type = details.select(COPY_DETAILS_ELEMENT).get(TYPE_INDEX);
+            Element section = details.select(COPY_DETAILS_ELEMENT).get(SECTION_INDEX);
+            Element location = details.select(COPY_DETAILS_ELEMENT).get(LOCATION_INDEX);
+            Element rating = details.select(COPY_DETAILS_ELEMENT).get(RATING_INDEX);
+            Element available = details.select(COPY_DETAILS_ELEMENT).get(AVAILABLE_INDEX);
+            Element return_date = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
+
+            if (summary != null) {
+                media.setSummary(summary.text());
+            }
+            if (type != null) {
+                media.setType(type.text());
+            }
+            if (section != null) {
+                media.setSection(section.text());
+            }
+            if (location != null) {
+                media.setLocation(location.text());
+            }
+            if (rating != null) {
+                media.setRating(rating.text());
+            }
+            if (available != null) {
+                media.setAvailable(rating.text().equals("Sorti") ? false : true);
+            }
+        }
+
+        return media;
     }
 }

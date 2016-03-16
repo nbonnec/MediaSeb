@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -42,8 +43,6 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
     @Inject
     MSSEndpoints mssEndpoints;
 
-    private MenuItem searchItem;
-
     // TODO get rid of
     private String search;
 
@@ -62,7 +61,7 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
         } else if (findViewById(R.id.container) != null) {
             handleIntent(getIntent());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container,
+                    .replace(R.id.container,
                             new MediaListFragmentBuilder(mssEndpoints.simpleSearchUrl(search))
                                     .build(),
                             MEDIALIST_FRAGMENT_TAG)
@@ -104,7 +103,6 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
             }
         });
 
-        // TODO up as home
         getSearchMenuItem().expandActionView();
         getSearchView().setQuery(search, false);
         getSearchView().clearFocus();
@@ -132,8 +130,20 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
         }
     }
 
+    private void loadMedia(Media media) {
+        Intent intent = new Intent(SearchActivity.this, DetailsActivity.class);
+        intent.putExtra(DetailsActivity.MEDIA, media);
+        /*
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+        MainActivity.this, transitionView, DetailActivity.EXTRA_IMAGE);
+        ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
+        options.toBundle());
+        */
+        startActivity(intent);
+    }
+
     @Override
     public void onItemClicked(Media media) {
-        // TODO
+        loadMedia(media);
     }
 }

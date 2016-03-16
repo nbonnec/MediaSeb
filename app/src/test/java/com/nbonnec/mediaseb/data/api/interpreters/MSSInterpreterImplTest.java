@@ -58,6 +58,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
         assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/html/com_opac/assets/images/icones_support/ico_sup_03.png");
+        assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/520486958-103");
     }
 
     @Test
@@ -67,5 +68,16 @@ public class MSSInterpreterImplTest extends BaseTestCase {
 
         assertThat(mediaList.getMedias()).isEmpty();
         assertThat(mediaList.getNextPageUrl()).isEqualTo(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL);
+    }
+
+    @Test
+    public void test_noticeParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        Media media = interpreter.interpretNoticeFromHtml(readAssetFile("details.html"));
+
+        assertThat(media.getSummary()).isEqualTo("Les amis en visite à Alexandria sont un renfort" +
+                " appréciable dans l'affrontement contre les ennemis présents" +
+                " dans les rangs des rôdeurs. Electre 2015.");
+        assertThat(media.isAvailable()).isEqualTo(false);
     }
 }
