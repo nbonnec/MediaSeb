@@ -33,9 +33,9 @@ public class Media implements Parcelable{
     private String section;
     private String location;
     private String rating;
-    private Date return_date;
     private String imageUrl;
     private String noticeUrl;
+    private Date returnDate;
     private boolean available;
 
     public Media() {}
@@ -54,7 +54,7 @@ public class Media implements Parcelable{
         imageUrl = in.readString();
         noticeUrl = in.readString();
         available = in.readByte() != 0;
-        return_date = new Date(in.readLong());
+        returnDate = new Date(in.readLong());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class Media implements Parcelable{
         dest.writeString(imageUrl);
         dest.writeString(noticeUrl);
         dest.writeByte((byte) (available ? 1 : 0));
-        dest.writeLong(return_date.getTime());
+        dest.writeLong(returnDate.getTime());
     }
 
     @Override
@@ -197,6 +197,14 @@ public class Media implements Parcelable{
 
     public void setNoticeUrl(String noticeUrl) {
         this.noticeUrl = noticeUrl;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(Date returnDate) {
+        this.returnDate = returnDate;
     }
 
     public boolean isAvailable() {

@@ -16,6 +16,9 @@
 
 package com.nbonnec.mediaseb.data.api.interpreters;
 
+import android.util.Log;
+
+import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
@@ -26,8 +29,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 import javax.inject.Inject;
@@ -72,16 +78,21 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 currentMedia.setTitle(title.text());
                 currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
             }
-            if (author != null)
+            if (author != null) {
                 currentMedia.setAuthor(author.text());
-            if (editor != null)
+            }
+            if (editor != null) {
                 currentMedia.setEditor(editor.text());
-            if (collection != null)
+            }
+            if (collection != null) {
                 currentMedia.setCollection(collection.text());
-            if (year != null)
+            }
+            if (year != null) {
                 currentMedia.setYear(year.text());
-            if (imageUrl != null)
+            }
+            if (imageUrl != null) {
                 currentMedia.setImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
+            }
 
             medias.add(currentMedia);
         }
@@ -119,7 +130,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             Element location = details.select(COPY_DETAILS_ELEMENT).get(LOCATION_INDEX);
             Element rating = details.select(COPY_DETAILS_ELEMENT).get(RATING_INDEX);
             Element available = details.select(COPY_DETAILS_ELEMENT).get(AVAILABLE_INDEX);
-            Element return_date = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
+            Element returnDate = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
 
             if (summary != null) {
                 media.setSummary(summary.text());
@@ -137,7 +148,17 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 media.setRating(rating.text());
             }
             if (available != null) {
-                media.setAvailable(rating.text().equals("Sorti") ? false : true);
+                media.setAvailable(available.text().equals("En rayon"));
+                if (!media.isAvailable() && returnDate != null) {
+                    SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+                    try {
+                        media.setReturnDate(fmt.parse(returnDate.text()));
+                    } catch (ParseException e) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, " Exception : can not parse return date !");
+                        }
+                    }
+                }
             }
         }
 

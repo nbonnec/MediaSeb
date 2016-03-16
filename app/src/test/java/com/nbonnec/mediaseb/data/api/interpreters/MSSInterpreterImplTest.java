@@ -32,7 +32,10 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -71,13 +74,28 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     }
 
     @Test
-    public void test_noticeParsing() throws IOException {
+    public void test_noticeParsing() throws IOException, ParseException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        Media media = interpreter.interpretNoticeFromHtml(readAssetFile("details.html"));
+        Media media = interpreter.interpretNoticeFromHtml(readAssetFile("details-walking-dead.html"));
 
         assertThat(media.getSummary()).isEqualTo("Les amis en visite à Alexandria sont un renfort" +
                 " appréciable dans l'affrontement contre les ennemis présents" +
                 " dans les rangs des rôdeurs. Electre 2015.");
+        assertThat(media.getType()).isEqualTo("Bd Adulte");
+        assertThat(media.getSection()).isEqualTo("Espace adulte");
+        assertThat(media.getLocation()).isEqualTo("BD");
+        assertThat(media.getRating()).isEqualTo("");
         assertThat(media.isAvailable()).isEqualTo(false);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd", Locale.FRENCH);
+        assertThat(media.getReturnDate()).isEqualTo(fmt.parse("2016/03/25"));
+
+        media = interpreter.interpretNoticeFromHtml(readAssetFile("details-endymion.html"));
+        assertThat(media.getSummary()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_SUMMARY);
+        assertThat(media.getType()).isEqualTo("Livre");
+        assertThat(media.getSection()).isEqualTo("Espace adulte");
+        assertThat(media.getLocation()).isEqualTo("Réserve");
+        assertThat(media.getRating()).isEqualTo("R SIM");
+        assertThat(media.isAvailable()).isEqualTo(true);
+        assertThat(media.getReturnDate()).isEqualTo(null);
     }
 }
