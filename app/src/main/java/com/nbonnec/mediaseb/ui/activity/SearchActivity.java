@@ -110,7 +110,6 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
 
         return true;
     }
-
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);

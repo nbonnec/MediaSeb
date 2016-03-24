@@ -17,6 +17,7 @@
 package com.nbonnec.mediaseb.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
@@ -49,6 +50,11 @@ public class DetailsActivity extends BaseActivity {
             /* we want the fragment quickly for lollipop transitions. */
             // TODO maybe postponeEnterTranstion
             getSupportFragmentManager().executePendingTransactions();
+        }
+
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
         }
     }
 }
