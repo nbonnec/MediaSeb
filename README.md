@@ -9,7 +9,7 @@ Use of :
 * [Recyclerview](http://developer.android.com/training/material/lists-cards.html),
 * [dagger 1](http://square.github.io/dagger/),
 * [Butterknife](http://jakewharton.github.io/butterknife/),
-* [RxAndroid](https://github.com/ReactiveX/RxAndroid),
+* [RxAndroid](http://reactivex.io/),
 * [JSoup](http://jsoup.org/),
 * [Roboelectric](http://robolectric.org/),
 * [Picasso](http://square.github.io/picasso/)
