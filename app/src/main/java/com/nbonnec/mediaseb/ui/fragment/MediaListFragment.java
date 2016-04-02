@@ -90,7 +90,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         public void onError(Throwable e) {
             getMediasObservable = null;
             isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -102,7 +102,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             }
 
             pageLoaded = true;
-            progressBar.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     };
 

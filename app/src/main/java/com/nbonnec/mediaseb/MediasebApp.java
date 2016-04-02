@@ -22,7 +22,9 @@ import android.content.Context;
 import com.nbonnec.mediaseb.di.modules.ContextModule;
 import com.nbonnec.mediaseb.di.modules.MediasebModule;
 
+import dagger.Module;
 import dagger.ObjectGraph;
+import dagger.internal.Modules;
 
 public class MediasebApp extends Application {
     private ObjectGraph objectGraph;
@@ -34,11 +36,19 @@ public class MediasebApp extends Application {
     }
 
     public void buildObjectGraphAndInject() {
+        buildInitialObjectGraph();
+        objectGraph.inject(this);
+    }
+
+    public void buildInitialObjectGraph() {
         objectGraph = ObjectGraph.create(
                 new ContextModule(),
                 new MediasebModule(this)
         );
-        objectGraph.inject(this);
+    }
+
+    public void addModule(Object... modules) {
+        objectGraph.plus(modules);
     }
 
     public static MediasebApp get(Context context) {
