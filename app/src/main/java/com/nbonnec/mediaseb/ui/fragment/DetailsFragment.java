@@ -45,6 +45,8 @@ import rx.schedulers.Schedulers;
 public class DetailsFragment extends BaseFragment {
     public static final String TAG = DetailsFragment.class.getSimpleName();
 
+    private static final String STATE_PAGE_LOADED = "page_loaded";
+
     @Arg
     Media media;
 
@@ -67,6 +69,8 @@ public class DetailsFragment extends BaseFragment {
     @Bind(R.id.details_year)
     TextView yearView;
 
+    private boolean pageLoaded = false;
+
     private Observer<Media> getNoticeObserver = new Observer<Media>() {
         @Override
         public void onCompleted() {
@@ -74,12 +78,14 @@ public class DetailsFragment extends BaseFragment {
 
         @Override
         public void onError(Throwable e) {
+            pageLoaded = false;
         }
 
         @Override
         public void onNext(Media nextMedia) {
             media.setDetails(nextMedia);
             refreshViews();
+            pageLoaded = true;
         }
     };
 
@@ -87,6 +93,9 @@ public class DetailsFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+        }
     }
 
     @Override
@@ -114,7 +123,16 @@ public class DetailsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadNotice(media.getNoticeUrl());
+
+        if (!pageLoaded) {
+            loadNotice(media.getNoticeUrl());
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+        saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
     }
 
     private void loadNotice(String page) {

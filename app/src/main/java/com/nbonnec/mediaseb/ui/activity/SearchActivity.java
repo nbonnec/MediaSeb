@@ -19,9 +19,10 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -105,6 +106,18 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
         });
 
         getSearchMenuItem().expandActionView();
+        MenuItemCompat.setOnActionExpandListener(getSearchMenuItem(), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                NavUtils.navigateUpFromSameTask(SearchActivity.this);
+                return false;
+            }
+        });
         getSearchView().setQuery(search, false);
         getSearchView().clearFocus();
 

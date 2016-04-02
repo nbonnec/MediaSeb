@@ -96,6 +96,5 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(media.getLocation()).isEqualTo("Réserve");
         assertThat(media.getRating()).isEqualTo("R SIM");
         assertThat(media.isAvailable()).isEqualTo(true);
-        assertThat(media.getReturnDate()).isEqualTo(null);
     }
 }

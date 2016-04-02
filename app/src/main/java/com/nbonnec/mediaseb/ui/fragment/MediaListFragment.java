@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -66,6 +67,9 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
+    @Bind(R.id.media_list_progress_bar)
+    ProgressBar progressBar;
+
     private OnClickedListener listener;
 
     private boolean isLoading;
@@ -86,6 +90,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         public void onError(Throwable e) {
             getMediasObservable = null;
             isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -97,6 +102,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             }
 
             pageLoaded = true;
+            progressBar.setVisibility(View.INVISIBLE);
         }
     };
 
@@ -178,6 +184,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     public void loadPage(String page) {
         isLoading = true;
+        progressBar.setVisibility(View.VISIBLE);
         resetAdapters();
 
         getMediasObservable = mssService

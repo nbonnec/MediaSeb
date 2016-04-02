@@ -45,10 +45,6 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
         getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                MenuItem searchMenuItem = getSearchMenuItem();
-                if (searchMenuItem != null) {
-                    searchMenuItem.collapseActionView();
-                }
                 return false;
             }
 
@@ -69,6 +65,10 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
         ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
         options.toBundle());
         */
+        MenuItem searchMenuItem = getSearchMenuItem();
+        if (searchMenuItem != null) {
+            searchMenuItem.collapseActionView();
+        }
         startActivity(intent);
     }
 

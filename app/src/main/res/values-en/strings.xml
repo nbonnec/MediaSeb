@@ -4,4 +4,5 @@
     <string name="hint">Search in catalog</string>
     <string name="search">Search</string>
     <string name="news">News</string>
+    <string name="empty_results">No results</string>
 </resources>
