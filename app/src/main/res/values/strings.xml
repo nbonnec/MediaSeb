@@ -4,4 +4,5 @@
     <string name="search">Rechercher</string>
     <string name="news">Nouveautés</string>
     <string name="empty_results">Pas de résultats</string>
+    <string name="network_error">Erreur réseau</string>
 </resources>

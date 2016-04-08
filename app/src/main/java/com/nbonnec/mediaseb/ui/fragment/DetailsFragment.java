@@ -32,6 +32,9 @@ import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
@@ -68,6 +71,8 @@ public class DetailsFragment extends BaseFragment {
     TextView collectionView;
     @Bind(R.id.details_year)
     TextView yearView;
+    @Bind(R.id.details_available)
+    TextView availableView;
 
     private boolean pageLoaded = false;
 
@@ -145,6 +150,12 @@ public class DetailsFragment extends BaseFragment {
     }
 
     private void refreshViews() {
+        if (media.isAvailable()) {
+            availableView.setText("Disponible");
+        } else {
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+            availableView.setText(String.format("Retour le %s", fmt.format(media.getReturnDate())));
+        }
     }
 
     @Override

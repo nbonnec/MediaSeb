@@ -62,6 +62,13 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
         assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/html/com_opac/assets/images/icones_support/ico_sup_03.png");
         assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/520486958-103");
+
+        assertThat(medias.get(2).getTitle()).isEqualTo("Walking dead. 12, un monde parfait");
+        assertThat(medias.get(2).getAuthor()).isEqualTo("Kirkman, Robert");
+        assertThat(medias.get(2).getEditor()).isEqualTo("Delcourt");
+        assertThat(medias.get(2).getCollection()).isEqualTo("Contrebande");
+        assertThat(medias.get(2).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/cache/9782756021119_grande.jpg");
+        assertThat(medias.get(2).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/134223724-103");
     }
 
     @Test

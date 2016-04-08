@@ -37,18 +37,16 @@ public class MediasebApp extends Application {
 
     public void buildObjectGraphAndInject() {
         buildInitialObjectGraph();
-        objectGraph.inject(this);
     }
 
     public void buildInitialObjectGraph() {
         objectGraph = ObjectGraph.create(
-                new ContextModule(),
                 new MediasebModule(this)
         );
     }
 
-    public void addModule(Object... modules) {
-        objectGraph.plus(modules);
+    public void setObjectGraph(Object... modules) {
+        objectGraph = ObjectGraph.create(modules);
     }
 
     public static MediasebApp get(Context context) {

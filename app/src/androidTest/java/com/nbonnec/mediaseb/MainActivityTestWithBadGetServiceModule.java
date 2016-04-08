@@ -17,51 +17,50 @@
 package com.nbonnec.mediaseb;
 
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.matcher.ViewMatchers;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.nbonnec.mediaseb.di.modules.BadGetMSSServiceModule;
+import com.nbonnec.mediaseb.di.modules.MediasebModule;
 import com.nbonnec.mediaseb.ui.activity.MainActivity;
-import com.nbonnec.mediaseb.utils.ActivityRule;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.Visibility;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static junit.framework.Assert.assertNotNull;
 
+/**
+ * The @Before annotation is called before tests and not before lauchning activity on default
+ * behavior.
+ * Use launchActivity=false for {@link android.support.test.rule.ActivityTestRule#ActivityTestRule(Class, boolean, boolean)}.
+ * @see <a href="https://jabknowsnothing.wordpress.com/2015/11/05/activitytestrule-espressos-test-lifecycle/">ActivityTestRule: Espresso’s Test “Lifecycle”</a>
+ */
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTestWithBadGetServiceModule {
     public static final String TAG = MainActivityTestWithBadGetServiceModule.class.getSimpleName();
 
     @Rule
-    public final ActivityRule<MainActivity> mActivityRule = new ActivityRule<>(MainActivity.class);
-
-    public MainActivity mainActivity;
+    public final ActivityTestRule<MainActivity> activityRule =
+            new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Before
     public void setup() {
         MediasebApp app = MediasebApp.get(InstrumentationRegistry.getTargetContext());
-        app.buildInitialObjectGraph();
-        app.addModule(new BadGetMSSServiceModule());
-
-        mainActivity = mActivityRule.get();
-    }
-
-    @After
-    public void teardown() {
-        mainActivity = null;
+        app.setObjectGraph(new MediasebModule(app), new BadGetMSSServiceModule());
     }
 
     @Test
     public void testProgressBarViewIsInvisible() {
-        onView(withId(R.id.media_list_progress_bar)).check(matches(withEffectiveVisibility(Visibility.GONE)));
+        activityRule.launchActivity(null);
+        onView(withId(R.id.media_list_progress_bar_layout)).check(matches(withEffectiveVisibility(Visibility.GONE)));
+        onView(withId(R.id.media_list_error_layout)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)));
+        onView(withId(R.id.media_list_content_layout)).check(matches(withEffectiveVisibility(Visibility.GONE)));
     }
 }

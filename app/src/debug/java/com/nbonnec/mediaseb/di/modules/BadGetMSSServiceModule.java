@@ -25,12 +25,13 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        addsTo = MediasebModule.class,
-        library = true,
+        includes = MediasebModule.class,
         overrides = true
 )
 public class BadGetMSSServiceModule {
     public static final String TAG = BadGetMSSServiceModule.class.getSimpleName();
+
+    public BadGetMSSServiceModule() {}
 
     @Provides
     @Singleton

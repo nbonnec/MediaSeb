@@ -67,8 +67,14 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
-    @Bind(R.id.media_list_progress_bar)
-    ProgressBar progressBar;
+    @Bind(R.id.media_list_content_layout)
+    View contentView;
+
+    @Bind(R.id.media_list_progress_bar_layout)
+    View loadingView;
+
+    @Bind(R.id.media_list_error_layout)
+    View errorView;
 
     private OnClickedListener listener;
 
@@ -90,7 +96,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         public void onError(Throwable e) {
             getMediasObservable = null;
             isLoading = false;
-            progressBar.setVisibility(View.GONE);
+            showErrorView();
         }
 
         @Override
@@ -102,7 +108,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             }
 
             pageLoaded = true;
-            progressBar.setVisibility(View.GONE);
+            showContentView();
         }
     };
 
@@ -168,6 +174,11 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
         if (mediaList != null) {
@@ -184,7 +195,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     public void loadPage(String page) {
         isLoading = true;
-        progressBar.setVisibility(View.VISIBLE);
+        showLoadingView();
         resetAdapters();
 
         getMediasObservable = mssService
@@ -216,6 +227,25 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         }
         newsAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
         newsAdapter.setOnItemClickListener(this);
+    }
+
+    private void showLoadingView() {
+        loadingView.setVisibility(View.VISIBLE);
+        errorView.setVisibility(View.GONE);
+        contentView.setVisibility(View.GONE);
+
+    }
+
+    private void showErrorView() {
+        loadingView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        contentView.setVisibility(View.GONE);
+    }
+
+    private void showContentView() {
+        loadingView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+        contentView.setVisibility(View.VISIBLE);
     }
 
     @Override

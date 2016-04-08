@@ -26,6 +26,8 @@ import rx.Observable;
 public class BadGetMSSServiceImpl implements MSSService {
     public static final String TAG = BadGetMSSServiceImpl.class.getSimpleName();
 
+    public BadGetMSSServiceImpl() { }
+
     @Override
     public Observable<MediaList> getMediaListFromUrl(String url) {
         return Observable.error(new NetworkErrorException(TAG +
