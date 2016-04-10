@@ -26,11 +26,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.factories.InitialFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
@@ -187,6 +187,12 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        newsAdapter.clearSubscriptioins();
+    }
+
     @Subscribe
     public void onMediasLatestPositionEvent(MediasLatestPositionEvent event) {
         if (canPullNextMedias(event.getPosition()))
@@ -199,9 +205,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         resetAdapters();
 
         getMediasObservable = mssService
-                .getMediaListFromUrl(page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .getMediaList(page)
+                .compose(RxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 
@@ -215,9 +220,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         isLoading = true;
 
         getMediasObservable = mssService
-                .getMediaListFromUrl(mediaList.getNextPageUrl())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .getMediaList(mediaList.getNextPageUrl())
+                .compose(RxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 
@@ -249,8 +253,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Override
-    public void onItemClick(int position) {
-        listener.onItemClicked(mediaList.getMedias().get(position));
+    public void onItemClick(Media media) {
+        listener.onItemClicked(media);
     }
 
     private void resetAdapters() {

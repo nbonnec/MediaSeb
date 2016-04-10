@@ -56,6 +56,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         final String COLLECTION_ELEMENT = "span.collection";
         final String YEAR_ELEMENT = "span.date_edi";
         final String NEXT_URL_ELEMENT = "a[title=Page:Suivant]";
+        final String COVER_LOAD_ELEMENT ="div.couverture input[name=\"ntc_url\"]";
 
         final MediaList mediaResults = DefaultFactory.MediaList.constructDefaultInstance();
         List<Media> medias = new ArrayList<>();
@@ -70,6 +71,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             Element editor = e.select(EDITOR_ELEMENT).first();
             Element year = e.select(YEAR_ELEMENT).first();
             Element collection = e.select(COLLECTION_ELEMENT).first();
+            Element coverLoadUrl = e.select(COVER_LOAD_ELEMENT).first();
             Element imageUrl = e.select("img").first();
 
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
@@ -90,7 +92,9 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             if (year != null) {
                 currentMedia.setYear(year.text());
             }
-            if (imageUrl != null) {
+            if (coverLoadUrl != null) {
+                currentMedia.setImageUrl(endpoints.imageUrl("/" + coverLoadUrl.val()));
+            } else if (imageUrl != null) {
                 currentMedia.setImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
             }
 
@@ -163,5 +167,18 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         }
 
         return media;
+    }
+
+    @Override
+    public String interpretImageUrlFromHtml(String html) {
+        Document parseHtml = Jsoup.parse(html);
+        Element imageUrl = parseHtml.select("img").first();
+
+        if (imageUrl != null) {
+            return endpoints.imageUrl(imageUrl.attr("src"));
+        } else {
+            return endpoints.baseUrl().concat("/templates/c3rb_alpha_25/html/" +
+                    "com_opac/assets/images/icones_support/ico_sup_03.png");
+        }
     }
 }

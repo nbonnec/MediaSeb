@@ -54,20 +54,20 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("results.html"));
         List<Media> medias = mediaList.getMedias();
 
-        assertThat(mediaList.getNextPageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/facettes/walking+dead/ligne?start=10");
+        assertThat(mediaList.getNextPageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/facettes/walking+dead+/ligne?limit=10&start=10");
         assertThat(medias.get(0).getTitle()).isEqualTo("Dead man walking : bande originale du film");
         assertThat(medias.get(0).getAuthor()).isEqualTo("Robbins, Tim");
         assertThat(medias.get(0).getEditor()).isEqualTo("Sony Music");
         assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
-        assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/html/com_opac/assets/images/icones_support/ico_sup_03.png");
+        assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/index.php?option=com_opac&view=Ajax&task=couvertureAjax&tmpl=component&format=raw&num_ntc=520486958:103&is_media_ntc=0&type_ntc=6&taille=grande&support=ico_sup_03.png&lib_support=CD&isbn=&ean=&titre=Dead+man+walking&editeur=Sony+Music&auteur=Robbins%2C+Tim&show_lnk=118&Itemid=118");
         assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/520486958-103");
 
         assertThat(medias.get(2).getTitle()).isEqualTo("Walking dead. 12, un monde parfait");
         assertThat(medias.get(2).getAuthor()).isEqualTo("Kirkman, Robert");
         assertThat(medias.get(2).getEditor()).isEqualTo("Delcourt");
         assertThat(medias.get(2).getCollection()).isEqualTo("Contrebande");
-        assertThat(medias.get(2).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/cache/9782756021119_grande.jpg");
+        assertThat(medias.get(2).getImageUrl()).isEqualTo("http://ecx.images-amazon.com/images/I/61-5KGEFv9L.jpg");
         assertThat(medias.get(2).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/134223724-103");
     }
 
@@ -103,5 +103,13 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(media.getLocation()).isEqualTo("Réserve");
         assertThat(media.getRating()).isEqualTo("R SIM");
         assertThat(media.isAvailable()).isEqualTo(true);
+    }
+
+    @Test
+    public void test_ImageUrlParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        String imageUrl = interpreter.interpretImageUrlFromHtml(readAssetFile("cover-return.html"));
+
+        assertThat(imageUrl).isEqualTo("http://mediatheque.saintsebastien.fr/cache/9782756039572_grande.jpg");
     }
 }

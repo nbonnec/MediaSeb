@@ -224,4 +224,8 @@ public class Media implements Parcelable{
         available = media.available;
         returnDate = media.returnDate;
     }
+
+    public boolean needImagePreload() {
+        return imageUrl.contains("couvertureAjax");
+    }
 }

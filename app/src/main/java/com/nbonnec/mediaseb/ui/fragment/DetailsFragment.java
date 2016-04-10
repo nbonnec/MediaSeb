@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
@@ -143,9 +144,8 @@ public class DetailsFragment extends BaseFragment {
     private void loadNotice(String page) {
 
         Observable<Media> getMediasObservable = mssService
-                .getMediaDetailsFromUrl(page)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .getMediaDetails(page)
+                .compose(RxUtils.<Media>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getNoticeObserver));
     }
 

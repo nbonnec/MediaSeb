@@ -20,8 +20,9 @@ import com.nbonnec.mediaseb.models.MediaList;
 import rx.Observable;
 
 public interface MSSService {
-    Observable<MediaList> getMediaListFromUrl(String url);
-    Observable<Media> getMediaDetailsFromUrl(String url);
+    Observable<MediaList> getMediaList(String url);
+    Observable<Media> getMediaDetails(String url);
+    Observable<String> getMediaLoadedImage(String url);
     Observable<MediaList> getResults(String pattern);
     Observable<MediaList> getNews();
 }

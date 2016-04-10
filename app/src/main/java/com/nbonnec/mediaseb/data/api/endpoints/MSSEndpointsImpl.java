@@ -68,7 +68,10 @@ public class MSSEndpointsImpl implements MSSEndpoints {
 
     @Override
     public String imageUrl(String href) {
-        if (href.contains("/com_opac/assets/images/"))
+        if (!href.contains(API_URL) &&
+                (href.contains("/com_opac/assets/images/") ||
+                        href.contains("couvertureAjax") ||
+                        href.contains("cache")))
             return API_URL + href;
         else
             return href;

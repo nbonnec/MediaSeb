@@ -29,15 +29,21 @@ public class BadGetMSSServiceImpl implements MSSService {
     public BadGetMSSServiceImpl() { }
 
     @Override
-    public Observable<MediaList> getMediaListFromUrl(String url) {
+    public Observable<MediaList> getMediaList(String url) {
         return Observable.error(new NetworkErrorException(TAG +
         ": getMedialistFromUrl() - Simulated Bad Network Request"));
     }
 
     @Override
-    public Observable<Media> getMediaDetailsFromUrl(String url) {
+    public Observable<Media> getMediaDetails(String url) {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getMediaDetailsFromUrl - Simulated Bad Network Request"));
+        ": getMediaDetails - Simulated Bad Network Request"));
+    }
+
+    @Override
+    public Observable<String> getMediaLoadedImage(String url) {
+        return Observable.error(new NetworkErrorException(TAG +
+        ": getMediaLoadedImageUrl - Simulated Bad Network Request"));
     }
 
     @Override

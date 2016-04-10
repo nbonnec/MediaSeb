@@ -9,4 +9,5 @@ import com.nbonnec.mediaseb.models.MediaList;
 public interface MSSInterpreter {
     MediaList interpretMediaResultsFromHtml(String html);
     Media interpretNoticeFromHtml(String html);
+    String interpretImageUrlFromHtml(String html);
 }

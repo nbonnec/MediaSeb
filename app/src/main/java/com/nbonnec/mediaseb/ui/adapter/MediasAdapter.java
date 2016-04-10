@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
+import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPositionEvent;
 import com.squareup.otto.Bus;
@@ -37,20 +39,23 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder> {
     private static final String TAG = MediasAdapter.class.getSimpleName();
 
-    @Inject
-    Bus bus;
+    @Inject Bus bus;
+    @Inject MSSService mssService;
 
     private Context context;
     private List<Media> medias;
+    private CompositeSubscription subscriptions;
 
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(Media media);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -81,6 +86,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
         MediasebApp app = MediasebApp.get(context);
         app.inject(this);
+        subscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -90,21 +96,39 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final Media media = medias.get(position);
 
         bus.post(new MediasLatestPositionEvent(position));
 
         holder.title.setText(media.getTitle());
         holder.author.setText(media.getAuthor());
+        // TODO use retro lambda
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(position);
+                listener.onItemClick(media);
             }
         });
 
-        Picasso.with(context).load(media.getImageUrl())
+        if (media.needImagePreload()) {
+            subscriptions.add(mssService
+                    .getMediaLoadedImage(media.getImageUrl())
+                    .compose(RxUtils.<String>applySchedulers())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            media.setImageUrl(s);
+                            Picasso.with(context)
+                                    .load(media.getImageUrl())
+                                    .into(holder.icon);
+                        }
+                    })
+            );
+        }
+
+        Picasso.with(context)
+                .load(media.getImageUrl())
                 .into(holder.icon);
     }
 
@@ -130,5 +154,9 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         int size = medias.size();
         medias.clear();
         notifyItemRangeRemoved(0, size);
+    }
+
+    public void clearSubscriptioins() {
+        subscriptions = null;
     }
 }

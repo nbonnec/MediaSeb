@@ -46,16 +46,16 @@ public class MSSServiceImpl implements MSSService {
 
     @Override
     public Observable<MediaList> getResults(String search) {
-        return getMediaListFromUrl(mssEndpoints.simpleSearchUrl(search));
+        return getMediaList(mssEndpoints.simpleSearchUrl(search));
     }
 
     @Override
     public Observable<MediaList> getNews() {
-        return getMediaListFromUrl(mssEndpoints.newsUrl());
+        return getMediaList(mssEndpoints.newsUrl());
     }
 
     @Override
-    public Observable<MediaList> getMediaListFromUrl(String url) {
+    public Observable<MediaList> getMediaList(String url) {
         return getHtml(url)
                 .map(new Func1<String, MediaList>() {
                     @Override
@@ -66,7 +66,7 @@ public class MSSServiceImpl implements MSSService {
     }
 
     @Override
-    public Observable<Media> getMediaDetailsFromUrl(String url) {
+    public Observable<Media> getMediaDetails(String url) {
         return getHtml(url)
                 .map(new Func1<String, Media>() {
                     @Override
@@ -76,6 +76,16 @@ public class MSSServiceImpl implements MSSService {
                 });
     }
 
+    @Override
+    public Observable<String> getMediaLoadedImage(String url) {
+        return getHtml(url)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        return interpreter.interpretImageUrlFromHtml(s);
+                    }
+                });
+    }
     private Observable<String> getHtml(final String url) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format("Get page : %s", url));
