@@ -19,12 +19,14 @@ package com.nbonnec.mediaseb;
 import android.app.Application;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.nbonnec.mediaseb.di.modules.ContextModule;
 import com.nbonnec.mediaseb.di.modules.MediasebModule;
 
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.internal.Modules;
+import io.fabric.sdk.android.Fabric;
 
 public class MediasebApp extends Application {
     private ObjectGraph objectGraph;
@@ -32,6 +34,7 @@ public class MediasebApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         buildObjectGraphAndInject();
     }
 

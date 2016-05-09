@@ -77,7 +77,7 @@ public class MSSServiceImpl implements MSSService {
     }
 
     @Override
-    public Observable<String> getMediaLoadedImage(String url) {
+    public Observable<String> getMediaLoadedImageUrl(String url) {
         return getHtml(url)
                 .map(new Func1<String, String>() {
                     @Override

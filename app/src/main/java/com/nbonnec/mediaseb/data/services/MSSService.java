@@ -22,7 +22,7 @@ import rx.Observable;
 public interface MSSService {
     Observable<MediaList> getMediaList(String url);
     Observable<Media> getMediaDetails(String url);
-    Observable<String> getMediaLoadedImage(String url);
+    Observable<String> getMediaLoadedImageUrl(String url);
     Observable<MediaList> getResults(String pattern);
     Observable<MediaList> getNews();
 }

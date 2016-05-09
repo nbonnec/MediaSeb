@@ -94,6 +94,9 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             }
             if (coverLoadUrl != null) {
                 currentMedia.setImageUrl(endpoints.imageUrl("/" + coverLoadUrl.val()));
+                if (imageUrl != null) {
+                    currentMedia.setLoadingImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
+                }
             } else if (imageUrl != null) {
                 currentMedia.setImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
             }
@@ -181,4 +184,10 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                     "com_opac/assets/images/icones_support/ico_sup_03.png");
         }
     }
+/*
+    @Override
+    public MediaList interpretSubscriptionsFromHtml(String html) {
+        Document
+    }
+    */
 }

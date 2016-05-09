@@ -51,7 +51,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     @Test
     public void test_resultsParsing() throws IOException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("results.html"));
+        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("html/results.html"));
         List<Media> medias = mediaList.getMedias();
 
         assertThat(mediaList.getNextPageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/facettes/walking+dead+/ligne?limit=10&start=10");
@@ -72,9 +72,35 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     }
 
     @Test
+    public void test_firstResponseParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("html/first-response.html"));
+        List<Media> medias = mediaList.getMedias();
+
+        assertThat(mediaList.getNextPageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/facettes/walking+Dead+/ligne?limit=10&start=20");
+        assertThat(medias.get(0).getTitle()).isEqualTo("Walking dead. 11, les chasseurs");
+        assertThat(medias.get(0).getAuthor()).isEqualTo("Kirkman, Robert");
+        assertThat(medias.get(0).getEditor()).isEqualTo("Delcourt");
+        assertThat(medias.get(0).getYear()).isEqualTo(("2010"));
+        assertThat(medias.get(0).getCollection()).isEqualTo("Contrebande");
+        assertThat(medias.get(0).getImageUrl()).isEqualTo("http://ecx.images-amazon.com/images/I/51%2BaiNu8K3L.jpg");
+        assertThat(medias.get(0).getLoadingImageUrl()).isNull();
+        assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/134292892-103");
+
+        assertThat(medias.get(1).getTitle()).isEqualTo("Walking dead. 01, passé décomposé");
+        assertThat(medias.get(1).getAuthor()).isEqualTo("Kirkman, Robert");
+        assertThat(medias.get(1).getEditor()).isEqualTo("Delcourt");
+        assertThat(medias.get(1).getYear()).isEqualTo(("2007"));
+        assertThat(medias.get(1).getCollection()).isEqualTo("Contrebande");
+        assertThat(medias.get(1).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/index.php?option=com_opac&view=Ajax&task=couvertureAjax&tmpl=component&format=raw&num_ntc=134300540:103&is_media_ntc=0&type_ntc=0&taille=moyenne&support=ico_sup_00.png&lib_support=&isbn=2756009121&ean=9782756009124&titre=Walking+dead.+01%2C+passe+decompose&editeur=Delcourt&auteur=Kirkman%2C+Robert&show_lnk=118&Itemid=118");
+        assertThat(medias.get(1).getLoadingImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/html/com_opac/assets/images/icones_support/ico_sup_00.png");
+        assertThat(medias.get(1).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/134300540-103");
+    }
+
+    @Test
     public void test_noResultsParsing() throws IOException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("no-results.html"));
+        MediaList mediaList = interpreter.interpretMediaResultsFromHtml(readAssetFile("html/no-results.html"));
 
         assertThat(mediaList.getMedias()).isEmpty();
         assertThat(mediaList.getNextPageUrl()).isEqualTo(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL);
@@ -83,7 +109,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     @Test
     public void test_noticeParsing() throws IOException, ParseException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        Media media = interpreter.interpretNoticeFromHtml(readAssetFile("details-walking-dead.html"));
+        Media media = interpreter.interpretNoticeFromHtml(readAssetFile("html/details-walking-dead.html"));
 
         assertThat(media.getSummary()).isEqualTo("Les amis en visite à Alexandria sont un renfort" +
                 " appréciable dans l'affrontement contre les ennemis présents" +
@@ -96,7 +122,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd", Locale.FRENCH);
         assertThat(media.getReturnDate()).isEqualTo(fmt.parse("2016/03/25"));
 
-        media = interpreter.interpretNoticeFromHtml(readAssetFile("details-endymion.html"));
+        media = interpreter.interpretNoticeFromHtml(readAssetFile("html/details-endymion.html"));
         assertThat(media.getSummary()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_SUMMARY);
         assertThat(media.getType()).isEqualTo("Livre");
         assertThat(media.getSection()).isEqualTo("Espace adulte");
@@ -108,7 +134,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     @Test
     public void test_ImageUrlParsing() throws IOException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        String imageUrl = interpreter.interpretImageUrlFromHtml(readAssetFile("cover-return.html"));
+        String imageUrl = interpreter.interpretImageUrlFromHtml(readAssetFile("html/cover-return.html"));
 
         assertThat(imageUrl).isEqualTo("http://mediatheque.saintsebastien.fr/cache/9782756039572_grande.jpg");
     }

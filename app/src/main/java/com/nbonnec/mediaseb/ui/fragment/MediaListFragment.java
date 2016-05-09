@@ -46,8 +46,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @FragmentWithArgs
 public class MediaListFragment extends BaseFragment implements MediasAdapter.OnItemClickListener {
@@ -81,7 +79,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private boolean isLoading;
     private boolean pageLoaded;
 
-    private MediasAdapter newsAdapter;
+    private MediasAdapter mediasAdapter;
     private MediaList mediaList;
 
     private Observable<MediaList> getMediasObservable;
@@ -102,9 +100,9 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         @Override
         public void onNext(MediaList nextList) {
             mediaList.setNextPageUrl(nextList.getNextPageUrl());
-            if (newsAdapter != null) {
-                newsAdapter.addMedias(nextList.getMedias());
-                mediaList.setMedias(newsAdapter.getMedias());
+            if (mediasAdapter != null) {
+                mediasAdapter.addMedias(nextList.getMedias());
+                mediaList.setMedias(mediasAdapter.getMedias());
             }
 
             pageLoaded = true;
@@ -134,7 +132,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
         ButterKnife.bind(this, rootView);
 
-        recyclerView.setAdapter(newsAdapter);
+        recyclerView.setAdapter(mediasAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -190,7 +188,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Override
     public void onStop() {
         super.onStop();
-        newsAdapter.clearSubscriptioins();
+        mediasAdapter.clearSubscriptions();
     }
 
     @Subscribe
@@ -201,8 +199,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     public void loadPage(String page) {
         isLoading = true;
-        showLoadingView();
         resetAdapters();
+        showLoadingView();
 
         getMediasObservable = mssService
                 .getMediaList(page)
@@ -213,7 +211,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private boolean canPullNextMedias(int position) {
         return !isLoading && mediaList != null &&
                 !mediaList.getNextPageUrl().equals(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL) &&
-                position > (newsAdapter.getItemCount() - 10);
+                position > (mediasAdapter.getItemCount() - 10);
     }
 
     private void pullNextMedias() {
@@ -229,8 +227,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         if (mediaList == null) {
             mediaList = InitialFactory.MediaList.constructInitialInstance();
         }
-        newsAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
-        newsAdapter.setOnItemClickListener(this);
+        mediasAdapter = new MediasAdapter(getActivity(), mediaList.getMedias());
+        mediasAdapter.setOnItemClickListener(this);
     }
 
     private void showLoadingView() {
@@ -259,8 +257,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     private void resetAdapters() {
         mediaList = InitialFactory.MediaList.constructInitialInstance();
-        if (newsAdapter != null) {
-            newsAdapter.clearMedias();
+        if (mediasAdapter != null) {
+            mediasAdapter.clearMedias();
         }
     }
 }

@@ -2,6 +2,7 @@ package com.nbonnec.mediaseb.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
     }
 
     @Override
+    // TODO what for ?
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
@@ -65,10 +67,7 @@ public class MainActivity extends BaseActivity implements MediaListFragment.OnCl
         ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
         options.toBundle());
         */
-        MenuItem searchMenuItem = getSearchMenuItem();
-        if (searchMenuItem != null) {
-            searchMenuItem.collapseActionView();
-        }
+        MenuItemCompat.collapseActionView(getSearchMenuItem());
         startActivity(intent);
     }
 
