@@ -23,6 +23,7 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.fragment.DetailsFragmentBuilder;
 
+// TODO manage parent activity
 public class DetailsActivity extends BaseActivity {
     public static final String TAG = DetailsActivity.class.getSimpleName();
 
@@ -30,15 +31,13 @@ public class DetailsActivity extends BaseActivity {
 
     private static final String DETAILS_FRAGMENT_TAG = "details_fragment_tag";
 
-    private Media media;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_base);
 
-        media = getIntent().getParcelableExtra(MEDIA);
+        Media media = getIntent().getParcelableExtra(MEDIA);
 
         if (savedInstanceState == null && findViewById(R.id.container) != null) {
 
@@ -48,7 +47,7 @@ public class DetailsActivity extends BaseActivity {
                             DETAILS_FRAGMENT_TAG)
                     .commit();
             /* we want the fragment quickly for lollipop transitions. */
-            // TODO maybe postponeEnterTranstion
+            // TODO maybe postponeEnterTransition
             getSupportFragmentManager().executePendingTransactions();
         }
 

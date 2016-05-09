@@ -20,9 +20,11 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -81,9 +83,10 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
         super.onResume();
         resFragment = (MediaListFragment) getSupportFragmentManager()
                 .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
-
         if (reload && search != null) {
+            reload = false;
             getSearchView().setQuery(search, false);
+            getSearchView().clearFocus();
             // TODO sometimes search is thrown twice
             resFragment.loadPage(mssEndpoints.simpleSearchUrl(search));
         }
@@ -92,24 +95,13 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                getSearchView().clearFocus();
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-
-        getSearchMenuItem().expandActionView();
+        getSearchView().setFocusable(false);
+        MenuItemCompat.expandActionView(getSearchMenuItem());
         MenuItemCompat.setOnActionExpandListener(getSearchMenuItem(), new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                return false;
+                return true;
             }
 
             @Override
@@ -118,11 +110,22 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
                 return false;
             }
         });
-        getSearchView().setQuery(search, false);
-        getSearchView().clearFocus();
 
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        SearchView searchView = getSearchView();
+        if (!TextUtils.isEmpty(search)) {
+            searchView.setQuery(search, false);
+            searchView.setIconified(false);
+            searchView.clearFocus();
+        }
+        return true;
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         handleIntent(intent);
@@ -152,6 +155,7 @@ public class SearchActivity extends BaseActivity implements MediaListFragment.On
         ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
         options.toBundle());
         */
+
         startActivity(intent);
     }
 

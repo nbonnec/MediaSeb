@@ -47,6 +47,9 @@
                 android:value=".ui.activity.MainActivity" />
 
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="5a7e38c9e555761c827ce72a3609d4ad5636372e" />
     </application>
 
 </manifest>

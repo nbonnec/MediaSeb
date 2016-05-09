@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,8 +113,11 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         });
 
         if (media.needImagePreload()) {
+            if (subscriptions == null) {
+                subscriptions = new CompositeSubscription();
+            }
             subscriptions.add(mssService
-                    .getMediaLoadedImage(media.getImageUrl())
+                    .getMediaLoadedImageUrl(media.getImageUrl())
                     .compose(RxUtils.<String>applySchedulers())
                     .subscribe(new Action1<String>() {
                         @Override
@@ -121,15 +125,20 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
                             media.setImageUrl(s);
                             Picasso.with(context)
                                     .load(media.getImageUrl())
+                                    .noFade()
                                     .into(holder.icon);
                         }
                     })
             );
-        }
+            Picasso.with(context)
+                    .load(media.getLoadingImageUrl())
+                    .into(holder.icon);
 
-        Picasso.with(context)
-                .load(media.getImageUrl())
-                .into(holder.icon);
+        } else {
+            Picasso.with(context)
+                    .load(media.getImageUrl())
+                    .into(holder.icon);
+        }
     }
 
     @Override
@@ -156,7 +165,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         notifyItemRangeRemoved(0, size);
     }
 
-    public void clearSubscriptioins() {
+    public void clearSubscriptions() {
         subscriptions = null;
     }
 }

@@ -34,6 +34,7 @@ public class Media implements Parcelable{
     private String location;
     private String rating;
     private String imageUrl;
+    private String loadingImageUrl;
     private String noticeUrl;
     private Date returnDate;
     private boolean available;
@@ -52,9 +53,9 @@ public class Media implements Parcelable{
         location = in.readString();
         rating = in.readString();
         imageUrl = in.readString();
+        loadingImageUrl = in.readString();
         noticeUrl = in.readString();
         available = in.readByte() != 0;
-        returnDate = new Date(in.readLong());
     }
 
     @Override
@@ -70,9 +71,9 @@ public class Media implements Parcelable{
         dest.writeString(location);
         dest.writeString(rating);
         dest.writeString(imageUrl);
+        dest.writeString(loadingImageUrl);
         dest.writeString(noticeUrl);
         dest.writeByte((byte) (available ? 1 : 0));
-        dest.writeLong(returnDate.getTime());
     }
 
     @Override
@@ -184,6 +185,9 @@ public class Media implements Parcelable{
     }
 
     public String getImageUrl() {
+        if (needImagePreload()) {
+            imageUrl = imageUrl.replace("taille=grande", "taille=moyenne");
+        }
         return imageUrl;
     }
 
@@ -227,5 +231,13 @@ public class Media implements Parcelable{
 
     public boolean needImagePreload() {
         return imageUrl.contains("couvertureAjax");
+    }
+
+    public String getLoadingImageUrl() {
+        return loadingImageUrl;
+    }
+
+    public void setLoadingImageUrl(String loadingImageUrl) {
+        this.loadingImageUrl = loadingImageUrl;
     }
 }

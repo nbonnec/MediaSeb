@@ -36,6 +36,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     private static final String SIMPLE_SEARCH_URL =
             "{api_url}/recherche/facettes/{search}/{layout}?limit={limit}";
     private static final String NEXT_URL = "{api_url}{next_url}";
+    private static final String LOAN_URL = "{api_url}/mon-compte/mes-prets?view=Prets&task=ListePrets";
 
     @Override
     public String baseUrl() {
@@ -75,6 +76,14 @@ public class MSSEndpointsImpl implements MSSEndpoints {
             return API_URL + href;
         else
             return href;
+    }
+
+    @Override
+    public String loanUrl() {
+        return Phrase.from(LOAN_URL)
+                .put("api_url", API_URL)
+                .format()
+                .toString();
     }
 
     @Override

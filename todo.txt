@@ -7,3 +7,14 @@ Tips : ./emulator -tcpdump emulator.cap -avd Nexus_5_API_23_x86
 
 
 PERFORMANCE : layout is too slow to draw, maybe use LinearLayout.
+
+POST mon-compte :
+nom : "",
+carte : "",
+option : "com_opac",
+task : "login",
+return : "aW5kZXgucGhwP0l0ZW1pZD0xMTQ=" ????
+Itemid : "0",
+mode_id : "102",
+79509f93d65c7891914cdddcbab4c6fd : "1"
+

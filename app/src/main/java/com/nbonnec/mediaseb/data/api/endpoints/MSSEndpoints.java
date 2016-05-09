@@ -17,13 +17,15 @@ package com.nbonnec.mediaseb.data.api.endpoints;
 
 public interface MSSEndpoints {
 
-    public String baseUrl();
+    String baseUrl();
 
-    public String simpleSearchUrl(String search);
+    String simpleSearchUrl(String search);
 
-    public String imageUrl(String href);
+    String imageUrl(String href);
 
-    public String newsUrl();
+    String loanUrl();
 
-    public String nextUrl(String nextUrl);
+    String newsUrl();
+
+    String nextUrl(String nextUrl);
 }
