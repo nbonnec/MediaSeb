@@ -1,10 +1,9 @@
 # MediaSeb
 
-Android application for Saint-Sébastien-Sur-Loire library.
+Application Android permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
+Créée pour apprendre le développement Android.
 
-Created to learn Android developpemnt and its trending frameworks.
-
-Use of :
+Utilisation de :
 * [Fragments](http://developer.android.com/guide/components/fragments.html),
 * [Recyclerview](http://developer.android.com/training/material/lists-cards.html),
 * [dagger 1](http://square.github.io/dagger/),
