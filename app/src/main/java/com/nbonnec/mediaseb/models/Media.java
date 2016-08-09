@@ -37,6 +37,7 @@ public class Media implements Parcelable{
     private String loadingImageUrl;
     private String noticeUrl;
     private Date returnDate;
+    private Date loanDate;
     private boolean available;
 
     public Media() {}
@@ -55,6 +56,8 @@ public class Media implements Parcelable{
         imageUrl = in.readString();
         loadingImageUrl = in.readString();
         noticeUrl = in.readString();
+        returnDate = new Date(in.readLong());
+        loanDate = new Date(in.readLong());
         available = in.readByte() != 0;
     }
 
@@ -73,6 +76,8 @@ public class Media implements Parcelable{
         dest.writeString(imageUrl);
         dest.writeString(loadingImageUrl);
         dest.writeString(noticeUrl);
+        dest.writeLong(returnDate.getTime());
+        dest.writeLong(loanDate.getTime());
         dest.writeByte((byte) (available ? 1 : 0));
     }
 
@@ -98,9 +103,8 @@ public class Media implements Parcelable{
         return String.format(
                 TAG + ": Title: %s... \n" +
                         "Editor: %s... \n" +
-                        "Collection: %s...\n" +
                         "Year: %s...",
-               title, editor, collection, year
+               title, editor, year
         );
     }
 
@@ -209,6 +213,14 @@ public class Media implements Parcelable{
 
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public Date getLoanDate() {
+        return loanDate;
+    }
+
+    public void setLoanDate(Date loanDate) {
+        this.loanDate = loanDate;
     }
 
     public boolean isAvailable() {
