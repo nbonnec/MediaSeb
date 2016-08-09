@@ -20,7 +20,7 @@ import com.nbonnec.mediaseb.R;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+// TODO use dagger for that
 public class DefaultFactory {
     public static final String TAG = DefaultFactory.class.getSimpleName();
 

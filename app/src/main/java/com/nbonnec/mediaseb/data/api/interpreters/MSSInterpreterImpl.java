@@ -184,10 +184,61 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                     "com_opac/assets/images/icones_support/ico_sup_03.png");
         }
     }
-/*
+
     @Override
-    public MediaList interpretSubscriptionsFromHtml(String html) {
-        Document
+    public List<Media> interpretLoansFromHtml(String html) {
+        final String LOANS_LIST = "div#div_result tr[class]";
+        final String LOAN_ELEMENT = "td";
+        final int EXTEND_LOAN_INDEX = 0;
+        final int TYPE_INDEX = 1;
+        final int TITLE_INDEX = 2;
+        final int BOOKLET_INDEX = 3;
+        final int AUTHOR_INDEX = 4;
+        final int RETURN_DATE_INDEX = 5;
+        final int LOAN_DATE_INDEX = 6;
+
+        Document parseHtml = Jsoup.parse(html);
+        Elements loans = parseHtml.select(LOANS_LIST);
+
+        List<Media> medias = new ArrayList<>();
+
+        for (Element loan : loans) {
+            Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
+
+            Element title = loan.select(LOAN_ELEMENT).get(TITLE_INDEX);
+            Element author = loan.select(LOAN_ELEMENT).get(AUTHOR_INDEX);
+            Element returnDate = loan.select(LOAN_ELEMENT).get(RETURN_DATE_INDEX);
+            Element loanDate = loan.select(LOAN_ELEMENT).get(LOAN_DATE_INDEX);
+
+            if (title != null) {
+                currentMedia.setTitle(title.text());
+            }
+            if (author != null) {
+                currentMedia.setAuthor(author.text());
+            }
+            if (returnDate != null) {
+                SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+                try {
+                    currentMedia.setReturnDate(fmt.parse(returnDate.text()));
+                } catch (ParseException e) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, " Exception : can not parse return date !");
+                    }
+                }
+            }
+            if (loanDate != null) {
+                SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+                try {
+                    currentMedia.setLoanDate(fmt.parse(loanDate.text()));
+                } catch (ParseException e) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(TAG, " Exception : can not parse loan date !");
+                    }
+                }
+            }
+            medias.add(currentMedia);
+        }
+
+        return medias;
     }
-    */
 }

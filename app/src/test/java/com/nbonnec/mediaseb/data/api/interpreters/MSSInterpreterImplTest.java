@@ -60,7 +60,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(0).getEditor()).isEqualTo("Sony Music");
         assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
-        assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/index.php?option=com_opac&view=Ajax&task=couvertureAjax&tmpl=component&format=raw&num_ntc=520486958:103&is_media_ntc=0&type_ntc=6&taille=grande&support=ico_sup_03.png&lib_support=CD&isbn=&ean=&titre=Dead+man+walking&editeur=Sony+Music&auteur=Robbins%2C+Tim&show_lnk=118&Itemid=118");
+        assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/index.php?option=com_opac&view=Ajax&task=couvertureAjax&tmpl=component&format=raw&num_ntc=520486958:103&is_media_ntc=0&type_ntc=6&taille=moyenne&support=ico_sup_03.png&lib_support=CD&isbn=&ean=&titre=Dead+man+walking&editeur=Sony+Music&auteur=Robbins%2C+Tim&show_lnk=118&Itemid=118");
         assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/520486958-103");
 
         assertThat(medias.get(2).getTitle()).isEqualTo("Walking dead. 12, un monde parfait");
@@ -119,8 +119,8 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(media.getLocation()).isEqualTo("BD");
         assertThat(media.getRating()).isEqualTo("");
         assertThat(media.isAvailable()).isEqualTo(false);
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd", Locale.FRENCH);
-        assertThat(media.getReturnDate()).isEqualTo(fmt.parse("2016/03/25"));
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+        assertThat(media.getReturnDate()).isEqualTo(fmt.parse("25/03/2016"));
 
         media = interpreter.interpretNoticeFromHtml(readAssetFile("html/details-endymion.html"));
         assertThat(media.getSummary()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_SUMMARY);
@@ -137,5 +137,23 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         String imageUrl = interpreter.interpretImageUrlFromHtml(readAssetFile("html/cover-return.html"));
 
         assertThat(imageUrl).isEqualTo("http://mediatheque.saintsebastien.fr/cache/9782756039572_grande.jpg");
+    }
+
+    @Test
+    public void test_LoanParsing() throws IOException, ParseException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        List<Media> medias = interpreter.interpretLoansFromHtml(readAssetFile("html/loans.html"));
+
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+
+        assertThat(medias.get(0).getTitle()).isEqualTo("Hyperion. 03, Endymion");
+        assertThat(medias.get(0).getAuthor()).isEqualTo("Simmons, Dan");
+        assertThat(medias.get(0).getReturnDate()).isEqualTo(fmt.parse("16/08/2016"));
+        assertThat(medias.get(0).getLoanDate()).isEqualTo(fmt.parse("31/05/2016"));
+
+        assertThat(medias.get(4).getTitle()).isEqualTo("Walking dead. 23, murmures");
+        assertThat(medias.get(4).getAuthor()).isEqualTo("Kirkman, Robert");
+        assertThat(medias.get(4).getReturnDate()).isEqualTo(fmt.parse("01/08/2016"));
+        assertThat(medias.get(4).getLoanDate()).isEqualTo(fmt.parse("31/05/2016"));
     }
 }

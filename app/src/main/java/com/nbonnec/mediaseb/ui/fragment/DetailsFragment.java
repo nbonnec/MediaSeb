@@ -29,6 +29,7 @@ import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
+import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.squareup.picasso.Picasso;
@@ -42,8 +43,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @FragmentWithArgs
 public class DetailsFragment extends BaseFragment {
@@ -112,7 +111,11 @@ public class DetailsFragment extends BaseFragment {
 
         titleView.setText(media.getTitle());
         authorView.setText(media.getAuthor());
-        collectionView.setText(media.getCollection());
+
+        if (!media.getCollection().equals(DefaultFactory.Media.EMPTY_FIELD_COLLECTION)) {
+            collectionView.setText(media.getCollection());
+        }
+
         yearView.setText(media.getYear());
 
         Picasso.with(getContext())
@@ -151,7 +154,7 @@ public class DetailsFragment extends BaseFragment {
 
     private void refreshViews() {
         if (media.isAvailable()) {
-            availableView.setText("Disponible");
+            availableView.setText(R.string.available);
         } else {
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
             availableView.setText(String.format("Retour le %s", fmt.format(media.getReturnDate())));
