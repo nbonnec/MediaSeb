@@ -16,9 +16,6 @@
 
 package com.nbonnec.mediaseb.data.services;
 
-import android.util.Log;
-
-import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
 import com.nbonnec.mediaseb.models.Media;
@@ -34,6 +31,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class MSSServiceImpl implements MSSService {
     public static final String TAG = MSSServiceImpl.class.getSimpleName();
@@ -87,9 +85,7 @@ public class MSSServiceImpl implements MSSService {
                 });
     }
     private Observable<String> getHtml(final String url) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format("Get page : %s", url));
-        }
+        Timber.d("Get page : %s", url);
 
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override

@@ -18,15 +18,16 @@ package com.nbonnec.mediaseb;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.nbonnec.mediaseb.di.modules.ContextModule;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.nbonnec.mediaseb.di.modules.MediasebModule;
+import com.nbonnec.mediaseb.log.CrashlyticsTree;
 
-import dagger.Module;
 import dagger.ObjectGraph;
-import dagger.internal.Modules;
 import io.fabric.sdk.android.Fabric;
+import timber.log.Timber;
 
 public class MediasebApp extends Application {
     private ObjectGraph objectGraph;
@@ -34,7 +35,20 @@ public class MediasebApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+
+        CrashlyticsCore core = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
+                .build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+
+        // Error logs are sent to the cloud with Crashlytics
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+        else {
+            Timber.plant(new CrashlyticsTree());
+        }
+
         buildObjectGraphAndInject();
     }
 

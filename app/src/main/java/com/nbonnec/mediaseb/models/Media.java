@@ -36,9 +36,9 @@ public class Media implements Parcelable{
     private String imageUrl;
     private String loadingImageUrl;
     private String noticeUrl;
+    private MediaStatus status;
     private Date returnDate;
     private Date loanDate;
-    private boolean available;
 
     public Media() {}
 
@@ -56,9 +56,9 @@ public class Media implements Parcelable{
         imageUrl = in.readString();
         loadingImageUrl = in.readString();
         noticeUrl = in.readString();
+        status = MediaStatus.valueOf(in.readString());
         returnDate = new Date(in.readLong());
         loanDate = new Date(in.readLong());
-        available = in.readByte() != 0;
     }
 
     @Override
@@ -76,9 +76,9 @@ public class Media implements Parcelable{
         dest.writeString(imageUrl);
         dest.writeString(loadingImageUrl);
         dest.writeString(noticeUrl);
+        dest.writeString(status.name());
         dest.writeLong(returnDate.getTime());
         dest.writeLong(loanDate.getTime());
-        dest.writeByte((byte) (available ? 1 : 0));
     }
 
     @Override
@@ -207,6 +207,14 @@ public class Media implements Parcelable{
         this.noticeUrl = noticeUrl;
     }
 
+    public MediaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MediaStatus status) {
+        this.status = status;
+    }
+
     public Date getReturnDate() {
         return returnDate;
     }
@@ -223,13 +231,6 @@ public class Media implements Parcelable{
         this.loanDate = loanDate;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 
     public void setDetails(Media media) {
         summary = media.summary;
@@ -237,7 +238,7 @@ public class Media implements Parcelable{
         section = media.section;
         location = media.location;
         rating = media.rating;
-        available = media.available;
+        status = media.status;
         returnDate = media.returnDate;
     }
 

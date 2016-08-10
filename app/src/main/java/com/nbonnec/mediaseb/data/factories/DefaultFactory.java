@@ -74,6 +74,7 @@ public class DefaultFactory {
             temporaryInstance.setSummary(EMPTY_FIELD_SUMMARY);
             temporaryInstance.setImageUrl(EMPTY_FIELD_IMAGE_URL);
             temporaryInstance.setReturnDate(new Date());
+            temporaryInstance.setLoanDate(new Date());
 
             return temporaryInstance;
         }

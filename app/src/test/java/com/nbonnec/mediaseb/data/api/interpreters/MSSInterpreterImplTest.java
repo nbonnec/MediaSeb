@@ -25,6 +25,7 @@ import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpointsImpl;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
+import com.nbonnec.mediaseb.models.MediaStatus;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,7 +119,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(media.getSection()).isEqualTo("Espace adulte");
         assertThat(media.getLocation()).isEqualTo("BD");
         assertThat(media.getRating()).isEqualTo("");
-        assertThat(media.isAvailable()).isEqualTo(false);
+        assertThat(media.getStatus()).isEqualTo(MediaStatus.LOANED);
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
         assertThat(media.getReturnDate()).isEqualTo(fmt.parse("25/03/2016"));
 
@@ -128,7 +129,20 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(media.getSection()).isEqualTo("Espace adulte");
         assertThat(media.getLocation()).isEqualTo("Réserve");
         assertThat(media.getRating()).isEqualTo("R SIM");
-        assertThat(media.isAvailable()).isEqualTo(true);
+        assertThat(media.getStatus()).isEqualTo(MediaStatus.AVAILABLE);
+
+        media = interpreter.interpretNoticeFromHtml(readAssetFile("html/details-bodyguard.html"));
+        assertThat(media.getSummary()).isEqualTo("A 15 ans, Connor Reeves travaille pour l'agence" +
+                " Bodyguard chargée de protéger les enfants de personnalités. Pour cette mission," +
+                " il est le garde du corps de Ambre et Henri, les enfants de l'ambassadeur de France" +
+                " au Burundi dont la famille est conviée à un safari par le président Bagaza." +
+                " Mais un groupe de rebelles attaque le groupe, Connor parvient à fuir dans la" +
+                " brousse avec les deux enfants.");
+        assertThat(media.getType()).isEqualTo("Livre");
+        assertThat(media.getSection()).isEqualTo("Espace jeunesse");
+        assertThat(media.getLocation()).isEqualTo("Fiction jeunesse");
+        assertThat(media.getRating()).isEqualTo("BRA");
+        assertThat(media.getStatus()).isEqualTo(MediaStatus.RESERVED);
     }
 
     @Test
