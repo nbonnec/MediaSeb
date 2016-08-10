@@ -16,13 +16,11 @@
 
 package com.nbonnec.mediaseb.data.api.interpreters;
 
-import android.util.Log;
-
-import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
+import com.nbonnec.mediaseb.models.MediaStatus;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,11 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
-import javax.inject.Inject;
+import timber.log.Timber;
 
 public final class MSSInterpreterImpl implements MSSInterpreter {
-    public static final String TAG = MSSInterpreterImpl.class.getSimpleName();
 
     MSSEndpoints endpoints;
 
@@ -122,7 +118,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         final int SECTION_INDEX = 1;
         final int LOCATION_INDEX = 2;
         final int RATING_INDEX = 3;
-        final int AVAILABLE_INDEX = 4;
+        final int SITUATION_INDEX = 4;
         final int RETURN_DATE_INDEX = 5;
 
         final Media media = DefaultFactory.Media.constructDefaultInstance();
@@ -136,7 +132,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             Element section = details.select(COPY_DETAILS_ELEMENT).get(SECTION_INDEX);
             Element location = details.select(COPY_DETAILS_ELEMENT).get(LOCATION_INDEX);
             Element rating = details.select(COPY_DETAILS_ELEMENT).get(RATING_INDEX);
-            Element available = details.select(COPY_DETAILS_ELEMENT).get(AVAILABLE_INDEX);
+            Element situation = details.select(COPY_DETAILS_ELEMENT).get(SITUATION_INDEX);
             Element returnDate = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
 
             if (summary != null) {
@@ -154,16 +150,14 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             if (rating != null) {
                 media.setRating(rating.text());
             }
-            if (available != null) {
-                media.setAvailable(available.text().equals("En rayon"));
-                if (!media.isAvailable() && returnDate != null) {
+            if (situation != null) {
+                media.setStatus(getStatus(situation.text()));
+                if (media.getStatus() == MediaStatus.LOANED && returnDate != null) {
                     SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
                     try {
                         media.setReturnDate(fmt.parse(returnDate.text()));
                     } catch (ParseException e) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, " Exception : can not parse return date !");
-                        }
+                        Timber.d("Exception : can not parse return date (%s)! %s ", returnDate.text(), e.toString());
                     }
                 }
             }
@@ -221,9 +215,7 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 try {
                     currentMedia.setReturnDate(fmt.parse(returnDate.text()));
                 } catch (ParseException e) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, " Exception : can not parse return date !");
-                    }
+                    Timber.d("Exception : can not parse return date !");
                 }
             }
             if (loanDate != null) {
@@ -231,14 +223,37 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
                 try {
                     currentMedia.setLoanDate(fmt.parse(loanDate.text()));
                 } catch (ParseException e) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, " Exception : can not parse loan date !");
-                    }
+                    Timber.d("Exception : can not parse loan date !");
                 }
             }
             medias.add(currentMedia);
         }
 
         return medias;
+    }
+
+    /**
+     * Get the status of the media.
+     * @param situation from html.
+     * @return enum.
+     */
+    private MediaStatus getStatus(String situation) {
+        MediaStatus mediaStatus;
+
+        switch (situation) {
+            case "En rayon":
+                mediaStatus = MediaStatus.AVAILABLE;
+                break;
+            case "Réservé":
+                mediaStatus = MediaStatus.RESERVED;
+                break;
+            case "Sorti":
+                mediaStatus = MediaStatus.LOANED;
+                break;
+            default:
+                mediaStatus = MediaStatus.NONE;
+        }
+
+        return mediaStatus;
     }
 }

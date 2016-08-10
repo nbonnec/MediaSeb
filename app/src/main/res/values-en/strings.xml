@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mediaseb</string>
     <string name="hint">Search in catalog</string>
     <string name="search">Search</string>
     <string name="news">News</string>

@@ -32,6 +32,7 @@ import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
+import com.nbonnec.mediaseb.models.MediaStatus;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -153,7 +154,7 @@ public class DetailsFragment extends BaseFragment {
     }
 
     private void refreshViews() {
-        if (media.isAvailable()) {
+        if (media.getStatus() == MediaStatus.AVAILABLE) {
             availableView.setText(R.string.available);
         } else {
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
