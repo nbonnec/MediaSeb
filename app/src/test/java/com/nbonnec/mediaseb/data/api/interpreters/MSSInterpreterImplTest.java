@@ -35,6 +35,7 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -169,5 +170,29 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(4).getAuthor()).isEqualTo("Kirkman, Robert");
         assertThat(medias.get(4).getReturnDate()).isEqualTo(fmt.parse("01/08/2016"));
         assertThat(medias.get(4).getLoanDate()).isEqualTo(fmt.parse("31/05/2016"));
+    }
+
+    @Test
+    public void test_InputsParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        Hashtable<String, String> table = interpreter.interpretTokenFromHtml(readAssetFile("html/login-attempt.html"));
+        Hashtable<String, String> testTable = new Hashtable<>();
+
+        testTable.put("option", "com_opac");
+        testTable.put("task", "login");
+        testTable.put("return", "aW5kZXgucGhwP0l0ZW1pZD0xMTQ=");
+        testTable.put("Itemid", "0");
+        testTable.put("mod_id", "102");
+        testTable.put("30c714561c0e699462bd5de36d90219a", "1");
+
+        assertThat(table).isEqualTo(testTable);
+    }
+
+    @Test
+    public void test_LoginParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        boolean login = interpreter.interpretLoginFromHtml(readAssetFile("html/login-fail.html"));
+
+        assertThat(login).isFalse();
     }
 }

@@ -24,7 +24,7 @@ import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.fragment.DetailsFragmentBuilder;
 
 // TODO manage parent activity
-public class DetailsActivity extends BaseActivity {
+public class DetailsActivity extends ToolbarActivity {
     public static final String TAG = DetailsActivity.class.getSimpleName();
 
     public static final String MEDIA = "media";

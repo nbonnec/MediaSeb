@@ -16,7 +16,6 @@ package com.nbonnec.mediaseb.data.api.endpoints;
  */
 
 public interface MSSEndpoints {
-
     String baseUrl();
 
     String simpleSearchUrl(String search);
@@ -28,4 +27,6 @@ public interface MSSEndpoints {
     String newsUrl();
 
     String nextUrl(String nextUrl);
+
+    String getLoginUrl();
 }

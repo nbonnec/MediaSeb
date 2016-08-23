@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
@@ -16,7 +14,7 @@ import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity implements MediaListFragment.OnClickedListener {
+public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
     private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
 
     @Inject

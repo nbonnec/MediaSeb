@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nbonnec.mediaseb.data.api.interpreters;
 
-import com.nbonnec.mediaseb.models.Media;
-import com.nbonnec.mediaseb.models.MediaList;
+package com.nbonnec.mediaseb.account;
 
-import java.util.Hashtable;
-import java.util.List;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
-public interface MSSInterpreter {
-    MediaList interpretMediaResultsFromHtml(String html);
-    Media interpretNoticeFromHtml(String html);
-    String interpretImageUrlFromHtml(String html);
-    List<Media> interpretLoansFromHtml(String html);
-    Hashtable<String, String> interpretTokenFromHtml(String html);
-    boolean interpretLoginFromHtml(String html);
+public class AccountAuthenticatorService extends Service {
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        AccountAuthenticator authenticator = new AccountAuthenticator(this);
+        return authenticator.getIBinder();
+    }
 }

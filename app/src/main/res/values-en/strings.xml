@@ -6,4 +6,13 @@
     <string name="empty_results">No results</string>
     <string name="network_error">Network error</string>
     <string name="available">Available</string>
+    <string name="title_activity_login">Sign In</string>
+    <string name="prompt_card_number">Card nb. (14 digits)</string>
+    <string name="prompt_name">Name</string>
+    <string name="error_field_required">This field is reguired</string>
+    <string name="error_incorrect_card_number">This card nb. is incorrect</string>
+    <string name="error_invalid_name">This name is invalid</string>
+    <string name="error_invalid_card_number">This card nb. is too short</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
 </resources>

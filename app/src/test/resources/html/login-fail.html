@@ -1,0 +1,997 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr-fr" lang="fr-fr" dir="ltr" xmlns:og="http://ogp.me/ns#">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="http://mediatheque.saintsebastien.fr/mon-compte" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Médiathèque, Bibliothèque, Catalogue en ligne, Orphée, Médiathèque Yves Laurent, Saint-Sébastien-sur-Loire " />
+    <meta name="description" content="Site de la Médiathèque Yves Laurent de Saint-Sébastien-sur-Loire. Découvrez toutes nos animations, nouveautés et coups de cœur. Visualisez vos prêts en cours, réservez des documents et consultez le catalogue." />
+    <title>Mon compte</title>
+    <link href="/templates/c3rb_alpha_25/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+    <link href="http://mediatheque.saintsebastien.fr/component/search/?Itemid=114&amp;format=opensearch" rel="search" title="Valider Portail de la Médiathèque de Saint-Sébastien-sur-Loire" type="application/opensearchdescription+xml" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/components/com_opac/assets/css/com_opac25.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/bootstrap-responsive.min.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/bootstrap-my.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/bootstrap-c3rb.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/template.css" type="text/css" />
+    <link rel="stylesheet" href="/modules/mod_c3rb_socials/assets/css/mod_socials.css" type="text/css" />
+    <link rel="stylesheet" href="/media/system/css/modal.css" type="text/css" />
+    <link rel="stylesheet" href="/modules/mod_menu/assets/css/menuaccessible.css" type="text/css" />
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/plugins/system/c3rbga/assets/css/c3rbga.css" type="text/css" />
+    <script src="/media/system/js/mootools-core.js" type="text/javascript"></script>
+    <script src="/media/system/js/core.js" type="text/javascript"></script>
+    <script src="/components/com_opac/assets/javascript/moo14/systemopac.min.js" type="text/javascript"></script>
+    <script src="/media/system/js/mootools-more.js" type="text/javascript"></script>
+    <script src="/media/system/js/validate.js" type="text/javascript"></script>
+    <script src="/media/system/js/modal.js" type="text/javascript"></script>
+    <script src="/modules/mod_opac_login/assets/javascript/moo14/login.min.js" type="text/javascript"></script>
+    <script src="/modules/mod_opac_panier/assets/javascript/moo14/panier.min.js" type="text/javascript"></script>
+    <script src="/modules/mod_menu/assets/js/menuaccessible.js" type="text/javascript"></script>
+    <script src="/plugins/system/c3rbga/assets/js/c3rbga.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var img_wait = "http://mediatheque.saintsebastien.fr/components/com_opac/assets/images/loading.gif";
+        var img_aff_filtres = "http://mediatheque.saintsebastien.fr/components/com_opac/assets/images/aff_filtres.png";
+        var img_mask_filtres = "http://mediatheque.saintsebastien.fr/components/com_opac/assets/images/mask_filtres.png";
+        var uri_root = 'http://mediatheque.saintsebastien.fr/';
+        window.addEvent('domready', function() {
+
+            SqueezeBox.initialize({});
+            SqueezeBox.assign($$('a.modalopac'), {
+                parse: 'rel'
+            });
+        });
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' />
+
+    <!-- Favicon Vous pouvez generer les favicons a cette adresse: http://realfavicongenerator.net -->
+    <link rel="shortcut icon" href="/images/imagesmedia/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/imagesmedia/favicon/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/imagesmedia/favicon/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/imagesmedia/favicon/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/imagesmedia/favicon/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/imagesmedia/favicon/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/imagesmedia/favicon/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/imagesmedia/favicon/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/imagesmedia/favicon/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="/images/imagesmedia/favicon/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/images/imagesmedia/favicon/favicon-160x160.png" sizes="160x160" />
+    <link rel="icon" type="image/png" href="/images/imagesmedia/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/images/imagesmedia/favicon/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/images/imagesmedia/favicon/favicon-32x32.png" sizes="32x32" />
+    <meta name="msapplication-TileColor" content="#ffc40d" />
+    <meta name="msapplication-TileImage" content="images/imagesmedia/favicon/mstile-144x144.png" />
+    <meta name="msapplication-config" content="images/imagesmedia/favicon/browserconfig.xml" />
+
+    <!-- Mon head personalisable -->
+    <!--[if IE 6]>
+    <![endif]-->
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/ie7.css" type="text/css" />
+    <![endif]-->
+    <!--[if IE 8]>
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/ie8.css" type="text/css" />
+    <![endif]-->
+    <!--[if IE 9]>
+    <link rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/ie9.css" type="text/css" />
+    <![endif]-->
+    <!-- if IE10 -->
+    <script>
+        /*@cc_on
+                    if (/^10/.test(@_jscript_version)) {
+                        var headHTML = document.getElementsByTagName('head')[0].innerHTML;
+                        headHTML    += '<link type="text/css" rel="stylesheet" href="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/css/ie10.css">';
+                        document.getElementsByTagName('head')[0].innerHTML = headHTML;
+                    }
+                @*/
+    </script>
+    <!-- end if ie10 -->
+</head>
+
+<body data-target=".bs-docs-sidebar" data-spy="scroll" data-twttr-rendered="true" class=" moncompte">
+<!--[if lt IE 8]>
+<sript>
+    <div class="alert alert-error margetop span6 offset4">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Attention!</h4>
+        <p>Pour une meilleure expérience d'utilisation sur ce site vous devriez mettre &agrave; jour votre navigateur 'Internet Explorer' ou désactiver l'affichage de compatibilit&eacute;</p>
+        <ul class="nav nav-stacked">
+            <li><a href="http://www.internetexplorer.fr/" title="" ><i class="icon-hand-right margeright"></i>Accéder &agrave; la page de mise &agrave; jour d'internet explorer</a></li>
+            <li><a href="http://windows.microsoft.com/fr-FR/windows-vista/Update-Internet-Explorer" title=""><i class="icon-hand-right margeright"></i>Acc&eacute;der &agrave; l'assistance de mise &agrave; jour </a></li>
+        </ul>
+    </div>
+    </script>
+<![endif]-->
+
+<!-- Header -->
+
+
+
+<div class="section-header">
+    <div class="container">
+        <div class="row">
+            <a id="topsite"></a>
+            <!-- message erreur -->
+            <div class="farfarleft">bratata
+
+                <div id="system-message-container">
+                    <dl id="system-message">
+                        <dt class="error">Erreur</dt>
+                        <dd class="error message">
+                            <ul>
+                                <li>Un mot de passe vide n'est pas autorisé</li>
+                                <li>Veuillez d'abord vous identifier</li>
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+
+            <!-- Lien d'evitement-->
+            <div class="span10"> </div>
+            <!-- FIN lien d'evitement -->
+
+            <div class="span12">
+
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="pos_head01">
+                            <div id="Mod117" class="moduletable  ">
+                                <div class="modcontent">
+
+
+                                    <div class="custom">
+                                        <h1><a href="/?view=featured"><span>Médiathèque de </span>Saint-Sébastien-sur-Loire</a></h1></div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="span3">
+                        <div class="pos_head02">
+                            <div id="Mod139" class="moduletable  hidden-phone ">
+                                <div class="modcontent">
+                                    <form action="/mon-compte" method="post" class="form-search">
+                                        <div class="search hidden-phone">
+                                            <div class="row-fluid">
+                                                <div class="span12 margebottom"> <input name="searchword" id="mod-search-searchword" maxlength="20" class="inputbox hidden-phone span0 " type="text" size="20" value="Rechercher un article" onblur="if (this.value=='') this.value='Rechercher un article';" onfocus="if (this.value=='Rechercher un article') this.value='';" /> </div><input type="submit" value="OK" class="button hidden-phone btn" onclick="this.form.searchword.focus();" /> <input type="hidden" name="task" value="search" />
+                                                <input type="hidden" name="option" value="com_search" />
+                                                <input type="hidden" name="Itemid" value="114" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="span2">
+                        <div class="pos_head03">
+                            <div id="Mod102" class="moduletable  hidden-phone ">
+                                <div class="modcontent">
+                                    <a href="#Modallogin102" role="button" class="modallogbtn" data-toggle="modal"><i class="icon icon-lock margeright"></i>Mon espace</a>
+
+
+                                    <!-- Boite modale -->
+                                    <div id="Modallogin102" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h3 class="Modalh3" id="ModalloginLabel">
+                                                Connectez-vous	</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mod-opac-login hidden-phone" id="modlogin">
+                                                <div class="well well-small span8 offset2">
+
+                                                    <!-- DECONNEXION -->
+
+                                                    <form target="_parent" action="/mon-compte" method="post" name="form-login102" id="form-login102">
+
+                                                        <p>Consultez vos prêts, vos réservations, prolongez vos documents, modifiez votre compte,...</p>
+                                                        <fieldset class="row-fluid input">
+                                                            <legend>Identification</legend>
+                                                            <p id="form-login-nom">
+                                                                <label for="modlgn_nom102">Nom (sans  prénom)</label>
+                                                                <input id="modlgn_nom102" type="text" name="nom" class="required  inputbox span12 nomarge" />
+                                                            </p>
+
+
+                                                            <p id="form-login-carte">
+                                                                <label for="modlgn_carte102">N° de carte (14 chiffres)</label>
+                                                                <input id="modlgn_carte102" type="text" name="carte" class="required  inputbox span12 nomarge" />
+                                                            </p>
+
+
+
+
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Annuler</button>
+                                                                <input type="submit" class="btn btn-success button" value="Se connecter" />
+
+                                                            </div>
+
+                                                        </fieldset>
+                                                        <ul class="nav nav-list margetop margebottom">
+                                                            <li><a href="/preinscription?task=preinsc" title=""><i class="icon-hand-right margeright"></i>Pré-inscription</a></li>
+                                                        </ul>
+
+
+                                                        <input type="hidden" name="option" value="com_opac" />
+                                                        <input type="hidden" name="task" value="login" />
+                                                        <input type="hidden" name="return" value="aW5kZXgucGhwP0l0ZW1pZD0xMTQ=" />
+                                                        <input type="hidden" name="Itemid" value="0" />
+                                                        <input type="hidden" name="mod_id" value="102" />
+                                                        <span id="span_tok"><input type="hidden" name="e3d5ff251a60e5e92a43f4af83c3f312" value="1" /></span>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="span1">
+                        <div class="pos_head04">
+                            <div id="Mod140" class="moduletable  hidden-phone ">
+                                <div class="modcontent">
+                                    <div id="opac_panier">
+                                            <span class="mod-panier-tit">
+</span>
+
+                                        <span class="clearfix">0 </span>
+                                        <!-- libelle modif a la demande du client -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Navigation -->
+<div class="section-nav">
+    <div class="container">
+        <div class="row">
+            <div id="menu"></div>
+            <!-- encre lien evitement -->
+            <div class="span12">
+                <div class="menuh">
+                    <div id="Mod1" class="moduletable  menu visible-desktop ">
+                        <div class="modcontent">
+
+                            <div class="navbar">
+                                <div class="navbar-inner">
+                                    <!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
+                                    <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+
+                                    <ul id="menuaccessible" class="nav menu menu accessimenu">
+
+                                        <li class="item-101">
+                                            <div>
+                                                    <span>
+                        <a class="navbar-link" href="/" ><img src="/images/acces-rapide/accueil.png" alt="Accueil" /><span class="image-title">Accueil</span> </a>
+                                                    </span>
+                                            </div>
+                                        </li>
+                                        <li class="item-377 deeper parent">
+                                            <div>
+                                                    <span>
+                        <span class="separator">La Médiathèque</span>
+                                                    </span>
+                                            </div>
+                                            <ul>
+                                                <li class="item-381">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/la-mediatheque/les-espaces" >Les espaces</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-383">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/la-mediatheque/inscriptions-et-tarifs" >Inscriptions et tarifs</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-382">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/la-mediatheque/services-specifiques" >Services spécifiques</a>                        </span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="item-378 deeper parent">
+                                            <div>
+                                                    <span>
+                        <span class="separator">Catalogue</span>
+                                                    </span>
+                                            </div>
+                                            <ul>
+                                                <li class="item-386">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/catalogue/recherche-avancee" >Recherche avancée</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-541">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/catalogue/nouveautes" >Nouveautés</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-486">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/catalogue/liste-des-selections" >Liste des sélections</a>                        </span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="item-379 deeper parent">
+                                            <div>
+                                                    <span>
+                        <span class="separator">Ressources numériques</span>
+                                                    </span>
+                                            </div>
+                                            <ul>
+                                                <li class="item-440">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/ressources-numeriques/a-la-mediatheque" >A la Médiathèque</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-439">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/ressources-numeriques/la-mediatheque-7j-7" >La Médiathèque 7j/7</a>                        </span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="item-380 deeper parent">
+                                            <div>
+                                                    <span>
+                        <span class="separator">Animations</span>
+                                                    </span>
+                                            </div>
+                                            <ul>
+                                                <li class="item-398">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/animations/pour-les-adultes" >Pour les adultes</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-399">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/animations/pour-les-enfants" >Pour les enfants</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-401">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/animations/retour-sur" >Retour sur...</a>                        </span>
+                                                    </div>
+                                                </li>
+                                                <li class="item-402">
+                                                    <div>
+                                                            <span>
+                        <a class="navbar-link" href="/animations/livres-en-liberte" >Livres en liberté</a>                        </span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="item-544">
+                                            <div>
+                                                    <span>
+                        <a href="http://www.saintsebastien.fr/" target="_blank" >Site de la ville</a>                        </span>
+                                            </div>
+                                        </li>
+                                        <div class="clearfix"></div>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="Mod150" class="moduletable  hidden-desktop ">
+                        <div class="modcontent">
+
+                            <div class="navbar">
+                                <div class="navbar-inner">
+                                    <button data-target="#nav-collapse" data-toggle="collapse" class="btn btn-navbar collapsed margebottom" type="button">
+            <span class="fll margeright">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </span>
+                                        <span class="flr"> Menu</span>
+                                    </button>
+                                    <div id="nav-collapse" class="nav-collapse collapse" style="height: 0px;">
+                                        <ul class="nav nav-pills  menu accessimenu">
+                                            <li class="item-101">
+                                                <a href="/"><img src="/images/acces-rapide/accueil.png" alt="Accueil" /><span class="image-title">Accueil</span> </a>
+                                            </li>
+                                            <li class="item-377 deeper parent dropdown-submenu"><a href="/">La Médiathèque<i class="icon-chevron-right margeleft"></i></a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="item-381"><a href="/la-mediatheque/les-espaces">Les espaces</a></li>
+                                                    <li class="item-383"><a href="/la-mediatheque/inscriptions-et-tarifs">Inscriptions et tarifs</a></li>
+                                                    <li class="item-382"><a href="/la-mediatheque/services-specifiques">Services spécifiques</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="item-378 deeper parent dropdown-submenu"><a href="/">Catalogue<i class="icon-chevron-right margeleft"></i></a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="item-386"><a href="/catalogue/recherche-avancee">Recherche avancée</a></li>
+                                                    <li class="item-541"><a href="/catalogue/nouveautes">Nouveautés</a></li>
+                                                    <li class="item-486"><a href="/catalogue/liste-des-selections">Liste des sélections</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="item-379 deeper parent dropdown-submenu"><a href="/">Ressources numériques<i class="icon-chevron-right margeleft"></i></a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="item-440"><a href="/ressources-numeriques/a-la-mediatheque">A la Médiathèque</a></li>
+                                                    <li class="item-439"><a href="/ressources-numeriques/la-mediatheque-7j-7">La Médiathèque 7j/7</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="item-380 deeper parent dropdown-submenu"><a href="/">Animations<i class="icon-chevron-right margeleft"></i></a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="item-398"><a href="/animations/pour-les-adultes">Pour les adultes</a></li>
+                                                    <li class="item-399"><a href="/animations/pour-les-enfants">Pour les enfants</a></li>
+                                                    <li class="item-401"><a href="/animations/retour-sur">Retour sur...</a></li>
+                                                    <li class="item-402"><a href="/animations/livres-en-liberte">Livres en liberté</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="item-544"><a href="http://www.saintsebastien.fr/" target="_blank">Site de la ville</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- Position en Top -->
+<div class="section-top">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="span12">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Content du site -->
+<div class="section-content">
+    <div class="container">
+        <div class="row">
+
+
+            <div class="span12">
+                <div class="row-fluid">
+                    <!-- Col de gauche -->
+                    <!-- Fin Col de gauche -->
+
+                    <!-- Col du centre -->
+
+                    <div class="span9">
+
+                        <div class="alert alert-danger"><a class="close" data-dismiss="alert" href="#">&times;</a>Erreur : Un mot de passe vide n'est pas autorisé</div>
+                        <div class="alert alert-danger"><a class="close" data-dismiss="alert" href="#">&times;</a>Erreur : Veuillez d'abord vous identifier</div>
+
+                        <!-- pos_contenttop -->
+                        <div class="row-fluid">
+                            <div class="span12">
+                                <div class="pos_contenttoptop">
+                                    <div id="Mod153" class="moduletable  visible-phone ">
+                                        <div class="modcontent">
+                                            <a href="#Modallogin153" role="button" class="modallogbtn" data-toggle="modal"><i class="icon icon-lock margeright"></i>Mon espace</a>
+
+
+                                            <!-- Boite modale -->
+                                            <div id="Modallogin153" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h3 class="Modalh3" id="ModalloginLabel">
+                                                        Connectez-vous	</h3>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mod-opac-login visible-phone" id="modlogin">
+                                                        <div class="well well-small span8 offset2">
+
+                                                            <!-- DECONNEXION -->
+
+                                                            <form target="_parent" action="/mon-compte" method="post" name="form-login153" id="form-login153">
+
+                                                                <fieldset class="row-fluid input">
+                                                                    <legend>Identification</legend>
+                                                                    <p id="form-login-nom">
+                                                                        <label for="modlgn_nom153">Nom (sans prénom)</label>
+                                                                        <input id="modlgn_nom153" type="text" name="nom" class="required  inputbox span12 nomarge" />
+                                                                    </p>
+
+
+                                                                    <p id="form-login-carte">
+                                                                        <label for="modlgn_carte153">N° de carte</label>
+                                                                        <input id="modlgn_carte153" type="text" name="carte" class="required  inputbox span12 nomarge" />
+                                                                    </p>
+
+
+
+
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-warning" data-dismiss="modal" aria-hidden="true">Annuler</button>
+                                                                        <input type="submit" class="btn btn-success button" value="Se connecter" />
+
+                                                                    </div>
+
+                                                                </fieldset>
+                                                                <ul class="nav nav-list margetop margebottom">
+                                                                    <li><a href="/preinscription?task=preinsc" title=""><i class="icon-hand-right margeright"></i>Pré-inscription</a></li>
+                                                                </ul>
+
+
+                                                                <input type="hidden" name="option" value="com_opac" />
+                                                                <input type="hidden" name="task" value="login" />
+                                                                <input type="hidden" name="return" value="aW5kZXgucGhwP0l0ZW1pZD0xMTQ=" />
+                                                                <input type="hidden" name="Itemid" value="0" />
+                                                                <input type="hidden" name="mod_id" value="153" />
+                                                                <span id="span_tok"><input type="hidden" name="e3d5ff251a60e5e92a43f4af83c3f312" value="1" /></span>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="Mod152" class="moduletable  visible-phone ">
+                                        <div class="modcontent">
+                                            <form action="/mon-compte" method="post" class="form-search">
+                                                <div class="search visible-phone">
+                                                    <div class="row-fluid">
+                                                        <div class="span12 margebottom"> <input name="searchword" id="mod-search-searchword" maxlength="20" class="inputbox visible-phone span0 " type="text" size="20" value="Rechercher un article " onblur="if (this.value=='') this.value='Rechercher un article ';" onfocus="if (this.value=='Rechercher un article ') this.value='';" /> </div><input type="submit" value="OK" class="button visible-phone btn" onclick="this.form.searchword.focus();" /> <input type="hidden" name="task" value="search" />
+                                                        <input type="hidden" name="option" value="com_search" />
+                                                        <input type="hidden" name="Itemid" value="114" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div id="Mod151" class="moduletable  visible-phone ">
+                                        <div class="modcontent">
+                                            <div id="opac_panier">
+                                                    <span class="mod-panier-tit">
+</span>
+
+                                                <span class="clearfix">0 </span>
+                                                <!-- libelle modif a la demande du client -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="Mod17" class="moduletable  ">
+                                        <div class="modcontent">
+
+                                            <div class="breadcrumb ">
+                                                <a href="/" class="pathway">Accueil</a> <img src="/templates/c3rb_alpha_25/images/system/arrow.png" alt="" /> <span>Mon compte</span></div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fin pos_contenttop -->
+                        <!-- JOOMLA -->
+                        <div id="contenu" class="contentjoomla">
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- Fin JOOMLA -->
+                        <!-- pos_contentbas -->
+
+                        <!-- pos_contentbas -->
+                        <!-- Fin pos_contentbas -->
+
+                    </div>
+                    <!-- Fin Col du centre -->
+
+                    <!-- Col de droite -->
+                    <!-- Agrandire reduire la typographie -->
+
+                    <div class="span2">
+                        <div id="font-size" class="hidden-phone  btn-group margetop margebottom">
+                            <a class="btn" href="/index.php" onclick="changeFontSize(1);return false;" title="Augmenter la Taille">A+</a>
+                            <a class="btn" href="/index.php" onclick="changeFontSize(-1);return false;" title="Diminuer la Taille">A-</a>
+                            <a class="btn" href="/index.php" onclick="resetFontSize(); return false;" title="Retour à la Taille par défaut">A</a>
+                        </div>
+                    </div>
+                    <!-- FIN Agrandire reduire la typographie -->
+                    <div class="span3">
+                        <aside>
+                            <div class="col_drte">
+                                <div id="Mod141" class="moduletable  bleu flash ">
+                                    <h3>Inscription à la lettre d'information</h3>
+                                    <div class="modcontent">
+                                        <script type="text/javascript">
+                                                <!--
+                                                if (typeof acymailing == 'undefined') {
+                                                    var acymailing = Array();
+                                                }
+                                                acymailing['NAMECAPTION'] = 'Mon nom';
+                                                acymailing['NAME_MISSING'] = 'Saisissez votre nom.';
+                                                acymailing['EMAILCAPTION'] = 'Mon adresse mail ';
+                                                acymailing['VALID_EMAIL'] = 'Saisissez une adresse courriel valide.';
+                                                acymailing['ACCEPT_TERMS'] = 'Veuillez accepter les Conditions d\'utilisation';
+                                                acymailing['CAPTCHA_MISSING'] = 'Le captcha est invalide, veuillez réessayer';
+                                                acymailing['NO_LIST_SELECTED'] = 'Veuillez sélectionner les listes auxquelles vous voulez vous inscrire';
+
+                                                //-->
+                                            </script>
+                                        <script type="text/javascript" src="/media/com_acymailing/js/acymailing_module.js?v=550"></script>
+
+                                        <link rel="stylesheet" property="stylesheet" href="/media/com_acymailing/css/module_default.css?v=1471858103" type="text/css" />
+                                        <div class="acymailing_module bleu flash" id="acymailing_module_formAcymailing73451">
+                                            <div class="acymailing_fulldiv" id="acymailing_fulldiv_formAcymailing73451">
+                                                <form id="formAcymailing73451" action="/mon-compte" onsubmit="return submitacymailingform('optin','formAcymailing73451')" method="post" name="formAcymailing73451">
+                                                    <div class="acymailing_module_form">
+                                                        <table class="acymailing_lists">
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="acymailing_checkbox" name="subscription[]" id="acylist_2" value="2" />
+                                                                </td>
+                                                                <td>
+                                                                    <label for="acylist_2">
+                                                                        Animations pour les adultes						</label>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="acymailing_checkbox" name="subscription[]" id="acylist_1" value="1" />
+                                                                </td>
+                                                                <td>
+                                                                    <label for="acylist_1">
+                                                                        Animations pour les enfants						</label>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <table style="width:100%" class="acymailing_form">
+                                                            <tr>
+                                                                <td class="acyfield_email">
+                                                                    <input id="user_email_formAcymailing73451" onfocus="if(this.value == 'Mon adresse mail ') this.value = '';" onblur="if(this.value=='') this.value='Mon adresse mail ';" class="inputbox" type="text" name="user[email]" style="width:95%" value="Mon adresse mail " />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="acysubbuttons text-right">
+                                                                    <input class="btn" type="submit" value="OK" name="Submit" onclick="try{ return submitacymailingform('optin','formAcymailing73451'); }catch(err){alert('The form could not be submitted '+err);return false;}" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <input type="hidden" name="ajax" value="0" />
+                                                        <input type="hidden" name="ctrl" value="sub" />
+                                                        <input type="hidden" name="task" value="notask" />
+                                                        <input type="hidden" name="redirect" value="http%3A%2F%2Fmediatheque.saintsebastien.fr%2Fmon-compte" />
+                                                        <input type="hidden" name="redirectunsub" value="http%3A%2F%2Fmediatheque.saintsebastien.fr%2Fmon-compte" />
+                                                        <input type="hidden" name="option" value="com_acymailing" />
+                                                        <input type="hidden" name="hiddenlists" value="" />
+                                                        <input type="hidden" name="acyformname" value="formAcymailing73451" />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="Mod161" class="moduletable  vert2 adh ">
+                                    <h3>Mes coordonnées</h3>
+                                    <div class="modcontent">
+
+
+                                        <div class="custom vert2 adh">
+                                            Vous pouvez à tout moment <strong>mettre à jour ou supprimer votre adresse électronique</strong><em> </em>; cette adresse est utilisée pour l'envoi de vos réservations et avis de retard.</div>
+                                    </div>
+                                </div>
+
+                                <div id="Mod98" class="moduletable  rose loupe ">
+                                    <h3>Recherche catalogue</h3>
+                                    <div class="modcontent">
+
+                                        <div id="mod-opac-rech-facettes" class=" rose loupe facettes">
+                                            <p>Lancez directement une recherche dans le catalogue :</p>
+                                            <form name="mod-opac-facettes-form" id="mod-opac-facettes-form" method="post" action="/recherche/facettes" class="form-validate">
+                                                <!-- <input type="hidden" name="option" value="com_opac" />
+<input type="hidden" name="task" value="RechFacettes" />
+<input type="hidden" name="view" value="results" />-->
+                                                <input type="hidden" name="layout" value="colonne" />
+                                                <input type="hidden" name="level" value="0" />
+                                                <input type="hidden" name="Itemid" value="118" />
+                                                <div class="controls-row">
+                                                    <label for="mod-opac-facettes-mots1" class="farfarleft">Rechercher dans le catalogue</label><input type="text" id="mod-opac-facettes-mots1" name="mots1" value="" class="span9 nomarge inputbox required" size="100" placeholder="Ma recherche" />
+                                                    <input type="submit" value="OK" class="button btn span3 " />
+                                                </div>
+                                                <div>
+                                                    <!-- Aide -->
+                                                    <a href="http://mediatheque.saintsebastien.fr/components/com_opac/help/fr-FR/rech-facettes.html" class="modalopac aide" rel="{handler: 'iframe',size:{x:get_modal_width(600), y: get_modal_height(450)}}" title="Afficher l'aide"><img src="http://mediatheque.saintsebastien.fr/components/com_opac/assets/images/aide.png" alt="Aide" /></a>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="Mod163" class="moduletable  orange2 oeil ">
+                                    <h3>Formathèque</h3>
+                                    <div class="modcontent">
+
+
+                                        <div class="custom orange2 oeil">
+                                            Vous êtes connecté,<strong> accédez immédiatement aux formations "Toutapprendre"</strong>:<br data-mce-bogus="1" />&nbsp;
+                                            <p>
+                                                <a href="/component/opac/?task=RedirectRess&amp;ntc=0:9806&amp;no_return=1:9806&amp;no_return=1" onclick="window.open(this.href,'','scrollbars=yes,resizable=yes,location=yes,menubar=yes,status=yes,toolbar=yes,left=0,top=0');return false;"><img alt="Bt1 acces" src="/images/imagesmedia/Bt1-acces.png" height="40" width="300" /></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="Mod167" class="moduletable  bleu flash ">
+                                    <h3>Désincription à la lettre d'information</h3>
+                                    <div class="modcontent">
+                                        <script type="text/javascript">
+                                                <!--
+                                                if (typeof acymailing == 'undefined') {
+                                                    var acymailing = Array();
+                                                }
+                                                acymailing['NAMECAPTION'] = 'Mon nom';
+                                                acymailing['NAME_MISSING'] = 'Saisissez votre nom.';
+                                                acymailing['EMAILCAPTION'] = 'Mon adresse mail ';
+                                                acymailing['VALID_EMAIL'] = 'Saisissez une adresse courriel valide.';
+                                                acymailing['ACCEPT_TERMS'] = 'Veuillez accepter les Conditions d\'utilisation';
+                                                acymailing['CAPTCHA_MISSING'] = 'Le captcha est invalide, veuillez réessayer';
+                                                acymailing['NO_LIST_SELECTED'] = 'Veuillez sélectionner les listes auxquelles vous voulez vous inscrire';
+
+                                                //-->
+                                            </script>
+                                        <script type="text/javascript" src="/media/com_acymailing/js/acymailing_module.js?v=550"></script>
+
+                                        <link rel="stylesheet" property="stylesheet" href="/media/com_acymailing/css/module_default.css?v=1471858103" type="text/css" />
+                                        <div class="acymailing_module bleu flash" id="acymailing_module_formAcymailing59762">
+                                            <div class="acymailing_fulldiv" id="acymailing_fulldiv_formAcymailing59762">
+                                                <form id="formAcymailing59762" action="/mon-compte" onsubmit="return submitacymailingform('optin','formAcymailing59762')" method="post" name="formAcymailing59762">
+                                                    <div class="acymailing_module_form">
+                                                        <table style="width:100%" class="acymailing_form">
+                                                            <tr>
+                                                                <td class="acyfield_email">
+                                                                    <input id="user_email_formAcymailing59762" onfocus="if(this.value == 'Mon adresse mail ') this.value = '';" onblur="if(this.value=='') this.value='Mon adresse mail ';" class="inputbox" type="text" name="user[email]" style="width:95%" value="Mon adresse mail " />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="acysubbuttons text-right">
+                                                                    <input class="button unsubbutton  btn btn-inverse" type="button" value="OK" name="Submit" onclick="return submitacymailingform('optout','formAcymailing59762')" />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <input type="hidden" name="ajax" value="0" />
+                                                        <input type="hidden" name="ctrl" value="sub" />
+                                                        <input type="hidden" name="task" value="notask" />
+                                                        <input type="hidden" name="redirect" value="http%3A%2F%2Fmediatheque.saintsebastien.fr%2Fmon-compte" />
+                                                        <input type="hidden" name="redirectunsub" value="http%3A%2F%2Fmediatheque.saintsebastien.fr%2Fmon-compte" />
+                                                        <input type="hidden" name="option" value="com_acymailing" />
+                                                        <input type="hidden" name="hiddenlists" value="2,1" />
+                                                        <input type="hidden" name="acyformname" value="formAcymailing59762" />
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </aside>
+                    </div>
+                    <!-- Fin Col de droite -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Position bas de site -->
+<div class="section-bas">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="row-fluid">
+                    <div class="stylefooter">
+                        <div class="span3">
+                            <div class="pos_bas01">
+                                <div id="Mod116" class="moduletable  ">
+                                    <div class="modcontent">
+
+
+                                        <div class="custom">
+                                            <a href="http://www.saintsebastien.fr/" target="_blank"><img style="display: block; margin-left: auto; margin-right: auto;" alt="logo saint sebastien sud loire" src="/images/logos-banniere/logo-saint-sebastien-sud-loire.png" height="172" width="173" /></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="span3">
+                            <div class="pos_bas02">
+                                <div id="Mod143" class="moduletable  ">
+                                    <div class="modcontent">
+
+
+                                        <div class="custom">
+                                            <p><strong>Médiathèque Yves Laurent</strong></p>
+                                            <p>10 rue Jean Macé<br />44230 Saint-Sébastien-sur-Loire</p>
+                                            <p><strong>Tél :</strong> 02 40 80 86 20</p>
+                                            <p><strong>Nous contacter :</strong> <a href="/nous-contacter">accéder au formulaire</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="span3">
+                            <div class="pos_bas03">
+                                <div id="Mod118" class="moduletable  ">
+                                    <div class="modcontent">
+
+                                        <ul class="nav nav-pills nomarge margebottom ">
+                                            <li class="item-488"><a title="" href="/faq-de-la-mediatheque">FAQ de la Médiathèque</a></li>
+                                            <li class="item-490"><a title="" href="/mentions-legales">Mentions légales</a></li>
+                                            <li class="item-489"><a title="" href="/accessibilite">Accessibilité</a></li>
+                                            <li class="item-123"><a title="" href="/plan-du-site">Plan du site</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="span3">
+                            <div class="pos_bas04">
+                                <div id="Mod89" class="moduletable  ">
+                                    <div class="modcontent">
+
+                                        <div class="module mod-social">
+                                            <ul>
+                                                <li class="socials-li">
+                                                    <a title="" class="social rss" href="/" target="_blank">
+                                                        <img class="social icon" src="/images/c3rb_socials/rss.png" alt="Flux RSS" />
+
+                                                    </a>
+                                                </li>
+                                                <li class="socials-li">
+                                                    <a title="" class="social fb" href="https://www.facebook.com/mediathequestsebsurloire" target="_blank">
+                                                        <img class="social icon" src="/images/c3rb_socials/facebook.png" alt="Facebook" />
+
+                                                    </a>
+                                                </li>
+                                                <li class="socials-li">
+                                                    <a title="" class="social tw" href="https://twitter.com/stsebsurloire" target="_blank">
+                                                        <img class="social icon" src="/images/c3rb_socials/twitter.png" alt="Twitter" />
+
+                                                    </a>
+                                                </li>
+                                                <li class="socials-li">
+                                                    <a title="" class="social yt" href="https://www.youtube.com/user/saintsebastien44" target="_blank">
+                                                        <img class="social icon" src="/images/c3rb_socials/youtube.png" alt="Youtube" />
+
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<div class="section-footer">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="modal-footer margetop">
+                    <small>
+                        <div id="modalfooter" class="text-center">R&eacute;alisation <a href="http://www.c3rb.net" title="" target="_blank">C3rb Informatique - Portail documentaire</a>
+                            <div class="flr margebottom"><a href="#topsite" title="Haut du site"><i class="margeleft icon-chevron-up"></i></a></div>
+                        </div>
+                    </small>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<div class="debug"></div>
+
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/jquery1101.min.js"></script>
+<!-- v1.10.0 -->
+
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/respondtable.js"></script>
+<!-- Les tableaux en responsive youpi! -->
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-alert.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-modal.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-dropdown.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-scrollspy.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-tab.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-tooltip.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-popover.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-button.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-collapse.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-carousel.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-typeahead.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/bootstrap-affix.js"></script>
+<script type="text/javascript" src="http://mediatheque.saintsebastien.fr/templates/c3rb_alpha_25/js/fontjssize.js" defer></script>
+
+
+
+<!--	<script type="text/javascript" src="/js/respondtable.min.js"></script>   -->
+<!--	<script type="text/javascript" src="/js/bootstrap.min.js" defer></script> -->
+<!--	<script type="text/javascript" src="/js/fontjssize.min.js" defer></script> -->
+
+
+<script type="text/javascript">
+        jQuery.noConflict();
+    </script>
+
+<script>
+        // mettre ici les scripts personnalisés (sticky menu et autres...)
+    </script>
+</body>
+
+</html>

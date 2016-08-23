@@ -57,4 +57,10 @@ public class BadGetMSSServiceImpl implements MSSService {
         return Observable.error(new NetworkErrorException(TAG +
         ": getNews - Simulated Bad Network Request"));
     }
+
+    @Override
+    public Observable<Boolean> login(String name, String cardNumber) {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": loginWithToken - Simulated Bad Network Request"));
+    }
 }
