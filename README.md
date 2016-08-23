@@ -6,12 +6,12 @@ Créée pour apprendre le développement Android.
 Utilisation de :
 * [Fragments](http://developer.android.com/guide/components/fragments.html),
 * [Recyclerview](http://developer.android.com/training/material/lists-cards.html),
-* [dagger 1](http://square.github.io/dagger/),
+* [Dagger 1](http://square.github.io/dagger/),
 * [Butterknife](http://jakewharton.github.io/butterknife/),
 * [RxAndroid](http://reactivex.io/),
 * [JSoup](http://jsoup.org/),
 * [Roboelectric](http://robolectric.org/),
-* [Picasso](http://square.github.io/picasso/)
+* [Picasso](http://square.github.io/picasso/),
 * [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/setup/).
 
 Licence
