@@ -18,3 +18,6 @@ Itemid : "0",
 mode_id : "102",
 79509f93d65c7891914cdddcbab4c6fd : "1"
 
+Message si erreur ->  <a class="close" data-dismiss="alert" href="#">×</a>Erreur : Un mot de passe vide n'est pas autorisé
+
+Enlever les crochets autour de L', Le, La.

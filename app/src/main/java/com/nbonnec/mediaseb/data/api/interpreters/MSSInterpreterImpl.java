@@ -30,6 +30,7 @@ import org.jsoup.select.Elements;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
@@ -255,5 +256,38 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
         }
 
         return mediaStatus;
+    }
+
+    @Override
+    public Hashtable<String, String> interpretTokenFromHtml(String html) {
+        final String INPUT_ELEMENT = "form#form-login102 input[type=hidden]";
+
+        Document parseHtml = Jsoup.parse(html);
+        Elements inputs = parseHtml.select(INPUT_ELEMENT);
+
+        Hashtable<String, String> table = new Hashtable<>();
+
+        for (Element e : inputs) {
+            table.put(e.attr("name"), e.attr("value"));
+        }
+
+        return table;
+    }
+
+    @Override
+    public boolean interpretLoginFromHtml(String html) {
+        final String ERROR_ELEMENT = "div.alert.alert-danger";
+
+        Document parseHtml = Jsoup.parse(html);
+        Elements errors = parseHtml.select(ERROR_ELEMENT);
+
+        for (Element e : errors) {
+            if (e.text().contains("Erreur : Un mot de passe vide n'est pas autorisé") ||
+                    e.text().contains("Erreur : Veuillez d'abord vous identifier")) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

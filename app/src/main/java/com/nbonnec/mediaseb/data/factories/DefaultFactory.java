@@ -16,7 +16,7 @@
 
 package com.nbonnec.mediaseb.data.factories;
 
-import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.models.MediaStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +73,7 @@ public class DefaultFactory {
             temporaryInstance.setYear(EMPTY_FIELD_YEAR);
             temporaryInstance.setSummary(EMPTY_FIELD_SUMMARY);
             temporaryInstance.setImageUrl(EMPTY_FIELD_IMAGE_URL);
+            temporaryInstance.setStatus(MediaStatus.NONE);
             temporaryInstance.setReturnDate(new Date());
             temporaryInstance.setLoanDate(new Date());
 

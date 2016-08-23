@@ -36,7 +36,7 @@ import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
 import javax.inject.Inject;
 
-public class SearchActivity extends BaseActivity implements MediaListFragment.OnClickedListener {
+public class SearchActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
     private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";

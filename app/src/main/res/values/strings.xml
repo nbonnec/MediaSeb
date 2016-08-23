@@ -6,4 +6,18 @@
     <string name="empty_results">Pas de résultats</string>
     <string name="network_error">Erreur réseau</string>
     <string name="available">Disponible</string>
+    <string name="title_activity_login">S\'identifier</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_name">Nom</string>
+    <string name="prompt_card_number">N° carte (14 chiffres)</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="error_invalid_name">Ce nom n\'est pas correct</string>
+    <string name="error_invalid_card_number">Ce numéro de carte est trop court</string>
+    <string name="error_incorrect_card_number">Ce numéro de carte est incorrecte</string>
+    <string name="error_field_required">Ce champ est requis</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

@@ -20,11 +20,14 @@ import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.Hashtable;
 
 import javax.inject.Inject;
 
@@ -84,18 +87,87 @@ public class MSSServiceImpl implements MSSService {
                     }
                 });
     }
-    private Observable<String> getHtml(final String url) {
-        Timber.d("Get page : %s", url);
 
+    private Observable<String> getHtml(final String url) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
+                Timber.d("Get page : %s", url);
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+
                 try {
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
                     Response response = client.newCall(request).execute();
                     subscriber.onNext(response.body().string());
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<Boolean> login(final String name, final String cardNumber) {
+        return getHtml(mssEndpoints.getLoginUrl())
+                .map(new Func1<String, Hashtable<String, String>>() {
+                    @Override
+                    public Hashtable<String, String> call(String s) {
+                        return interpreter.interpretTokenFromHtml(s);
+                    }
+                })
+                .flatMap(new Func1<Hashtable<String, String>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Hashtable<String, String> table) {
+                        return loginWithToken(name, cardNumber, table);
+                    }
+                });
+    }
+
+    /**
+     * Try to login.
+     * @param name name of the user.
+     * @param cardNumber card number of the user.
+     * @param inputs HTML inputs to post (including token).
+     * @return true if login succeeded.
+     */
+    private Observable<Boolean> loginWithToken(final String name, final String cardNumber, final Hashtable<String, String> inputs) {
+
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                Timber.d("Logging in user '%s', card '%s'", name, cardNumber);
+
+                FormEncodingBuilder formEncodingBuilder = new FormEncodingBuilder();
+
+                formEncodingBuilder.add("nom", name).add("carte", cardNumber);
+
+                for (Hashtable.Entry<String, String> entry : inputs.entrySet()) {
+                    formEncodingBuilder.add(entry.getKey(), entry.getValue());
+
+                    Timber.d("name : '%s', value : '%s'", entry.getKey(), entry.getValue());
+                }
+
+                RequestBody formBody = formEncodingBuilder.build();
+
+
+                Request request = new Request.Builder()
+                        .url(mssEndpoints.getLoginUrl())
+                        .post(formBody)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    boolean loginSuccess = interpreter.interpretLoginFromHtml(response.body().string());
+
+                    if (response.isSuccessful() && loginSuccess) {
+                        Timber.d("User '%s' was successfully logged in", name);
+                        subscriber.onNext(true);
+                    } else {
+                        Timber.e("Failed to log in user '%s'", name);
+                        subscriber.onNext(false);
+                    }
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);
