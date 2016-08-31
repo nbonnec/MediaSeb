@@ -12,7 +12,8 @@ Utilisation de :
 * [JSoup](http://jsoup.org/),
 * [Roboelectric](http://robolectric.org/),
 * [Picasso](http://square.github.io/picasso/),
-* [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/setup/).
+* [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/setup/),
+* [Crashlytics](https://fabric.io/kits/android/crashlytics/summary).
 
 Licence
 -----------

@@ -163,6 +163,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         int size = medias.size();
         medias.clear();
         notifyItemRangeRemoved(0, size);
+        notifyDataSetChanged();
     }
 
     public void clearSubscriptions() {

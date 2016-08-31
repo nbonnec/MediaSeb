@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ViewFlipper;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.hannesdorfmann.fragmentargs.annotation.FragmentWithArgs;
@@ -44,8 +45,10 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.Observer;
+import timber.log.Timber;
 
 @FragmentWithArgs
 public class MediaListFragment extends BaseFragment implements MediasAdapter.OnItemClickListener {
@@ -56,11 +59,23 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     private static final String STATE_PAGE_LOADED = "page_loaded";
 
+    private static final String STATE_VISIBLE_LAYOUT = "visible_layout";
+
+    private enum VisibleLayout {
+        NO_CONTENT_LAYOUT,
+        CONTENT_LAYOUT,
+        LOADING_LAYOUT,
+        ERROR_LAYOUT
+    }
+
     @Arg
     String page;
 
     @Inject
     MSSService mssService;
+
+    @Bind(R.id.media_list_flipper_view)
+    ViewFlipper flipperView;
 
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
@@ -74,10 +89,14 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Bind(R.id.media_list_error_layout)
     View errorView;
 
+    @Bind(R.id.media_list_no_content_layout)
+    View noContentView;
+
     private OnClickedListener listener;
 
-    private boolean isLoading;
-    private boolean pageLoaded;
+    private boolean isLoading = false;
+    private boolean pageLoaded = false;
+    private VisibleLayout visibleLayout = VisibleLayout.LOADING_LAYOUT;
 
     private MediasAdapter mediasAdapter;
     private MediaList mediaList;
@@ -94,6 +113,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         public void onError(Throwable e) {
             getMediasObservable = null;
             isLoading = false;
+            // TODO if page already loaded -> snackbar
             showErrorView();
         }
 
@@ -106,7 +126,11 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             }
 
             pageLoaded = true;
-            showContentView();
+            if (mediaList.getMedias().isEmpty()) {
+                showNoContentView();
+            } else {
+                showContentView();
+            }
         }
     };
 
@@ -121,6 +145,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         if (savedInstanceState != null) {
             mediaList = savedInstanceState.getParcelable(STATE_MEDIALIST);
             pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+            visibleLayout = (VisibleLayout) savedInstanceState.get(STATE_VISIBLE_LAYOUT);
         }
 
         initAdapters();
@@ -135,6 +160,19 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         recyclerView.setAdapter(mediasAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        switch (visibleLayout) {
+            case CONTENT_LAYOUT:
+            case LOADING_LAYOUT:
+                showContentView();
+                break;
+            case NO_CONTENT_LAYOUT:
+                showNoContentView();
+                break;
+            case ERROR_LAYOUT:
+                showErrorView();
+                break;
+        }
 
         return rootView;
     }
@@ -182,6 +220,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         if (mediaList != null) {
             saveInstanceState.putParcelable(STATE_MEDIALIST, mediaList);
             saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
+            saveInstanceState.putSerializable(STATE_VISIBLE_LAYOUT, visibleLayout);
         }
     }
 
@@ -197,7 +236,13 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             pullNextMedias();
     }
 
+    @OnClick(R.id.error_reload_button)
+    public void onClikLoadPage() {
+        loadPage(page);
+    }
+
     public void loadPage(String page) {
+        this.page = page;
         isLoading = true;
         resetAdapters();
         showLoadingView();
@@ -232,22 +277,27 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     private void showLoadingView() {
-        loadingView.setVisibility(View.VISIBLE);
-        errorView.setVisibility(View.GONE);
-        contentView.setVisibility(View.GONE);
-
+        Timber.d("Showing loading view");
+        visibleLayout = VisibleLayout.LOADING_LAYOUT;
+        flipperView.setDisplayedChild(flipperView.indexOfChild(loadingView));
     }
 
     private void showErrorView() {
-        loadingView.setVisibility(View.GONE);
-        errorView.setVisibility(View.VISIBLE);
-        contentView.setVisibility(View.GONE);
+        Timber.d("Showing error view");
+        visibleLayout = VisibleLayout.ERROR_LAYOUT;
+        flipperView.setDisplayedChild(flipperView.indexOfChild(errorView));
     }
 
     private void showContentView() {
-        loadingView.setVisibility(View.GONE);
-        errorView.setVisibility(View.GONE);
-        contentView.setVisibility(View.VISIBLE);
+        Timber.d("Showing content view");
+        visibleLayout = VisibleLayout.CONTENT_LAYOUT;
+        flipperView.setDisplayedChild(flipperView.indexOfChild(contentView));
+    }
+
+    private void showNoContentView() {
+        Timber.d("Showing no content view");
+        visibleLayout = VisibleLayout.NO_CONTENT_LAYOUT;
+        flipperView.setDisplayedChild(flipperView.indexOfChild(noContentView));
     }
 
     @Override

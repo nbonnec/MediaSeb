@@ -74,7 +74,8 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
             if (title != null) {
-                currentMedia.setTitle(title.text());
+                String t = title.text().replaceAll("\\[(.*)\\]", "$1");
+                currentMedia.setTitle(t);
                 currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
             }
             if (author != null) {
