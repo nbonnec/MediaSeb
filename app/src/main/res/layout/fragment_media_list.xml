@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ViewFlipper
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/media_list_flipper_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!-- Content layout -->
     <LinearLayout
@@ -39,17 +39,51 @@
     <!-- Error layout -->
     <LinearLayout
         android:id="@+id/media_list_error_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center_vertical|center"
         >
         <ImageView
             android:id="@+id/media_list_error"
             android:src="@drawable/ic_error_outline_white"
+            android:tint="@color/colorAccent"
             android:contentDescription="@string/network_error"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_gravity="center"
             />
+        <TextView
+            android:id="@+id/error_message"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="@string/network_error"
+            />
+        <Button
+            android:id="@+id/error_reload_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reload_page"
+            />
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/media_list_no_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center" >
+
+        <TextView
+            android:id="@+id/no_content_message"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="@string/no_result"
+            />
+    </LinearLayout>
+
+</ViewFlipper>

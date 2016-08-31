@@ -58,6 +58,20 @@ public class ToolbarActivity extends BaseActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
+        getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+            /* prevent search to be thrown twice.
+             * http://stackoverflow.com/a/19655124/857620 */
+                getSearchView().clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }

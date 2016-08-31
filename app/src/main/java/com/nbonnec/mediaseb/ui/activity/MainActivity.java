@@ -34,26 +34,9 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
                     .commit();
         }
 
-        getToolbar().setTitle(R.string.news);
-    }
-
-    @Override
-    // TODO what for ?
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-        return true;
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.news);
+        }
     }
 
     private void loadMedia(Media media) {

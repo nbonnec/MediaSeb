@@ -15,4 +15,6 @@
     <string name="error_invalid_card_number">This card nb. is too short</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="reload_page">Reload page</string>
+    <string name="no_result">No result</string>
 </resources>

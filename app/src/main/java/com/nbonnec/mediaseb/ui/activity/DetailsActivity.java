@@ -54,6 +54,7 @@ public class DetailsActivity extends ToolbarActivity {
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
+            ab.setTitle("");
         }
     }
 }

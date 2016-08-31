@@ -20,4 +20,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="reload_page">Recharger la page</string>
+    <string name="no_result">Pas de résultat</string>
 </resources>

@@ -20,4 +20,11 @@ mode_id : "102",
 
 Message si erreur ->  <a class="close" data-dismiss="alert" href="#">×</a>Erreur : Un mot de passe vide n'est pas autorisé
 
-Enlever les crochets autour de L', Le, La.
+Enlever les crochets autour de L', Le, La, Une.
+
+Session expirée :
+<div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">&times;</a>Message : Votre session a expiré</div>
+
+Mettre loupe clavier.
+UI pour no result.
+Gérer l'orientation en loading.
