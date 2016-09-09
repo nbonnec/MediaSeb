@@ -1,5 +1,6 @@
 package com.nbonnec.mediaseb.ui.activity;
 
+import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
 import android.animation.Animator;
@@ -8,14 +9,17 @@ import android.annotation.TargetApi;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.account.AccountGeneral;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 
@@ -63,7 +67,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnEditorAction(R.id.card_number)
     protected boolean passwordEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-        if (id == R.id.login || id == EditorInfo.IME_NULL) {
+        if (id == EditorInfo.IME_ACTION_GO || id == EditorInfo.IME_NULL) {
             attemptLogin();
             return true;
         }
@@ -82,8 +86,8 @@ public class LoginActivity extends BaseActivity {
         cardNumberView.setError(null);
 
         // Store values at the time of the login attempt.
-        String name = nameView.getText().toString();
-        String cardNumber = cardNumberView.getText().toString();
+        final String name = nameView.getText().toString();
+        final String cardNumber = cardNumberView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -113,6 +117,7 @@ public class LoginActivity extends BaseActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            hideSoftKeyboard();
             showProgress(true);
             addSubscription(mssService.login(name, cardNumber)
                     .compose(RxUtils.<Boolean>applySchedulers())
@@ -129,11 +134,15 @@ public class LoginActivity extends BaseActivity {
 
                         @Override
                         public void onNext(Boolean loginOk) {
+                            Account account = new Account(name, AccountGeneral.ACCOUNT_TYPE);
+                            AccountManager accountManager = AccountManager.get(getApplicationContext());
+
                             if (loginOk) {
+                                accountManager.addAccountExplicitly(account, cardNumber, null);
+                                accountManager.setAuthToken(account, cardNumber, null);
                                 finish();
                             } else {
-                                cardNumberView.setError(getString(R.string.error_incorrect_card_number));
-                                cardNumberView.requestFocus();
+                                showLoginError();
                             }
                         }
                     }));
@@ -156,6 +165,25 @@ public class LoginActivity extends BaseActivity {
      */
     private boolean isCardNumberCorrect(String cardNumber) {
         return cardNumber.matches("[0-9]+");
+    }
+
+    private void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    /**
+     * Show a snackbar.
+     */
+    private void showLoginError() {
+        View view = findViewById(R.id.login_form);
+
+        if (view != null) {
+            Snackbar snackbar = Snackbar.make(view, getString(R.string.error_ids), Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     /**
@@ -195,7 +223,7 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-        /**
+    /**
      * From {@link android.accounts.AccountAuthenticatorActivity AccountAuthenicatorActivity}
      * Set the result that is to be sent as the result of the request that caused this
      * Activity to be launched. If result is null or this method is never called then

@@ -56,10 +56,9 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private static final String TAG = MediaListFragment.class.getSimpleName();
 
     private static final String STATE_MEDIALIST = "state_medialist";
-
     private static final String STATE_PAGE_LOADED = "page_loaded";
-
     private static final String STATE_VISIBLE_LAYOUT = "visible_layout";
+    private static final String STATE_SAVED_PAGE =  "saved_page";
 
     private enum VisibleLayout {
         NO_CONTENT_LAYOUT,
@@ -96,6 +95,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     private boolean isLoading = false;
     private boolean pageLoaded = false;
+    private String savedPage;
     private VisibleLayout visibleLayout = VisibleLayout.LOADING_LAYOUT;
 
     private MediasAdapter mediasAdapter;
@@ -145,7 +145,10 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         if (savedInstanceState != null) {
             mediaList = savedInstanceState.getParcelable(STATE_MEDIALIST);
             pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+            savedPage = savedInstanceState.getString(STATE_SAVED_PAGE);
             visibleLayout = (VisibleLayout) savedInstanceState.get(STATE_VISIBLE_LAYOUT);
+        } else {
+            savedPage = page;
         }
 
         initAdapters();
@@ -205,21 +208,25 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         super.onResume();
 
         if (!pageLoaded) {
-            loadPage(page);
+            loadPage(savedPage);
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
+
         if (mediaList != null) {
+            /* TODO
+             * fragment is destroyed while loading,
+             * we want to make the request again on onResume.
+             * I think it's ugly, need to be changed. */
+            if (visibleLayout == VisibleLayout.LOADING_LAYOUT) {
+                pageLoaded = false;
+            }
             saveInstanceState.putParcelable(STATE_MEDIALIST, mediaList);
             saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
+            saveInstanceState.putString(STATE_SAVED_PAGE, savedPage);
             saveInstanceState.putSerializable(STATE_VISIBLE_LAYOUT, visibleLayout);
         }
     }
@@ -241,8 +248,16 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         loadPage(page);
     }
 
+
+    /**
+     * Load a new page.
+     * Reset UI, no more list on screen.
+     * @param page page to load (URL).
+     *
+     * TODO refactor. Maybe use the bundle to change the arg of the fragment.
+     */
     public void loadPage(String page) {
-        this.page = page;
+        savedPage = page;
         isLoading = true;
         resetAdapters();
         showLoadingView();
