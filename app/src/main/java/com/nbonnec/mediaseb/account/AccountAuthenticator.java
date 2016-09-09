@@ -24,11 +24,16 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
+import android.widget.Toast;
 
+import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.ui.activity.LoginActivity;
 
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
-    final Context context;
+    private final Context context;
+    private final Handler handler = new Handler();
 
     public AccountAuthenticator(Context context) {
         super(context);
@@ -43,9 +48,27 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
         final Intent intent = new Intent(context, LoginActivity.class);
-        intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        final AccountManager accountManager = AccountManager.get(context);
+
+        if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
+            final String msg = context.getString(R.string.error_one_account_allowed);
+
+            bundle.putInt(AccountManager.KEY_ERROR_CODE, AccountGeneral.ERROR_CODE_ONE_ACCOUNT_ALLOWED);
+            bundle.putString(AccountManager.KEY_ERROR_MESSAGE, msg);
+
+            // Notify the user.
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+            bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        }
+
         return bundle;
     }
 
@@ -56,7 +79,20 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
-        return null;
+        final Bundle bundle = new Bundle();
+        final String password = AccountManager.get(context).getPassword(account);
+
+        if (!TextUtils.isEmpty(password)) {
+            bundle.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+            bundle.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            bundle.putString(AccountManager.KEY_AUTHTOKEN, password);
+        } else {
+            final Intent intent = new Intent(context, LoginActivity.class);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+            bundle.putParcelable(AccountManager.KEY_INTENT, intent);
+        }
+        return bundle;
     }
 
     @Override

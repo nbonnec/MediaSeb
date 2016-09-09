@@ -74,7 +74,10 @@ public class DetailsFragment extends BaseFragment {
     TextView yearView;
     @Bind(R.id.details_available)
     TextView availableView;
+    @Bind(R.id.details_summary)
+    TextView summaryView;
 
+    // Not to reload unnecessarily.
     private boolean pageLoaded = false;
 
     private Observer<Media> getNoticeObserver = new Observer<Media>() {
@@ -111,7 +114,10 @@ public class DetailsFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
 
         titleView.setText(media.getTitle());
-        authorView.setText(media.getAuthor());
+
+        if (media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
+            authorView.setText(media.getAuthor());
+        }
 
         if (!media.getCollection().equals(DefaultFactory.Media.EMPTY_FIELD_COLLECTION)) {
             collectionView.setText(media.getCollection());
@@ -126,6 +132,10 @@ public class DetailsFragment extends BaseFragment {
         Picasso.with(getContext())
                 .load(media.getImageUrl())
                 .into(imageView);
+
+        // Necessary on orientation changes.
+        // TODO reset position in the scrollview.
+        refreshViews();
 
         return rootView;
     }
@@ -153,18 +163,22 @@ public class DetailsFragment extends BaseFragment {
         addSubscription(getMediasObservable.subscribe(getNoticeObserver));
     }
 
+    /**
+     * We receive some infos after the creation of the view.
+     * TODO do something if the image was not loaded by the list.
+     */
     private void refreshViews() {
-        if (media.getStatus() == MediaStatus.AVAILABLE) {
-            availableView.setText(R.string.available);
-        } else {
-            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-            availableView.setText(String.format("Retour le %s", fmt.format(media.getReturnDate())));
+        if (!media.getStatus().equals(MediaStatus.NONE)) {
+            if (media.getStatus() == MediaStatus.AVAILABLE) {
+                availableView.setText(R.string.available);
+            } else {
+                SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+                availableView.setText(String.format("Retour le %s", fmt.format(media.getReturnDate())));
+            }
         }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        if (!media.getSummary().equals(DefaultFactory.Media.EMPTY_FIELD_SUMMARY)) {
+            summaryView.setText(media.getSummary());
+        }
     }
 }

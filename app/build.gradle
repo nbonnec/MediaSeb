@@ -17,13 +17,13 @@ repositories {
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.nbonnec.mediaseb"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -41,11 +41,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // android support
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:support-annotations:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:support-annotations:24.2.0'
+    compile 'com.android.support:design:24.2.0'
 
     // html
     compile 'com.squareup.okhttp:okhttp:2.7.0'
@@ -62,8 +62,8 @@ dependencies {
     // tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
-    testCompile('com.squareup.assertj:assertj-android:1.0.0') {
-        // assertj-android currently ships with support-annotations 20.0.0 which is in conflict
+    testCompile('com.squareup.assertj:assertj-android:1.1.1') {
+        // assertj-android currently ships with support-annotations 22.2.1 which is in conflict
         // with the version used by the app
         exclude module: 'support-annotations'
     }

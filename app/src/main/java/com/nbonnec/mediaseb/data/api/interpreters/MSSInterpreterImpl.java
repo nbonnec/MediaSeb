@@ -36,7 +36,7 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
-public final class MSSInterpreterImpl implements MSSInterpreter {
+public class MSSInterpreterImpl implements MSSInterpreter {
 
     MSSEndpoints endpoints;
 
@@ -47,10 +47,10 @@ public final class MSSInterpreterImpl implements MSSInterpreter {
     @Override
     public MediaList interpretMediaResultsFromHtml(String html) {
         final String LINE_ELEMENT = "div.result-ntc.media";
-        final String TITLE_ELEMENT = "span.titre_complet";
-        final String AUTHOR_ELEMENT = "span.auteur";
-        final String EDITOR_ELEMENT = "span.editeur";
-        final String COLLECTION_ELEMENT = "span.collection";
+        final String TITLE_ELEMENT = "span.titre_complet a";
+        final String AUTHOR_ELEMENT = "span.auteur a";
+        final String EDITOR_ELEMENT = "span.editeur a";
+        final String COLLECTION_ELEMENT = "span.collection a";
         final String YEAR_ELEMENT = "span.date_edi";
         final String NEXT_URL_ELEMENT = "a[title=Page:Suivant]";
         final String COVER_LOAD_ELEMENT ="div.couverture input[name=\"ntc_url\"]";

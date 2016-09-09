@@ -87,7 +87,6 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
             reload = false;
             getSearchView().setQuery(search, false);
             getSearchView().clearFocus();
-            // TODO sometimes search is thrown twice
             resFragment.loadPage(mssEndpoints.simpleSearchUrl(search));
         }
     }
@@ -106,11 +105,9 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                NavUtils.navigateUpFromSameTask(SearchActivity.this);
                 return false;
             }
         });
-
         return true;
     }
 

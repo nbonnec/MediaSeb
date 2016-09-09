@@ -20,6 +20,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="error_one_account_allowed">Seul un compte est authorisé</string>
     <string name="reload_page">Recharger la page</string>
     <string name="no_result">Pas de résultat</string>
+    <string name="error_ids">"Identifiants incorrects"</string>
 </resources>

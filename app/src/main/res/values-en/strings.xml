@@ -17,4 +17,6 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="reload_page">Reload page</string>
     <string name="no_result">No result</string>
+    <string name="error_ids">Wrong ids</string>
+    <string name="error_one_account_allowed">Only one account is allowed</string>
 </resources>

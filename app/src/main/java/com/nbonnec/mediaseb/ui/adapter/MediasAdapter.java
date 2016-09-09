@@ -18,7 +18,6 @@ package com.nbonnec.mediaseb.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
+import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.event.MediasLatestPositionEvent;
@@ -103,7 +103,11 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         bus.post(new MediasLatestPositionEvent(position));
 
         holder.title.setText(media.getTitle());
-        holder.author.setText(media.getAuthor());
+
+        if (!media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
+            holder.author.setText(media.getAuthor());
+        }
+
         // TODO use retro lambda
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
