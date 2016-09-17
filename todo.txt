@@ -28,3 +28,4 @@ UI pour no result.
 Gérer l'orientation en loading.
 
 Si fail réseau, afficher des médias si possible !
+
