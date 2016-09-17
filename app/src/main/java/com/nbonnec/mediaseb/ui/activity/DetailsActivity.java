@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.models.Media;
@@ -56,5 +57,12 @@ public class DetailsActivity extends ToolbarActivity {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setTitle("");
         }
+
+        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateUpOrBack(DetailsActivity.this, null);
+            }
+        });
     }
 }

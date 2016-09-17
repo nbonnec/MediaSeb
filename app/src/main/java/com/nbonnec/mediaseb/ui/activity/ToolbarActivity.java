@@ -64,6 +64,7 @@ public class ToolbarActivity extends BaseActivity {
             /* prevent search to be thrown twice.
              * http://stackoverflow.com/a/19655124/857620 */
                 getSearchView().clearFocus();
+                searchMenuItem.collapseActionView();
                 return false;
             }
 
@@ -76,7 +77,11 @@ public class ToolbarActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public Toolbar getToolbar() {
+    public Toolbar getActionBarToolbar() {
+        if (toolbar == null) {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+        }
         return toolbar;
     }
 

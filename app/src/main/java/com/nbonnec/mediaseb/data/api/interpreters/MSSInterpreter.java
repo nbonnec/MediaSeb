@@ -28,4 +28,5 @@ public interface MSSInterpreter {
     List<Media> interpretLoansFromHtml(String html);
     Hashtable<String, String> interpretTokenFromHtml(String html);
     boolean interpretLoginFromHtml(String html);
+    String interpretAccountFromHtml(String html);
 }

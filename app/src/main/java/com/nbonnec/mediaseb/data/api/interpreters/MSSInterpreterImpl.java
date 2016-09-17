@@ -291,4 +291,19 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
         return true;
     }
+
+    @Override
+    public String interpretAccountFromHtml(String html) {
+        final String DATE_ELEMENT = "tr:contains(date) td:eq(3)";
+
+        Document parseHtml = Jsoup.parse(html);
+        Element date = parseHtml.select(DATE_ELEMENT).first();
+
+        if(date != null) {
+            // Remove &nbsp;
+            return date.text().replaceAll("\\u00a0", "");
+        } else {
+            return "";
+        }
+    }
 }

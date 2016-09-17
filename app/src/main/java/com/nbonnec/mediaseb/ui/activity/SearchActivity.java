@@ -16,15 +16,15 @@
 
 package com.nbonnec.mediaseb.ui.activity;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -96,6 +96,7 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
         super.onCreateOptionsMenu(menu);
 
         getSearchView().setFocusable(false);
+        getSearchView().clearFocus();
         MenuItemCompat.expandActionView(getSearchMenuItem());
         MenuItemCompat.setOnActionExpandListener(getSearchMenuItem(), new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -105,6 +106,7 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                navigateUpOrBack(SearchActivity.this, null);
                 return false;
             }
         });
@@ -159,5 +161,40 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
     @Override
     public void onItemClicked(Media media) {
         loadMedia(media);
+    }
+
+    /**
+     *  Search menu collapses on finish, disable the listener which contains
+     *  {@link com.nbonnec.mediaseb.ui.activity.BaseActivity#navigateUpOrBack(Activity, Class) navigateUpOrBack}
+     */
+    @Override
+    public void onBackPressed() {
+        MenuItemCompat.setOnActionExpandListener(getSearchMenuItem(),
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        return false;
+                    }
+                });
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        /*
+         * onBackPressed is not called in this activity.
+         * TODO find why.
+         */
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

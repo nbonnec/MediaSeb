@@ -195,4 +195,12 @@ public class MSSInterpreterImplTest extends BaseTestCase {
 
         assertThat(login).isFalse();
     }
+
+    @Test
+    public void test_AccountParsing() throws IOException {
+        MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
+        String date = interpreter.interpretAccountFromHtml(readAssetFile("html/account.html"));
+
+        assertThat(date).isEqualTo("24/08/2016");
+    }
 }
