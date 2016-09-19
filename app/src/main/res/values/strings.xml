@@ -24,4 +24,13 @@
     <string name="reload_page">Recharger la page</string>
     <string name="no_result">Pas de résultat</string>
     <string name="error_ids">"Identifiants incorrects"</string>
+
+    <!-- Layouts -->
+    <string name="media_image_description">Image du media</string>
+    <string name="details_extras">Détails</string>
+    <string name="details_collection">Collection :</string>
+    <string name="details_type">Support :</string>
+    <string name="details_section">Section :</string>
+    <string name="details_location">Localisation :</string>
+    <string name="details_rating">Cote :</string>
 </resources>

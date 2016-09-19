@@ -1,92 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/details_background"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            />
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="82dp"
-            android:padding="4dp">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin">
 
             <ImageView
                 android:id="@+id/details_image"
                 android:layout_width="68dp"
-                android:layout_height="68dp"
-                android:layout_centerVertical="true"
+                android:layout_height="100dp"
                 android:layout_alignParentLeft="true"
-                />
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
 
             <TextView
                 android:id="@+id/details_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/details_image"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_centerVertical="true"
-                android:textColor="#000"
-                android:textSize="22sp"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
-            >
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
-                    android:id="@+id/details_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/d"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:textColor="#9f9f9f"
-                    android:textSize="18sp"
-                    />
-
-            <TextView
-                android:id="@+id/details_collection"
+                android:id="@+id/details_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                />
+                android:layout_below="@id/details_title"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/details_image"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
             <TextView
                 android:id="@+id/details_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                />
+                android:layout_below="@+id/details_author"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/details_image"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/details_extras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin">
 
             <TextView
                 android:id="@+id/details_available"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/details_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                />
-        </LinearLayout>
+                android:layout_below="@+id/details_available"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <View
+                android:id="@+id/details_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/details_summary"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/details_collection_title"
+                android:layout_below="@id/details_divider"
+                android:text="@string/details_collection"
+                style="@style/Details.Title"/>
+
+            <TextView
+                android:id="@+id/details_collection"
+                android:layout_alignBaseline="@id/details_collection_title"
+                android:layout_below="@+id/details_divider"
+                android:layout_toEndOf="@+id/details_collection_title"
+                android:layout_toRightOf="@id/details_collection_title"
+                style="@style/Details.Content"/>
+
+            <TextView
+                android:id="@+id/details_type_title"
+                android:layout_below="@id/details_collection_title"
+                android:text="@string/details_type"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                style="@style/Details.Title"/>
+
+            <TextView
+                android:id="@+id/details_type"
+                android:layout_alignBaseline="@id/details_type_title"
+                android:layout_below="@id/details_collection_title"
+                android:layout_toRightOf="@id/details_type_title"
+                style="@style/Details.Content"/>
+
+            <TextView
+                android:id="@+id/details_section_title"
+                android:layout_below="@id/details_type_title"
+                android:text="@string/details_section"
+                style="@style/Details.Title"/>
+
+            <TextView
+                android:id="@+id/details_section"
+                android:layout_alignBaseline="@id/details_section_title"
+                android:layout_below="@id/details_type_title"
+                android:layout_toRightOf="@id/details_section_title"
+                style="@style/Details.Content"/>
+
+            <TextView
+                android:id="@+id/details_location_title"
+                android:layout_below="@id/details_section_title"
+                android:text="@string/details_location"
+                style="@style/Details.Title"/>
+
+            <TextView
+                android:id="@+id/details_location"
+                android:layout_alignBaseline="@id/details_location_title"
+                android:layout_below="@id/details_section_title"
+                android:layout_toRightOf="@id/details_location_title"
+                style="@style/Details.Content"/>
+
+            <TextView
+                android:id="@+id/details_rating_title"
+                android:layout_below="@id/details_location_title"
+                android:text="@string/details_rating"
+                style="@style/Details.Title"/>
+
+            <TextView
+                android:id="@+id/details_rating"
+                android:layout_alignBaseline="@id/details_rating_title"
+                android:layout_below="@id/details_location_title"
+                android:layout_toRightOf="@id/details_rating_title"
+                style="@style/Details.Content"/>
+
+        </RelativeLayout>
     </LinearLayout>
 </ScrollView>

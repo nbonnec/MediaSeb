@@ -21,7 +21,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -161,7 +161,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         ButterKnife.bind(this, rootView);
 
         recyclerView.setAdapter(mediasAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         switch (visibleLayout) {
@@ -248,7 +248,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @OnClick(R.id.error_reload_button)
-    public void onClikLoadPage() {
+    public void onClickLoadPage() {
         loadPage(page);
     }
 

@@ -19,4 +19,11 @@
     <string name="no_result">No result</string>
     <string name="error_ids">Wrong ids</string>
     <string name="error_one_account_allowed">Only one account is allowed</string>
+    <string name="media_image_description">Media image</string>
+    <string name="details_extras">Details</string>
+    <string name="details_location">Location:</string>
+    <string name="details_rating">Rating:</string>
+    <string name="details_section">Section:</string>
+    <string name="details_type">Type:</string>
+    <string name="details_collection">Collection:</string>
 </resources>

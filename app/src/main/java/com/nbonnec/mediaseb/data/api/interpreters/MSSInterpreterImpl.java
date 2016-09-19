@@ -74,6 +74,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
             if (title != null) {
+                /* Delete brackets. */
                 String t = title.text().replaceAll("\\[(.*)\\]", "$1");
                 currentMedia.setTitle(t);
                 currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
@@ -88,7 +89,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
                 currentMedia.setCollection(collection.text());
             }
             if (year != null) {
-                currentMedia.setYear(year.text());
+                currentMedia.setYear(year.text().replaceAll("[^\\d]", ""));
             }
             if (coverLoadUrl != null) {
                 currentMedia.setImageUrl(endpoints.imageUrl("/" + coverLoadUrl.val()));

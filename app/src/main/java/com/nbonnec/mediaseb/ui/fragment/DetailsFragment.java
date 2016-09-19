@@ -60,22 +60,18 @@ public class DetailsFragment extends BaseFragment {
     @Inject
     MSSEndpoints mssEndpoints;
 
-    @Bind(R.id.details_background)
-    ImageView imageViewBack;
-    @Bind(R.id.details_image)
-    ImageView imageView;
-    @Bind(R.id.details_title)
-    TextView titleView;
-    @Bind(R.id.details_author)
-    TextView authorView;
-    @Bind(R.id.details_collection)
-    TextView collectionView;
-    @Bind(R.id.details_year)
-    TextView yearView;
-    @Bind(R.id.details_available)
-    TextView availableView;
-    @Bind(R.id.details_summary)
-    TextView summaryView;
+    @Bind(R.id.details_background)      ImageView imageViewBack;
+    @Bind(R.id.details_image)           ImageView imageView;
+    @Bind(R.id.details_title)           TextView titleView;
+    @Bind(R.id.details_author)          TextView authorView;
+    @Bind(R.id.details_collection)      TextView collectionView;
+    @Bind(R.id.details_year)            TextView yearView;
+    @Bind(R.id.details_available)       TextView availableView;
+    @Bind(R.id.details_summary)         TextView summaryView;
+    @Bind(R.id.details_type)            TextView typeView;
+    @Bind(R.id.details_section)         TextView sectionView;
+    @Bind(R.id.details_location)        TextView locationView;
+    @Bind(R.id.details_rating)          TextView ratingView;
 
     // Not to reload unnecessarily.
     private boolean pageLoaded = false;
@@ -93,7 +89,7 @@ public class DetailsFragment extends BaseFragment {
         @Override
         public void onNext(Media nextMedia) {
             media.setDetails(nextMedia);
-            refreshViews();
+            setExtrasViews();
             pageLoaded = true;
         }
     };
@@ -115,17 +111,14 @@ public class DetailsFragment extends BaseFragment {
 
         titleView.setText(media.getTitle());
 
-        if (media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
+        if (!media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
             authorView.setText(media.getAuthor());
-        }
-
-        if (!media.getCollection().equals(DefaultFactory.Media.EMPTY_FIELD_COLLECTION)) {
-            collectionView.setText(media.getCollection());
         }
 
         yearView.setText(media.getYear());
 
-        Picasso.with(getContext())
+        // TODO
+        Picasso.with(getActivity())
                 .load(media.getImageUrl())
                 .into(imageViewBack);
 
@@ -135,7 +128,7 @@ public class DetailsFragment extends BaseFragment {
 
         // Necessary on orientation changes.
         // TODO reset position in the scrollview.
-        refreshViews();
+        setExtrasViews();
 
         return rootView;
     }
@@ -167,7 +160,7 @@ public class DetailsFragment extends BaseFragment {
      * We receive some infos after the creation of the view.
      * TODO do something if the image was not loaded by the list.
      */
-    private void refreshViews() {
+    private void setExtrasViews() {
         if (!media.getStatus().equals(MediaStatus.NONE)) {
             if (media.getStatus() == MediaStatus.AVAILABLE) {
                 availableView.setText(R.string.available);
@@ -180,5 +173,21 @@ public class DetailsFragment extends BaseFragment {
         if (!media.getSummary().equals(DefaultFactory.Media.EMPTY_FIELD_SUMMARY)) {
             summaryView.setText(media.getSummary());
         }
+        if (!media.getCollection().equals(DefaultFactory.Media.EMPTY_FIELD_COLLECTION)) {
+            collectionView.setText(media.getCollection());
+        }
+        if (!media.getType().equals(DefaultFactory.Media.EMPTY_FIELD_TYPE)) {
+            typeView.setText(media.getType());
+        }
+        if (!media.getSection().equals(DefaultFactory.Media.EMPTY_FIELD_SECTION)) {
+            sectionView.setText(media.getSection());
+        }
+        if (!media.getLocation().equals(DefaultFactory.Media.EMPTY_FIELD_LOCATION)) {
+            locationView.setText(media.getLocation());
+        }
+        if (!media.getRating().equals(DefaultFactory.Media.EMPTY_FIELD_RATING)) {
+            ratingView.setText(media.getRating());
+        }
+
     }
 }

@@ -64,12 +64,14 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.icon)
+        public ImageView icon;
         @Bind(R.id.title)
         public TextView title;
         @Bind(R.id.author)
         public TextView author;
-        @Bind(R.id.icon)
-        public ImageView icon;
+        @Bind(R.id.year)
+        public TextView year;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -102,10 +104,14 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
         bus.post(new MediasLatestPositionEvent(position));
 
-        holder.title.setText(media.getTitle());
-
+        if (!media.getTitle().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
+            holder.title.setText(media.getTitle());
+        }
         if (!media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
             holder.author.setText(media.getAuthor());
+        }
+        if (!media.getYear().equals(DefaultFactory.Media.EMPTY_FIELD_YEAR)) {
+            holder.year.setText(media.getYear());
         }
 
         // TODO use retro lambda

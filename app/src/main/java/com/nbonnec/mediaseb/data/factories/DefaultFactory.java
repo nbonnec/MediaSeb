@@ -51,13 +51,17 @@ public class DefaultFactory {
     public static final class Media {
         public static final String TAG = com.nbonnec.mediaseb.models.Media.class.getSimpleName();
 
+        public static final String EMPTY_FIELD_IMAGE_URL = "No Image Url";
         public static final String EMPTY_FIELD_TITLE = "No Title";
         public static final String EMPTY_FIELD_AUTHOR = "No Author";
         public static final String EMPTY_FIELD_EDITOR = "No Editor";
-        public static final String EMPTY_FIELD_COLLECTION = "No Collection";
         public static final String EMPTY_FIELD_YEAR = "No Year";
         public static final String EMPTY_FIELD_SUMMARY = "No Summary";
-        public static final String EMPTY_FIELD_IMAGE_URL = "No Image Url";
+        public static final String EMPTY_FIELD_COLLECTION = "No Collection";
+        public static final String EMPTY_FIELD_TYPE = "No Type";
+        public static final String EMPTY_FIELD_SECTION = "No Section";
+        public static final String EMPTY_FIELD_LOCATION = "No Localisation";
+        public static final String EMPTY_FIELD_RATING = "No Rating";
 
         private Media() {
             throw new AssertionError(TAG + ": Cannot be initialized.");
@@ -73,6 +77,10 @@ public class DefaultFactory {
             temporaryInstance.setYear(EMPTY_FIELD_YEAR);
             temporaryInstance.setSummary(EMPTY_FIELD_SUMMARY);
             temporaryInstance.setImageUrl(EMPTY_FIELD_IMAGE_URL);
+            temporaryInstance.setType(EMPTY_FIELD_TYPE);
+            temporaryInstance.setSection(EMPTY_FIELD_SECTION);
+            temporaryInstance.setLocation(EMPTY_FIELD_LOCATION);
+            temporaryInstance.setRating(EMPTY_FIELD_RATING);
             temporaryInstance.setStatus(MediaStatus.NONE);
             temporaryInstance.setReturnDate(new Date());
             temporaryInstance.setLoanDate(new Date());
