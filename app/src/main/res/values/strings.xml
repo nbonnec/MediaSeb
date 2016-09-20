@@ -17,9 +17,6 @@
     <string name="error_invalid_card_number">Ce numéro de carte est trop court</string>
     <string name="error_incorrect_card_number">Ce numéro de carte est incorrecte</string>
     <string name="error_field_required">Ce champ est requis</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
     <string name="error_one_account_allowed">Seul un compte est authorisé</string>
     <string name="reload_page">Recharger la page</string>
     <string name="no_result">Pas de résultat</string>
