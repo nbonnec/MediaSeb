@@ -39,7 +39,7 @@ import javax.inject.Inject;
 public class SearchActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    private static final String MEDIALIST_FRAGMENT_TAG = "medialist_fragment";
+    private static final String MEDIALIST_FRAGMENT_TAG = "search_frament_tag";
 
     private static final String STATE_SEARCH = "state_search";
 
