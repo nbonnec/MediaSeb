@@ -56,7 +56,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(Media media);
+        void onItemClick(View itemView, Media media);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -64,13 +64,13 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.icon)
+        @Bind(R.id.list_item_image)
         public ImageView icon;
-        @Bind(R.id.title)
+        @Bind(R.id.list_item_title)
         public TextView title;
-        @Bind(R.id.author)
+        @Bind(R.id.list_item_author)
         public TextView author;
-        @Bind(R.id.year)
+        @Bind(R.id.list_item_year)
         public TextView year;
 
         public ViewHolder(final View itemView) {
@@ -118,7 +118,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(media);
+                listener.onItemClick(holder.itemView, media);
             }
         });
 

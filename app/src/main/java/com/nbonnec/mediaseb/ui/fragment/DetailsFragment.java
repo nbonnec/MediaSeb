@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -129,6 +130,10 @@ public class DetailsFragment extends BaseFragment {
         // Necessary on orientation changes.
         // TODO reset position in the scrollview.
         setExtrasViews();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            scheduleStartPostponedTransitionApi21(imageView);
+        }
 
         return rootView;
     }

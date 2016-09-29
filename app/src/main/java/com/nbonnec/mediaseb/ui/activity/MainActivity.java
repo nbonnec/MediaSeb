@@ -1,10 +1,14 @@
 package com.nbonnec.mediaseb.ui.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
+import android.view.View;
+import android.view.Window;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
@@ -32,6 +36,8 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
                             new MediaListFragmentBuilder(mssEndpoints.newsUrl()).build(),
                             NEWS_FRAGMENT_TAG)
                     .commit();
+            /* we want the fragment quickly for lollipop transitions. */
+            getSupportFragmentManager().executePendingTransactions();
         }
 
         if (getSupportActionBar() != null) {
@@ -39,21 +45,28 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         }
     }
 
-    private void loadMedia(Media media) {
+    private void loadMedia(View view, Media media) {
         Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.MEDIA, media);
-        /*
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-        MainActivity.this, transitionView, DetailActivity.EXTRA_IMAGE);
-        ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
-        options.toBundle());
-        */
+
         MenuItemCompat.collapseActionView(getSearchMenuItem());
-        startActivity(intent);
+
+        Bundle bundle = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    MainActivity.this,
+                    new Pair<>(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)),
+                    new Pair<>(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)),
+                    new Pair<>(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+                    new Pair<>(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME)
+            );
+            bundle = options.toBundle();
+        }
+        ActivityCompat.startActivity(MainActivity.this, intent, bundle);
     }
 
     @Override
-    public void onItemClicked(Media media) {
-        loadMedia(media);
+    public void onItemClicked(View view, Media media) {
+        loadMedia(view, media);
     }
 }
