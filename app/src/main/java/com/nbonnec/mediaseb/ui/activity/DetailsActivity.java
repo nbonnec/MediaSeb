@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.ui.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -48,7 +49,6 @@ public class DetailsActivity extends ToolbarActivity {
                             DETAILS_FRAGMENT_TAG)
                     .commit();
             /* we want the fragment quickly for lollipop transitions. */
-            // TODO maybe postponeEnterTransition
             getSupportFragmentManager().executePendingTransactions();
         }
 
@@ -64,5 +64,11 @@ public class DetailsActivity extends ToolbarActivity {
                 navigateUpOrBack(DetailsActivity.this, null);
             }
         });
+
+        /* wait for layout to be fully load
+         * do not forget to call scheduleStartPostponedTransitionApi21 */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            postponeEnterTransition();
+        }
     }
 }

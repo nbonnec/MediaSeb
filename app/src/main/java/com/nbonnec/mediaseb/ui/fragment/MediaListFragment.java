@@ -135,7 +135,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     };
 
     public interface OnClickedListener {
-        void onItemClicked(Media media);
+        void onItemClicked(View view, Media media);
     }
 
     @Override
@@ -345,8 +345,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     @Override
-    public void onItemClick(Media media) {
-        listener.onItemClicked(media);
+    public void onItemClick(View itemView, Media media) {
+        listener.onItemClicked(itemView, media);
     }
 
     private void resetAdapters() {

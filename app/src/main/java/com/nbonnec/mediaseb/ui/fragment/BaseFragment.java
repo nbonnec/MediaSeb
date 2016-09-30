@@ -16,8 +16,12 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 import com.nbonnec.mediaseb.MediasebApp;
@@ -64,5 +68,18 @@ public class BaseFragment extends Fragment {
 
     protected void addSubscription(Subscription s) {
         subscriptions.add(s);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void scheduleStartPostponedTransitionApi21(final View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        getActivity().startPostponedEnterTransition();
+                        return true;
+                    }
+                });
     }
 }

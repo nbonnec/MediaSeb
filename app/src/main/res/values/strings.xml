@@ -30,4 +30,8 @@
     <string name="details_section">Section :</string>
     <string name="details_location">Localisation :</string>
     <string name="details_rating">Cote :</string>
+
+    <!-- Transitions -->
+    <string name="transition_name_image" translatable="false">transition:IMAGE</string>
+    <string name="transition_name_toolbar" translatable="false">toolbar</string>
 </resources>

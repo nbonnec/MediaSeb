@@ -19,7 +19,11 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
@@ -27,6 +31,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
@@ -145,22 +151,27 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
         }
     }
 
-    private void loadMedia(Media media) {
+    private void loadMedia(View view, Media media) {
         Intent intent = new Intent(SearchActivity.this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.MEDIA, media);
-        /*
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-        MainActivity.this, transitionView, DetailActivity.EXTRA_IMAGE);
-        ActivityCompat.startActivity(activity, new Intent(activity, DetailActivity.class),
-        options.toBundle());
-        */
 
-        startActivity(intent);
+        Bundle bundle = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    SearchActivity.this,
+                    new Pair<>(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)),
+                    new Pair<>(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
+                    new Pair<>(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME)
+            );
+            bundle = options.toBundle();
+        }
+        ActivityCompat.startActivity(SearchActivity.this, intent, bundle);
     }
 
+
     @Override
-    public void onItemClicked(Media media) {
-        loadMedia(media);
+    public void onItemClicked(View view, Media media) {
+        loadMedia(view, media);
     }
 
     /**
