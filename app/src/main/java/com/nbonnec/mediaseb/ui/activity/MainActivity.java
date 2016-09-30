@@ -48,7 +48,7 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     private void loadMedia(View view, Media media) {
         Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.MEDIA, media);
-        
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .addToBackStack(NEWS_FRAGMENT_TAG)

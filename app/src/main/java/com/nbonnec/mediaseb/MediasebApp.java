@@ -18,11 +18,10 @@ package com.nbonnec.mediaseb;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.nbonnec.mediaseb.di.modules.MediasebModule;
+import com.nbonnec.mediaseb.di.modules.Modules;
 import com.nbonnec.mediaseb.log.CrashlyticsTree;
 
 import dagger.ObjectGraph;
@@ -30,7 +29,7 @@ import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class MediasebApp extends Application {
-    private ObjectGraph objectGraph;
+    protected ObjectGraph objectGraph;
 
     @Override
     public void onCreate() {
@@ -49,17 +48,7 @@ public class MediasebApp extends Application {
             Timber.plant(new CrashlyticsTree());
         }
 
-        buildObjectGraphAndInject();
-    }
-
-    public void buildObjectGraphAndInject() {
-        buildInitialObjectGraph();
-    }
-
-    public void buildInitialObjectGraph() {
-        objectGraph = ObjectGraph.create(
-                new MediasebModule(this)
-        );
+        objectGraph = ObjectGraph.create(Modules.get(this));
     }
 
     public void setObjectGraph(Object... modules) {

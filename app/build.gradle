@@ -41,6 +41,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    productFlavors {
+        playstore {
+            applicationId "com.nbonnec.mediaseb.playstore"
+        }
+        full {
+            applicationId "com.nbonnec.mediaseb.full"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

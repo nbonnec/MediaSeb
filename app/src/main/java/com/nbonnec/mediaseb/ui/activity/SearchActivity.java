@@ -45,7 +45,7 @@ import javax.inject.Inject;
 public class SearchActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    private static final String MEDIALIST_FRAGMENT_TAG = "search_frament_tag";
+    private static final String SEARCH_FRAMENT_TAG = "search_frament_tag";
 
     private static final String STATE_SEARCH = "state_search";
 
@@ -74,7 +74,7 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
                     .replace(R.id.container,
                             new MediaListFragmentBuilder(mssEndpoints.simpleSearchUrl(search))
                                     .build(),
-                            MEDIALIST_FRAGMENT_TAG)
+                            SEARCH_FRAMENT_TAG)
                     .commit();
         }
 
@@ -88,7 +88,7 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
     public void onResume() {
         super.onResume();
         resFragment = (MediaListFragment) getSupportFragmentManager()
-                .findFragmentByTag(MEDIALIST_FRAGMENT_TAG);
+                .findFragmentByTag(SEARCH_FRAMENT_TAG);
         if (reload && search != null) {
             reload = false;
             getSearchView().setQuery(search, false);
@@ -154,6 +154,11 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
     private void loadMedia(View view, Media media) {
         Intent intent = new Intent(SearchActivity.this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.MEDIA, media);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(SEARCH_FRAMENT_TAG)
+                .commit();
 
         Bundle bundle = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
