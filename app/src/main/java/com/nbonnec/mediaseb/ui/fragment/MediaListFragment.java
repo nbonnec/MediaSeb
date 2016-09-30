@@ -207,6 +207,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     public void onResume() {
         super.onResume();
 
+        getContextBack();
+
         /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
         isLoading = false;
         mediasAdapter.notifyDataSetChanged();
@@ -252,7 +254,6 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         loadPage(page);
     }
 
-
     /**
      * Load a new page.
      * Reset UI, no more list on screen.
@@ -267,9 +268,33 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         showLoadingView();
 
         getMediasObservable = mssService
-                .getMediaList(page)
+                .getMediaList(savedPage)
                 .compose(RxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
+    }
+
+    /**
+     * In order for pullNextMedias to work correctly when we come from another activity (search
+     * for example), we need ask the fisrt page.
+     */
+    private void getContextBack() {
+        addSubscription(mssService.getHtml(savedPage).compose(RxUtils.<String>applySchedulers())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+
+                    }
+                }));
     }
 
     private boolean canPullNextMedias(int position) {

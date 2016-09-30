@@ -88,7 +88,8 @@ public class MSSServiceImpl implements MSSService {
                 });
     }
 
-    private Observable<String> getHtml(final String url) {
+    @Override
+    public Observable<String> getHtml(final String url) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
