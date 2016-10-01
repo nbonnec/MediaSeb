@@ -16,6 +16,9 @@ import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
@@ -58,12 +61,18 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
 
         Bundle bundle = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            List<Pair<View, String>> transitions = new ArrayList<>();
+
+            transitions.add(Pair.create(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)));
+            transitions.add(Pair.create(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)));
+            transitions.add(Pair.create(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+            /* does not exists in landscape */
+            if (findViewById(android.R.id.navigationBarBackground) != null) {
+                transitions.add(Pair.create(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+            }
+
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    MainActivity.this,
-                    new Pair<>(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)),
-                    new Pair<>(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)),
-                    new Pair<>(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-                    new Pair<>(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME)
+                    MainActivity.this, transitions.toArray(new Pair[transitions.size()])
             );
             bundle = options.toBundle();
         }
