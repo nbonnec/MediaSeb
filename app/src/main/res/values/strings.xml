@@ -3,6 +3,7 @@
     <string name="hint">Rechercher dans le catalogue</string>
     <string name="search">Rechercher</string>
     <string name="news">Nouveautés</string>
+    <string name="account">Compte</string>
     <string name="empty_results">Pas de résultats</string>
     <string name="network_error">Erreur réseau</string>
     <string name="available">Disponible</string>
@@ -32,6 +33,8 @@
     <string name="details_rating">Cote :</string>
 
     <!-- Transitions -->
-    <string name="transition_name_image" translatable="false">transition:IMAGE</string>
+    <string name="transition_name_image" translatable="false">image</string>
     <string name="transition_name_toolbar" translatable="false">toolbar</string>
+    <string name="transition_name_tablayout" translatable="false">tablayout</string>
+    <string name="transition_name_viewpager" translatable="false">viewpager</string>
 </resources>

@@ -3,16 +3,22 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.models.Media;
+import com.nbonnec.mediaseb.ui.fragment.AccountFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
@@ -24,6 +30,7 @@ import javax.inject.Inject;
 public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
     private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
 
+
     @Inject
     MSSEndpoints mssEndpoints;
 
@@ -31,21 +38,14 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null && findViewById(R.id.container) != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container,
-                            new MediaListFragmentBuilder(mssEndpoints.newsUrl()).build(),
-                            NEWS_FRAGMENT_TAG)
-                    .commit();
-            /* we want the fragment quickly for lollipop transitions. */
-            getSupportFragmentManager().executePendingTransactions();
-        }
+        initializeTabs();
+    }
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.news);
-        }
+    @Override
+    public void onItemClicked(View view, Media media) {
+        loadMedia(view, media);
     }
 
     private void loadMedia(View view, Media media) {
@@ -79,8 +79,78 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         ActivityCompat.startActivity(MainActivity.this, intent, bundle);
     }
 
-    @Override
-    public void onItemClicked(View view, Media media) {
-        loadMedia(view, media);
+    private void setActionBarTitle(int position) {
+        if (getSupportActionBar() != null) {
+            switch (position) {
+                case MainAvtivityPageAdapter.TAB_NEWS_POSITION:
+                    getSupportActionBar().setTitle(getString(R.string.news));
+                    break;
+                case MainAvtivityPageAdapter.TAB_ACCOUNT_POSITION:
+                    getSupportActionBar().setTitle(R.string.account);
+                    break;
+                default:
+                    getSupportActionBar().setTitle("");
+            }
+        }
+    }
+
+    private void initializeTabs() {
+        MainAvtivityPageAdapter mainAvtivityPageAdapter = new MainAvtivityPageAdapter(getSupportFragmentManager());
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
+        viewPager.setAdapter(mainAvtivityPageAdapter);
+        viewPager.clearOnPageChangeListeners();
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setActionBarTitle(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+
+        if (tabLayout.getTabCount() >= MainAvtivityPageAdapter.TAB_MAX) {
+            tabLayout.getTabAt(MainAvtivityPageAdapter.TAB_NEWS_POSITION).setIcon(R.drawable.ic_whatshot_white);
+            tabLayout.getTabAt(MainAvtivityPageAdapter.TAB_ACCOUNT_POSITION).setIcon(R.drawable.ic_person_white);
+        }
+
+        setActionBarTitle(viewPager.getCurrentItem());
+    }
+
+    private class MainAvtivityPageAdapter extends FragmentPagerAdapter {
+        public final static int TAB_NEWS_POSITION = 0;
+        public final static int TAB_ACCOUNT_POSITION = 1;
+        public final static int TAB_MAX = 2;
+
+        public MainAvtivityPageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case TAB_NEWS_POSITION:
+                    return new MediaListFragmentBuilder(mssEndpoints.newsUrl()).build();
+                case TAB_ACCOUNT_POSITION:
+                    return new AccountFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }
