@@ -207,15 +207,16 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     public void onResume() {
         super.onResume();
 
-        getContextBack();
-
         /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
         isLoading = false;
         mediasAdapter.notifyDataSetChanged();
 
         if (!pageLoaded) {
             loadPage(savedPage);
+        } else {
+            getContextBack();
         }
+
     }
 
     @Override
@@ -287,7 +288,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Timber.d("Can not load page context !");
                     }
 
                     @Override

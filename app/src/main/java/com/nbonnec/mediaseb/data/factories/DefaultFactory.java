@@ -88,4 +88,14 @@ public class DefaultFactory {
             return temporaryInstance;
         }
     }
+
+    public static final class Account {
+        public static com.nbonnec.mediaseb.models.Account constructDefaultInstance() {
+            final com.nbonnec.mediaseb.models.Account temporaryInstance = new com.nbonnec.mediaseb.models.Account();
+
+            temporaryInstance.setRenewDate(new Date());
+
+            return temporaryInstance;
+        }
+    }
 }

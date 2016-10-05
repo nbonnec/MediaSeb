@@ -36,7 +36,6 @@ public class MediasebApp extends Application {
         super.onCreate();
 
         CrashlyticsCore core = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
                 .build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 

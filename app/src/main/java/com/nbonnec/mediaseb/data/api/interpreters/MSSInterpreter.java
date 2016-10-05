@@ -15,6 +15,7 @@
  */
 package com.nbonnec.mediaseb.data.api.interpreters;
 
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
@@ -28,5 +29,5 @@ public interface MSSInterpreter {
     List<Media> interpretLoansFromHtml(String html);
     Hashtable<String, String> interpretTokenFromHtml(String html);
     boolean interpretLoginFromHtml(String html);
-    String interpretAccountFromHtml(String html);
+    Account interpretAccountFromHtml(String html);
 }

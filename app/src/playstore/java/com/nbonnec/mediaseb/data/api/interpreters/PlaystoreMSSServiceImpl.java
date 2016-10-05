@@ -20,6 +20,7 @@ import android.accounts.NetworkErrorException;
 
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.models.MediaStatus;
@@ -71,6 +72,12 @@ public class PlaystoreMSSServiceImpl implements MSSService {
     public Observable<Boolean> login(String name, String cardNumber) {
         return Observable.error(new NetworkErrorException(TAG +
                 ": login - Simulated Bad Network Request"));
+    }
+
+    @Override
+    public Observable<Account> getAccountDetails() {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": getAccountDetails - Simulated Bad Network Request"));
     }
 
     @Override

@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.data.services;
 
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.interpreters.MSSInterpreter;
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -89,6 +90,17 @@ public class MSSServiceImpl implements MSSService {
     }
 
     @Override
+    public Observable<Account> getAccountDetails() {
+        return getHtml(mssEndpoints.accountUrl())
+                .map(new Func1<String, Account>() {
+                    @Override
+                    public Account call(String s) {
+                        return interpreter.interpretAccountFromHtml(s);
+                    }
+                });
+    }
+
+    @Override
     public Observable<String> getHtml(final String url) {
         return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
@@ -112,7 +124,7 @@ public class MSSServiceImpl implements MSSService {
 
     @Override
     public Observable<Boolean> login(final String name, final String cardNumber) {
-        return getHtml(mssEndpoints.getLoginUrl())
+        return getHtml(mssEndpoints.loginUrl())
                 .map(new Func1<String, Hashtable<String, String>>() {
                     @Override
                     public Hashtable<String, String> call(String s) {
@@ -155,7 +167,7 @@ public class MSSServiceImpl implements MSSService {
 
 
                 Request request = new Request.Builder()
-                        .url(mssEndpoints.getLoginUrl())
+                        .url(mssEndpoints.loginUrl())
                         .post(formBody)
                         .build();
                 try {

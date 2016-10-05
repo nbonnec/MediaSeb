@@ -14,6 +14,7 @@ package com.nbonnec.mediaseb.data.services;/*
  * limitations under the License.
  */
 
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
@@ -26,5 +27,6 @@ public interface MSSService {
     Observable<MediaList> getResults(String pattern);
     Observable<MediaList> getNews();
     Observable<Boolean> login(String name, String cardNumber);
+    Observable<Account> getAccountDetails();
     Observable<String> getHtml(final String url);
 }
