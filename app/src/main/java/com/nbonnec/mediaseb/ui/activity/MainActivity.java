@@ -59,23 +59,10 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
 
         MenuItemCompat.collapseActionView(getSearchMenuItem());
 
-        Bundle bundle = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            List<Pair<View, String>> transitions = new ArrayList<>();
+        Bundle bundle =
+                makeTransitions(MainActivity.this,
+                        Pair.create(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)));
 
-            transitions.add(Pair.create(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)));
-            transitions.add(Pair.create(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)));
-            transitions.add(Pair.create(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
-            /* does not exists in landscape */
-            if (findViewById(android.R.id.navigationBarBackground) != null) {
-                transitions.add(Pair.create(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
-            }
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    MainActivity.this, transitions.toArray(new Pair[transitions.size()])
-            );
-            bundle = options.toBundle();
-        }
         ActivityCompat.startActivity(MainActivity.this, intent, bundle);
     }
 

@@ -19,12 +19,23 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.Window;
 
 import com.nbonnec.mediaseb.MediasebApp;
+import com.nbonnec.mediaseb.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import rx.Subscription;
@@ -65,6 +76,39 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Add shared elements to a list of predifined transitions.
+     * @param activity The Activity whose window contains the shared elements.
+     * @param sharedElements elements to add to transitions.
+     * @return a bundle or null if version is low than Lollipop.
+     */
+    @Nullable
+    public Bundle makeTransitions(Activity activity, Pair<View, String>... sharedElements) {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return null;
+        }
+
+        List<Pair<View, String>> transitions = new ArrayList<>();
+
+        if (sharedElements != null) {
+            Collections.addAll(transitions, sharedElements);
+        }
+
+        transitions.add(Pair.create(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)));
+        transitions.add(Pair.create(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
+        /* does not exists in landscape */
+        if (findViewById(android.R.id.navigationBarBackground) != null) {
+            transitions.add(Pair.create(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
+        }
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                activity, transitions.toArray(new Pair[transitions.size()])
+        );
+
+        return options.toBundle();
+    }
+
+    /**
      * From ioshed.
      *
      * This utility method handles Up navigation intents by searching for a parent activity and
@@ -76,9 +120,9 @@ public class BaseActivity extends AppCompatActivity {
      * {@code syntheticParentActivity} to define one dynamically.
      *
      * Note: Up navigation intents are represented by a back arrow in the top left of the Toolbar
-     *       in Material Design guidelines.
+     * in Material Design guidelines.
      *
-     * @param currentActivity Activity in use when navigate Up action occurred.
+     * @param currentActivity         Activity in use when navigate Up action occurred.
      * @param syntheticParentActivity Parent activity to use when one is not already configured.
      */
     public static void navigateUpOrBack(Activity currentActivity,
@@ -121,6 +165,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * Add a RxJava subscription.
      * This subscription will be handled on onStop().
+     *
      * @param s subscription to handle.
      */
     protected void addSubscription(Subscription s) {

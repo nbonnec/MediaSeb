@@ -160,16 +160,10 @@ public class SearchActivity extends ToolbarActivity implements MediaListFragment
                 .addToBackStack(SEARCH_FRAMENT_TAG)
                 .commit();
 
-        Bundle bundle = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    SearchActivity.this,
-                    new Pair<>(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)),
-                    new Pair<>(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME),
-                    new Pair<>(findViewById(android.R.id.navigationBarBackground), Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME)
-            );
-            bundle = options.toBundle();
-        }
+        Bundle bundle =
+                makeTransitions(SearchActivity.this,
+                        Pair.create(view.findViewById(R.id.list_item_image), getString(R.string.transition_name_image)));
+
         ActivityCompat.startActivity(SearchActivity.this, intent, bundle);
     }
 
