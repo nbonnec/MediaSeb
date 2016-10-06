@@ -82,10 +82,10 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     private void setActionBarTitle(int position) {
         if (getSupportActionBar() != null) {
             switch (position) {
-                case MainAvtivityPageAdapter.TAB_NEWS_POSITION:
+                case MainActivityPageAdapter.TAB_NEWS_POSITION:
                     getSupportActionBar().setTitle(getString(R.string.news));
                     break;
-                case MainAvtivityPageAdapter.TAB_ACCOUNT_POSITION:
+                case MainActivityPageAdapter.TAB_ACCOUNT_POSITION:
                     getSupportActionBar().setTitle(R.string.account);
                     break;
                 default:
@@ -95,10 +95,10 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     }
 
     private void initializeTabs() {
-        MainAvtivityPageAdapter mainAvtivityPageAdapter = new MainAvtivityPageAdapter(getSupportFragmentManager());
+        MainActivityPageAdapter mainActivityPageAdapter = new MainActivityPageAdapter(getSupportFragmentManager());
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
-        viewPager.setAdapter(mainAvtivityPageAdapter);
+        viewPager.setAdapter(mainActivityPageAdapter);
         viewPager.clearOnPageChangeListeners();
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -120,20 +120,20 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        if (tabLayout.getTabCount() >= MainAvtivityPageAdapter.TAB_MAX) {
-            tabLayout.getTabAt(MainAvtivityPageAdapter.TAB_NEWS_POSITION).setIcon(R.drawable.ic_whatshot_white);
-            tabLayout.getTabAt(MainAvtivityPageAdapter.TAB_ACCOUNT_POSITION).setIcon(R.drawable.ic_person_white);
+        if (tabLayout.getTabCount() >= MainActivityPageAdapter.TAB_MAX) {
+            tabLayout.getTabAt(MainActivityPageAdapter.TAB_NEWS_POSITION).setIcon(R.drawable.ic_whatshot_white);
+            tabLayout.getTabAt(MainActivityPageAdapter.TAB_ACCOUNT_POSITION).setIcon(R.drawable.ic_person_white);
         }
 
         setActionBarTitle(viewPager.getCurrentItem());
     }
 
-    private class MainAvtivityPageAdapter extends FragmentPagerAdapter {
+    private class MainActivityPageAdapter extends FragmentPagerAdapter {
         public final static int TAB_NEWS_POSITION = 0;
         public final static int TAB_ACCOUNT_POSITION = 1;
         public final static int TAB_MAX = 2;
 
-        public MainAvtivityPageAdapter(FragmentManager fm) {
+        public MainActivityPageAdapter(FragmentManager fm) {
             super(fm);
         }
 
