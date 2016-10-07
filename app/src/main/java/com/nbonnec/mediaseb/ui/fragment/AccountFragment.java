@@ -16,12 +16,15 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
@@ -35,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Observable;
 import rx.Observer;
 
@@ -43,10 +47,21 @@ public class AccountFragment extends BaseFragment {
     @Inject
     MSSService mssService;
 
+    @Bind(R.id.account_flipper_view)
+    ViewFlipper viewFlipper;
+
+    @Bind(R.id.account_content_layout)
+    View contentView;
+
+    @Bind(R.id.account_not_logged_layout)
+    View notLoggedView;
+
     @Bind(R.id.account_renew_date)
     TextView accountDateView;
 
     private Account account;
+
+    private OnClickListener listener;
 
     private Observer<Account> getAccountObserver = new Observer<Account>() {
         @Override
@@ -65,11 +80,17 @@ public class AccountFragment extends BaseFragment {
 
     };
 
+    public interface OnClickListener {
+        void onNotLoggedButtonClicked();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_account, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        showNotLoggedView();
 
         return rootView;
     }
@@ -79,6 +100,28 @@ public class AccountFragment extends BaseFragment {
         super.onResume();
 
         loadAccount();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity;
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            try {
+                listener = (AccountFragment.OnClickListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnClickListener");
+            }
+        }
+    }
+
+    @OnClick(R.id.account_not_logged_button)
+    public void onClickNotLoggedButton() {
+        listener.onNotLoggedButtonClicked();
     }
 
     private void setViews() {
@@ -92,5 +135,13 @@ public class AccountFragment extends BaseFragment {
                 .getAccountDetails()
                 .compose(RxUtils.<Account>applySchedulers());
         addSubscription(getAccountObservable.subscribe(getAccountObserver));
+    }
+
+    private void showNotLoggedView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(notLoggedView));
+    }
+
+    private void showContentView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(contentView));
     }
 }

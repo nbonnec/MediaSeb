@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.nbonnec.mediaseb.models;
-// TODO make it inner Media
-public enum MediaStatus {
-    NONE,
-    AVAILABLE,
-    RESERVED,
-    LOANED
+package com.nbonnec.mediaseb.misc;
+
+import android.os.Build;
+
+public class Utils {
+
+    public static boolean isHoneycomMR2OrLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2;
+    }
+
+    public static boolean isLollipopOrLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean isMarshmallowOrLater() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
 }

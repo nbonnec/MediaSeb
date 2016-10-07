@@ -177,6 +177,10 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
                 break;
         }
 
+        /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
+        isLoading = false;
+        mediasAdapter.notifyDataSetChanged();
+
         return rootView;
     }
 
@@ -207,11 +211,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     public void onResume() {
         super.onResume();
 
-        /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
-        isLoading = false;
-        mediasAdapter.notifyDataSetChanged();
-
-        if (!pageLoaded) {
+        if (!isLoading && !pageLoaded) {
             loadPage(savedPage);
         } else {
             getContextBack();

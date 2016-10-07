@@ -32,6 +32,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.misc.Utils;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaStatus;
 import com.squareup.picasso.Picasso;
@@ -131,7 +132,7 @@ public class DetailsFragment extends BaseFragment {
         // TODO reset position in the scrollview.
         setExtrasViews();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Utils.isLollipopOrLater()) {
             scheduleStartPostponedTransitionApi21(imageView);
         }
 

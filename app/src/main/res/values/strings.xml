@@ -31,10 +31,17 @@
     <string name="details_section">Section :</string>
     <string name="details_location">Localisation :</string>
     <string name="details_rating">Cote :</string>
+    <string name="account_not_logged_text">Vous n\'êtes pas connecté</string>
 
     <!-- Transitions -->
     <string name="transition_name_image" translatable="false">image</string>
     <string name="transition_name_toolbar" translatable="false">toolbar</string>
     <string name="transition_name_tablayout" translatable="false">tablayout</string>
     <string name="transition_name_viewpager" translatable="false">viewpager</string>
+
+    <!-- Permissions -->
+    <string name="permission_required_toast">Cette permission est indispensable pour cette application.</string>
+    <string name="permission_get_accounts_needed">Authorisation nécessaire</string>
+    <string name="permission_get_accounts_rationale">Une authorisation est nécessaire afin de pouvoir accéder à votre compte.</string>
+    <string name="permission_get_accounts_denied">Vous ne pourrez pas accéder à votre compte.</string>
 </resources>

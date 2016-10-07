@@ -22,6 +22,7 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.account.AccountGeneral;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.misc.Utils;
 
 import javax.inject.Inject;
 
@@ -195,7 +196,7 @@ public class LoginActivity extends BaseActivity {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        if (Utils.isHoneycomMR2OrLater()) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             loginView.setVisibility(show ? View.GONE : View.VISIBLE);

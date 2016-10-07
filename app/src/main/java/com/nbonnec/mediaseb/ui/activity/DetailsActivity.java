@@ -16,12 +16,12 @@
 
 package com.nbonnec.mediaseb.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 
 import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.misc.Utils;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.fragment.DetailsFragmentBuilder;
 
@@ -67,7 +67,7 @@ public class DetailsActivity extends ToolbarActivity {
 
         /* wait for layout to be fully load
          * do not forget to call scheduleStartPostponedTransitionApi21 */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Utils.isLollipopOrLater()) {
             postponeEnterTransition();
         }
     }

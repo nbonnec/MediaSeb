@@ -1,11 +1,9 @@
 package com.nbonnec.mediaseb.ui.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,7 +11,6 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.Window;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
@@ -22,12 +19,10 @@ import com.nbonnec.mediaseb.ui.fragment.AccountFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
-public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener {
+public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener,
+                                                            AccountFragment.OnClickListener {
     private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
 
 
@@ -46,6 +41,12 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     @Override
     public void onItemClicked(View view, Media media) {
         loadMedia(view, media);
+    }
+
+    @Override
+    public void onNotLoggedButtonClicked() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void loadMedia(View view, Media media) {
@@ -104,7 +105,7 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tablayout);
         tabLayout.setupWithViewPager(viewPager);
 
         if (tabLayout.getTabCount() >= MainActivityPageAdapter.TAB_MAX) {
