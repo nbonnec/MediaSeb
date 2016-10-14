@@ -31,7 +31,11 @@ import android.widget.Toast;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.ui.activity.LoginActivity;
 
+import timber.log.Timber;
+
 public class AccountAuthenticator extends AbstractAccountAuthenticator {
+    private static final int ERROR_CODE_ONE_ACCOUNT_ALLOWED = 0;
+
     private final Context context;
     private final Handler handler = new Handler();
 
@@ -51,10 +55,11 @@ public class AccountAuthenticator extends AbstractAccountAuthenticator {
         final Bundle bundle = new Bundle();
         final AccountManager accountManager = AccountManager.get(context);
 
+        Timber.d("Adding account !");
         if (accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE).length > 0) {
             final String msg = context.getString(R.string.error_one_account_allowed);
 
-            bundle.putInt(AccountManager.KEY_ERROR_CODE, AccountGeneral.ERROR_CODE_ONE_ACCOUNT_ALLOWED);
+            bundle.putInt(AccountManager.KEY_ERROR_CODE, ERROR_CODE_ONE_ACCOUNT_ALLOWED);
             bundle.putString(AccountManager.KEY_ERROR_MESSAGE, msg);
 
             // Notify the user.

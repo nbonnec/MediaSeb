@@ -31,5 +31,6 @@
     <string name="permission_get_accounts_needed">Permission needed</string>
     <string name="permission_get_accounts_rationale">A permission is needed to access your account.</string>
     <string name="permission_get_accounts_denied">You will not be able to access your account.</string>
-    <string name="account_not_logged_text">You are not connect</string>
+    <string name="account_not_logged_text">You are not connected</string>
+    <string name="loans">Loans</string>
 </resources>

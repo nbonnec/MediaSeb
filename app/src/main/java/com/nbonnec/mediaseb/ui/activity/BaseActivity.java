@@ -37,12 +37,15 @@ import android.view.Window;
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.account.AccountGeneral;
+import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.misc.PermissionUtils;
 import com.nbonnec.mediaseb.misc.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import rx.Subscription;
@@ -56,6 +59,11 @@ public class BaseActivity extends AppCompatActivity {
 
     private CompositeSubscription subscriptions;
 
+    private boolean signIn;
+
+    @Inject
+    MSSService mssService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +71,8 @@ public class BaseActivity extends AppCompatActivity {
         // Inject dependencies
         MediasebApp app = MediasebApp.get(getApplicationContext());
         app.inject(this);
+
+        signIn = false;
     }
 
     @Override
@@ -76,6 +86,7 @@ public class BaseActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        getAccount();
         subscriptions = new CompositeSubscription();
     }
 
@@ -84,6 +95,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         subscriptions.unsubscribe();
     }
+
     /**
      * From ioshed.
      * <p>
@@ -185,6 +197,10 @@ public class BaseActivity extends AppCompatActivity {
         return null;
     }
 
+    public boolean isSignIn() {
+        return signIn;
+    }
+
     /**
      * Add a RxJava subscription.
      * This subscription will be handled on onStop().
@@ -199,15 +215,20 @@ public class BaseActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) !=
                 PackageManager.PERMISSION_GRANTED) {
+            Timber.d("Requesting GET_ACCOUNTS permission.");
             PermissionUtils.requestPermission(this, PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS, false);
         } else {
             AccountManager am = AccountManager.get(this);
             Account[] accounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
-            Timber.d("Number of accounts : '%d'", accounts.length);
-            for (Account a : accounts) {
-                Timber.d("Account : '%s'", a.toString());
+            if (accounts.length > 0) {
+                Timber.d("Using '%s' account.", accounts[0].name);
+                signIn = true;
+                mssService.login(accounts[0].name, am.getPassword(accounts[0]));
+            } else {
+                Timber.d("No account.");
+                signIn = false;
             }
         }
     }

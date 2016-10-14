@@ -61,7 +61,9 @@ public class AccountFragment extends BaseFragment {
 
     private Account account;
 
-    private OnClickListener listener;
+    private OnClickListener onClickListener;
+
+    private OnIsSignedInListener onIsSignedInListener;
 
     private Observer<Account> getAccountObserver = new Observer<Account>() {
         @Override
@@ -84,13 +86,15 @@ public class AccountFragment extends BaseFragment {
         void onNotLoggedButtonClicked();
     }
 
+    public interface OnIsSignedInListener {
+        boolean onIsSignedIn();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_account, container, false);
 
         ButterKnife.bind(this, rootView);
-
-        showNotLoggedView();
 
         return rootView;
     }
@@ -99,7 +103,12 @@ public class AccountFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        loadAccount();
+        if (onIsSignedInListener.onIsSignedIn()) {
+            loadAccount();
+            showContentView();
+        } else {
+            showNotLoggedView();
+        }
     }
 
     @Override
@@ -111,17 +120,32 @@ public class AccountFragment extends BaseFragment {
         if (context instanceof Activity) {
             activity = (Activity) context;
             try {
-                listener = (AccountFragment.OnClickListener) activity;
+                onClickListener = (AccountFragment.OnClickListener) activity;
             } catch (ClassCastException e) {
                 throw new ClassCastException(activity.toString()
-                        + " must implement OnClickListener");
+                        + " must implement OnClickListener!");
+            }
+
+            try {
+                onIsSignedInListener = (AccountFragment.OnIsSignedInListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnIsSignedInListener!");
             }
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        onClickListener = null;
+        onIsSignedInListener = null;
+    }
+
     @OnClick(R.id.account_not_logged_button)
     public void onClickNotLoggedButton() {
-        listener.onNotLoggedButtonClicked();
+        onClickListener.onNotLoggedButtonClicked();
     }
 
     private void setViews() {

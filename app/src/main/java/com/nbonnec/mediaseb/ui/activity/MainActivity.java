@@ -1,15 +1,20 @@
 package com.nbonnec.mediaseb.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.View;
 
 import com.nbonnec.mediaseb.R;
@@ -21,10 +26,15 @@ import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
 
 import javax.inject.Inject;
 
-public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener,
-                                                            AccountFragment.OnClickListener {
-    private static final String NEWS_FRAGMENT_TAG = "news_fragment_tag";
 
+public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener,
+        AccountFragment.OnClickListener, AccountFragment.OnIsSignedInListener {
+    private static String POSITION = "POSITION";
+
+    private TabLayout tabLayout;
+    private MainActivityPageAdapter mainActivityPageAdapter;
+
+    private int savedPosition;
 
     @Inject
     MSSEndpoints mssEndpoints;
@@ -35,7 +45,24 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
 
         setContentView(R.layout.activity_main);
 
-        initializeTabs();
+        if (savedInstanceState != null) {
+            savedPosition = savedInstanceState.getInt(POSITION);
+        } else {
+            savedPosition = 0;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        initializeTabs(MainActivityPageAdapter.TAB_MIN + (isSignIn() ? 1 : 0));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POSITION, tabLayout.getSelectedTabPosition());
     }
 
     @Override
@@ -49,14 +76,14 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         startActivity(intent);
     }
 
+    @Override
+    public boolean onIsSignedIn() {
+        return isSignIn();
+    }
+
     private void loadMedia(View view, Media media) {
         Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.MEDIA, media);
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack(NEWS_FRAGMENT_TAG)
-                .commit();
 
         MenuItemCompat.collapseActionView(getSearchMenuItem());
 
@@ -69,9 +96,12 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
 
     private void setActionBarTitle(int position) {
         if (getSupportActionBar() != null) {
-            switch (position) {
+            switch (mainActivityPageAdapter.getVirtualPosition(position)) {
                 case MainActivityPageAdapter.TAB_NEWS_POSITION:
                     getSupportActionBar().setTitle(getString(R.string.news));
+                    break;
+                case MainActivityPageAdapter.TAB_LOANS_POSITION:
+                    getSupportActionBar().setTitle(R.string.loans);
                     break;
                 case MainActivityPageAdapter.TAB_ACCOUNT_POSITION:
                     getSupportActionBar().setTitle(R.string.account);
@@ -82,8 +112,8 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         }
     }
 
-    private void initializeTabs() {
-        MainActivityPageAdapter mainActivityPageAdapter = new MainActivityPageAdapter(getSupportFragmentManager());
+    private void initializeTabs(int tabCount) {
+        mainActivityPageAdapter = new MainActivityPageAdapter(getSupportFragmentManager(), tabCount);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
         viewPager.setAdapter(mainActivityPageAdapter);
@@ -105,31 +135,35 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tablayout);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.main_tablayout);
+        tabLayout.setupWithViewPager(viewPager, true);
 
-        if (tabLayout.getTabCount() >= MainActivityPageAdapter.TAB_MAX) {
-            tabLayout.getTabAt(MainActivityPageAdapter.TAB_NEWS_POSITION).setIcon(R.drawable.ic_whatshot_white);
-            tabLayout.getTabAt(MainActivityPageAdapter.TAB_ACCOUNT_POSITION).setIcon(R.drawable.ic_person_white);
-        }
+        viewPager.setCurrentItem(savedPosition);
+        viewPager.setOffscreenPageLimit(tabCount - 1);
 
         setActionBarTitle(viewPager.getCurrentItem());
     }
 
-    private class MainActivityPageAdapter extends FragmentPagerAdapter {
-        public final static int TAB_NEWS_POSITION = 0;
-        public final static int TAB_ACCOUNT_POSITION = 1;
-        public final static int TAB_MAX = 2;
+    private class MainActivityPageAdapter extends FragmentStatePagerAdapter {
+        final static int TAB_NEWS_POSITION = 0;
+        final static int TAB_LOANS_POSITION = 1;
+        final static int TAB_ACCOUNT_POSITION = 2;
+        final static int TAB_MIN = 2;
 
-        public MainActivityPageAdapter(FragmentManager fm) {
+        private int count;
+
+        MainActivityPageAdapter(FragmentManager fm, int tabCount) {
             super(fm);
+            count = tabCount;
         }
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
+            switch (getVirtualPosition(position)) {
                 case TAB_NEWS_POSITION:
                     return new MediaListFragmentBuilder(mssEndpoints.newsUrl()).build();
+                case TAB_LOANS_POSITION:
+                    return new MediaListFragmentBuilder(mssEndpoints.simpleSearchUrl("lol")).build();
                 case TAB_ACCOUNT_POSITION:
                     return new AccountFragment();
             }
@@ -137,8 +171,41 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            int[] imageResId = {
+                    R.drawable.ic_whatshot_white,
+                    R.drawable.ic_archive_white,
+                    R.drawable.ic_person_white
+            };
+
+            Drawable iconDrawable = ContextCompat.getDrawable(MainActivity.this,
+                    imageResId[getVirtualPosition(position)]);
+
+            if (iconDrawable == null) {
+                return null;
+            } else {
+                iconDrawable.setBounds(0, 0, iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight());
+
+                SpannableString spannableString = new SpannableString(" ");
+                ImageSpan imageSpan = new ImageSpan(iconDrawable, ImageSpan.ALIGN_BOTTOM);
+
+                spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                return spannableString;
+            }
+        }
+
+        @Override
         public int getCount() {
-            return 2;
+            return count;
+        }
+
+        /* virtually always 3 tabs */
+        int getVirtualPosition(int position) {
+            if (position == 1 && count == 2) {
+                position = 2;
+            }
+            return position;
         }
     }
 }

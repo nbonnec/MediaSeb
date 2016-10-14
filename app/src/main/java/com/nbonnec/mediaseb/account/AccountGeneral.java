@@ -18,7 +18,6 @@ package com.nbonnec.mediaseb.account;
 
 public class AccountGeneral {
     public static final String ACCOUNT_TYPE = "com.nbonnec.mediaseb.account";
-    public static final int ERROR_CODE_ONE_ACCOUNT_ALLOWED = 0;
 
     public enum Status {
         ACCOUNT_PERMISSION_DENIED,

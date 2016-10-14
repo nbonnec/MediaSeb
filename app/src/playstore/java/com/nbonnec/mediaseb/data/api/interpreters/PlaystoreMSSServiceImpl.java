@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import timber.log.Timber;
 
 public class PlaystoreMSSServiceImpl implements MSSService {
@@ -70,8 +71,7 @@ public class PlaystoreMSSServiceImpl implements MSSService {
 
     @Override
     public Observable<Boolean> login(String name, String cardNumber) {
-        return Observable.error(new NetworkErrorException(TAG +
-                ": login - Simulated Bad Network Request"));
+        return loginWithToken(name, cardNumber);
     }
 
     @Override
@@ -143,5 +143,31 @@ public class PlaystoreMSSServiceImpl implements MSSService {
         mediaList.setMedias(medias);
 
         return mediaList;
+    }
+
+    /**
+     * Try to login with GRIMES 12345678901234.
+     * @param name name of the user.
+     * @param cardNumber card number of the user.
+     * @return true if login succeeded.
+     */
+    private Observable<Boolean> loginWithToken(final String name, final String cardNumber) {
+
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                Timber.d("SIMULATED : Logging in user '%s', card '%s'", name, cardNumber);
+
+                    if (name.equals("GRIMES") && cardNumber.equals("12345678901234")) {
+                        Timber.d("User '%s' was successfully logged in", name);
+                        subscriber.onNext(true);
+                    } else {
+                        Timber.e("Failed to log in user '%s'", name);
+                        subscriber.onNext(false);
+                    }
+                    subscriber.onCompleted();
+                }
+            }
+        );
     }
 }
