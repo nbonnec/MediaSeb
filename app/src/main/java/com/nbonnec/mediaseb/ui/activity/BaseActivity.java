@@ -180,7 +180,6 @@ public class BaseActivity extends AppCompatActivity {
             }
 
             transitions.add(Pair.create(findViewById(R.id.toolbar), getString(R.string.transition_name_toolbar)));
-            transitions.add(Pair.create(findViewById(R.id.main_tablayout), getString(R.string.transition_name_tablayout)));
             transitions.add(Pair.create(findViewById(android.R.id.statusBarBackground), Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME));
             /* does not exists in landscape */
             if (findViewById(android.R.id.navigationBarBackground) != null) {
