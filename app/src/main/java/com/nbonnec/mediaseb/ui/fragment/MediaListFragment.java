@@ -162,12 +162,8 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
         recyclerView.setAdapter(mediasAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
 
-        // TODO why ?
-        if (visibleLayout == null) {
-            visibleLayout = VisibleLayout.LOADING_LAYOUT;
-        }
         switch (visibleLayout) {
             case CONTENT_LAYOUT:
             case LOADING_LAYOUT:
