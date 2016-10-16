@@ -13,7 +13,8 @@
         android:layout_marginRight="8dp">
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/list_item_image"
+            android:transitionName="@string/transition_name_image"
             android:layout_width="72dp"
             android:layout_height="104dp"
             android:layout_alignParentLeft="true"
@@ -23,30 +24,30 @@
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/list_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/icon"
-            android:layout_toRightOf="@+id/icon"
+            android:layout_alignTop="@+id/list_item_image"
+            android:layout_toRightOf="@+id/list_item_image"
             android:ellipsize="end"
             android:maxLines="2"
             android:paddingTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
         <TextView
-            android:id="@+id/author"
+            android:id="@+id/list_item_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:layout_toRightOf="@+id/icon"
+            android:layout_below="@+id/list_item_title"
+            android:layout_toRightOf="@+id/list_item_image"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
         <TextView
-            android:id="@+id/year"
+            android:id="@+id/list_item_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/icon"
-            android:layout_toRightOf="@+id/icon"
+            android:layout_alignBottom="@+id/list_item_image"
+            android:layout_toRightOf="@+id/list_item_image"
             android:paddingBottom="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 

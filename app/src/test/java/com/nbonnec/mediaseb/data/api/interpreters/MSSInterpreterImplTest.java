@@ -23,6 +23,7 @@ import com.nbonnec.mediaseb.BuildConfig;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpointsImpl;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.models.MediaStatus;
@@ -60,7 +61,7 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(medias.get(0).getTitle()).isEqualTo("Dead man walking : bande originale du film");
         assertThat(medias.get(0).getAuthor()).isEqualTo("Robbins, Tim");
         assertThat(medias.get(0).getEditor()).isEqualTo("Sony Music");
-        assertThat(medias.get(0).getYear()).isEqualTo(("P 1995"));
+        assertThat(medias.get(0).getYear()).isEqualTo(("1995"));
         assertThat(medias.get(0).getCollection()).isEqualTo(DefaultFactory.Media.EMPTY_FIELD_COLLECTION);
         assertThat(medias.get(0).getImageUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/index.php?option=com_opac&view=Ajax&task=couvertureAjax&tmpl=component&format=raw&num_ntc=520486958:103&is_media_ntc=0&type_ntc=6&taille=moyenne&support=ico_sup_03.png&lib_support=CD&isbn=&ean=&titre=Dead+man+walking&editeur=Sony+Music&auteur=Robbins%2C+Tim&show_lnk=118&Itemid=118");
         assertThat(medias.get(0).getNoticeUrl()).isEqualTo("http://mediatheque.saintsebastien.fr/recherche/notice/520486958-103");
@@ -197,10 +198,12 @@ public class MSSInterpreterImplTest extends BaseTestCase {
     }
 
     @Test
-    public void test_AccountParsing() throws IOException {
+    public void test_AccountParsing() throws IOException, ParseException {
         MSSInterpreterImpl interpreter = new MSSInterpreterImpl(mssEndpoints);
-        String date = interpreter.interpretAccountFromHtml(readAssetFile("html/account.html"));
+        Account account = interpreter.interpretAccountFromHtml(readAssetFile("html/account.html"));
 
-        assertThat(date).isEqualTo("24/08/2016");
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+
+        assertThat(account.getRenewDate()).isEqualTo(fmt.parse("24/08/2016"));
     }
 }

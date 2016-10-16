@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.misc.Utils;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaStatus;
 import com.squareup.picasso.Picasso;
@@ -129,6 +131,10 @@ public class DetailsFragment extends BaseFragment {
         // Necessary on orientation changes.
         // TODO reset position in the scrollview.
         setExtrasViews();
+
+        if (Utils.isLollipopOrLater()) {
+            scheduleStartPostponedTransitionApi21(imageView);
+        }
 
         return rootView;
     }

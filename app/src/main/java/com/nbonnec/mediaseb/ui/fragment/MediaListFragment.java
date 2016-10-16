@@ -135,7 +135,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     };
 
     public interface OnClickedListener {
-        void onItemClicked(Media media);
+        void onItemClicked(View view, Media media);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
         recyclerView.setAdapter(mediasAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(true);
 
         switch (visibleLayout) {
             case CONTENT_LAYOUT:
@@ -176,6 +176,10 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
                 showErrorView();
                 break;
         }
+
+        /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
+        isLoading = false;
+        mediasAdapter.notifyDataSetChanged();
 
         return rootView;
     }
@@ -207,32 +211,29 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     public void onResume() {
         super.onResume();
 
-        /* when returning to activity, we want to throw MediasLatestPositionEvent if needed */
-        isLoading = false;
-        mediasAdapter.notifyDataSetChanged();
-
-        if (!pageLoaded) {
+        if (!isLoading && !pageLoaded) {
             loadPage(savedPage);
+        } else {
+            getContextBack();
         }
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
 
-        if (mediaList != null) {
-            /* TODO
-             * fragment is destroyed while loading,
-             * we want to make the request again on onResume.
-             * I think it's ugly, need to be changed. */
-            if (visibleLayout == VisibleLayout.LOADING_LAYOUT) {
-                pageLoaded = false;
-            }
-            saveInstanceState.putParcelable(STATE_MEDIALIST, mediaList);
-            saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
-            saveInstanceState.putString(STATE_SAVED_PAGE, savedPage);
-            saveInstanceState.putSerializable(STATE_VISIBLE_LAYOUT, visibleLayout);
+        /* TODO
+         * fragment is destroyed while loading,
+         * we want to make the request again on onResume.
+         * I think it's ugly, need to be changed. */
+        if (visibleLayout == VisibleLayout.LOADING_LAYOUT) {
+            pageLoaded = false;
         }
+        saveInstanceState.putParcelable(STATE_MEDIALIST, mediaList);
+        saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
+        saveInstanceState.putString(STATE_SAVED_PAGE, savedPage);
+        saveInstanceState.putSerializable(STATE_VISIBLE_LAYOUT, visibleLayout);
     }
 
     @Override
@@ -252,7 +253,6 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         loadPage(page);
     }
 
-
     /**
      * Load a new page.
      * Reset UI, no more list on screen.
@@ -267,9 +267,33 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         showLoadingView();
 
         getMediasObservable = mssService
-                .getMediaList(page)
+                .getMediaList(savedPage)
                 .compose(RxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
+    }
+
+    /**
+     * In order for pullNextMedias to work correctly when we come from another activity (search
+     * for example), we need ask the fisrt page.
+     */
+    private void getContextBack() {
+        addSubscription(mssService.getHtml(savedPage).compose(RxUtils.<String>applySchedulers())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.d("Can not load page context !");
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+
+                    }
+                }));
     }
 
     private boolean canPullNextMedias(int position) {
@@ -296,32 +320,32 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     }
 
     private void showLoadingView() {
-        Timber.d("Showing loading view");
+        Timber.d("Showing loading view '%s'", this.toString());
         visibleLayout = VisibleLayout.LOADING_LAYOUT;
         flipperView.setDisplayedChild(flipperView.indexOfChild(loadingView));
     }
 
     private void showErrorView() {
-        Timber.d("Showing error view");
+        Timber.d("Showing error view '%s'", this.toString());
         visibleLayout = VisibleLayout.ERROR_LAYOUT;
         flipperView.setDisplayedChild(flipperView.indexOfChild(errorView));
     }
 
     private void showContentView() {
-        Timber.d("Showing content view");
+        Timber.d("Showing content view '%s'", this.toString());
         visibleLayout = VisibleLayout.CONTENT_LAYOUT;
         flipperView.setDisplayedChild(flipperView.indexOfChild(contentView));
     }
 
     private void showNoContentView() {
-        Timber.d("Showing no content view");
+        Timber.d("Showing no content view '%s'", this.toString());
         visibleLayout = VisibleLayout.NO_CONTENT_LAYOUT;
         flipperView.setDisplayedChild(flipperView.indexOfChild(noContentView));
     }
 
     @Override
-    public void onItemClick(Media media) {
-        listener.onItemClicked(media);
+    public void onItemClick(View itemView, Media media) {
+        listener.onItemClicked(itemView, media);
     }
 
     private void resetAdapters() {

@@ -30,7 +30,7 @@
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activity.SearchActivity" />
+                android:value="com.nbonnec.mediaseb.ui.activity.SearchActivity" />
         </activity>
         <activity
             android:name=".ui.activity.DetailsActivity"
@@ -43,7 +43,7 @@
             <!-- enable the search dialog to send searches to SearchableActivity -->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activity.SearchActivity" />
+                android:value="com.nbonnec.mediaseb.ui.activity.SearchActivity" />
         </activity>
         <activity
             android:name=".ui.activity.SearchActivity"

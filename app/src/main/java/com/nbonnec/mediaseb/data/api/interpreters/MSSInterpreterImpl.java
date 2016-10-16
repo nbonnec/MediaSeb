@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.data.api.interpreters;
 
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.models.MediaStatus;
@@ -75,7 +76,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
             if (title != null) {
                 /* Delete brackets. */
-                String t = title.text().replaceAll("\\[(.*)\\]", "$1");
+                String t = cleanTitle(title.text());
                 currentMedia.setTitle(t);
                 currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
             }
@@ -208,7 +209,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
             Element loanDate = loan.select(LOAN_ELEMENT).get(LOAN_DATE_INDEX);
 
             if (title != null) {
-                currentMedia.setTitle(title.text());
+                currentMedia.setTitle(cleanTitle(title.text()));
             }
             if (author != null) {
                 currentMedia.setAuthor(author.text());
@@ -233,31 +234,6 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         }
 
         return medias;
-    }
-
-    /**
-     * Get the status of the media.
-     * @param situation from html.
-     * @return enum.
-     */
-    private MediaStatus getStatus(String situation) {
-        MediaStatus mediaStatus;
-
-        switch (situation) {
-            case "En rayon":
-                mediaStatus = MediaStatus.AVAILABLE;
-                break;
-            case "Réservé":
-                mediaStatus = MediaStatus.RESERVED;
-                break;
-            case "Sorti":
-                mediaStatus = MediaStatus.LOANED;
-                break;
-            default:
-                mediaStatus = MediaStatus.NONE;
-        }
-
-        return mediaStatus;
     }
 
     @Override
@@ -294,17 +270,56 @@ public class MSSInterpreterImpl implements MSSInterpreter {
     }
 
     @Override
-    public String interpretAccountFromHtml(String html) {
-        final String DATE_ELEMENT = "tr:contains(date) td:eq(3)";
+    public Account interpretAccountFromHtml(String html) {
+        final String DATE_ELEMENT = "tr:contains(Date de renouvellement) td:eq(3)";
+
+        final Account account = DefaultFactory.Account.constructDefaultInstance();
 
         Document parseHtml = Jsoup.parse(html);
         Element date = parseHtml.select(DATE_ELEMENT).first();
 
         if(date != null) {
             // Remove &nbsp;
-            return date.text().replaceAll("\\u00a0", "");
-        } else {
-            return "";
+            final String renewDate = date.text().replaceAll("\\u00a0", "");
+
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+
+            try {
+                account.setRenewDate(fmt.parse(renewDate));
+            } catch (ParseException e) {
+                Timber.d("Exception : can not parse renew date !");
+            }
         }
+
+        return account;
+    }
+
+    /**
+     * Get the status of the media.
+     * @param situation from html.
+     * @return enum.
+     */
+    private MediaStatus getStatus(String situation) {
+        MediaStatus mediaStatus;
+
+        switch (situation) {
+            case "En rayon":
+                mediaStatus = MediaStatus.AVAILABLE;
+                break;
+            case "Réservé":
+                mediaStatus = MediaStatus.RESERVED;
+                break;
+            case "Sorti":
+                mediaStatus = MediaStatus.LOANED;
+                break;
+            default:
+                mediaStatus = MediaStatus.NONE;
+        }
+
+        return mediaStatus;
+    }
+
+    private String cleanTitle(String s) {
+       return s.replaceAll("[\\[\\]{}]", "");
     }
 }

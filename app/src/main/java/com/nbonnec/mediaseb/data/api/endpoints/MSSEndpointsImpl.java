@@ -37,7 +37,8 @@ public class MSSEndpointsImpl implements MSSEndpoints {
             "{api_url}/recherche/facettes/{search}/{layout}?limit={limit}";
     private static final String NEXT_URL = "{api_url}{next_url}";
     private static final String LOAN_URL = "{api_url}/mon-compte/mes-prets?view=Prets&task=ListePrets";
-    /* choose an URL fast to load */
+    private static final String ACCOUNT_URL = "{api_url}/mon-compte";
+    /* choose an URL fast to load to login quickly */
     private static final String LOGIN_URL = "{api_url}/mon-compte";
 
     @Override
@@ -108,8 +109,16 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     }
 
     @Override
-    public String getLoginUrl() {
+    public String loginUrl() {
         return Phrase.from(LOGIN_URL)
+                .put("api_url", API_URL)
+                .format()
+                .toString();
+    }
+
+    @Override
+    public String accountUrl() {
+        return Phrase.from(ACCOUNT_URL)
                 .put("api_url", API_URL)
                 .format()
                 .toString();

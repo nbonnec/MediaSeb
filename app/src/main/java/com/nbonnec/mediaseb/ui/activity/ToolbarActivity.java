@@ -58,6 +58,9 @@ public class ToolbarActivity extends BaseActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
+        /* fill horizontally in landscape */
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
         getSearchView().setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

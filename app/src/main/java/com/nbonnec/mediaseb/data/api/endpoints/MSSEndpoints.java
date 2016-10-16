@@ -28,5 +28,7 @@ public interface MSSEndpoints {
 
     String nextUrl(String nextUrl);
 
-    String getLoginUrl();
+    String loginUrl();
+
+    String accountUrl();
 }

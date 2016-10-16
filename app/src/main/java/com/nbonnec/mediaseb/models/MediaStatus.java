@@ -15,7 +15,7 @@
  */
 
 package com.nbonnec.mediaseb.models;
-
+// TODO make it inner Media
 public enum MediaStatus {
     NONE,
     AVAILABLE,

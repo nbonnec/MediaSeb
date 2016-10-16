@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.data.services;
 
 import android.accounts.NetworkErrorException;
 
+import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
@@ -61,6 +62,18 @@ public class BadGetMSSServiceImpl implements MSSService {
     @Override
     public Observable<Boolean> login(String name, String cardNumber) {
         return Observable.error(new NetworkErrorException(TAG +
-                ": loginWithToken - Simulated Bad Network Request"));
+                ": login - Simulated Bad Network Request"));
+    }
+
+    @Override
+    public Observable<Account> getAccountDetails() {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": login - Simulated Bad Network Request"));
+    }
+
+    @Override
+    public Observable<String> getHtml(String name) {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": getHtml - Simulated Bad Network Request"));
     }
 }

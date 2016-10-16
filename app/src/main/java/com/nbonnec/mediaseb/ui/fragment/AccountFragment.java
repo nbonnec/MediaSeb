@@ -16,5 +16,156 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.ViewFlipper;
+
+import com.nbonnec.mediaseb.R;
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
+import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.models.Account;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.Observable;
+import rx.Observer;
+
 public class AccountFragment extends BaseFragment {
+
+    @Inject
+    MSSService mssService;
+
+    @Bind(R.id.account_flipper_view)
+    ViewFlipper viewFlipper;
+
+    @Bind(R.id.account_content_layout)
+    View contentView;
+
+    @Bind(R.id.account_not_logged_layout)
+    View notLoggedView;
+
+    @Bind(R.id.account_renew_date)
+    TextView accountDateView;
+
+    private Account account;
+
+    private OnClickListener onClickListener;
+
+    private OnIsSignedInListener onIsSignedInListener;
+
+    private Observer<Account> getAccountObserver = new Observer<Account>() {
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+        }
+
+        @Override
+        public void onNext(Account a) {
+            account = a;
+            setViews();
+        }
+
+    };
+
+    public interface OnClickListener {
+        void onNotLoggedButtonClicked();
+    }
+
+    public interface OnIsSignedInListener {
+        boolean onIsSignedIn();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_account, container, false);
+
+        ButterKnife.bind(this, rootView);
+
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (onIsSignedInListener.onIsSignedIn()) {
+            loadAccount();
+            showContentView();
+        } else {
+            showNotLoggedView();
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity;
+
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            try {
+                onClickListener = (AccountFragment.OnClickListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnClickListener!");
+            }
+
+            try {
+                onIsSignedInListener = (AccountFragment.OnIsSignedInListener) activity;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(activity.toString()
+                        + " must implement OnIsSignedInListener!");
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        onClickListener = null;
+        onIsSignedInListener = null;
+    }
+
+    @OnClick(R.id.account_not_logged_button)
+    public void onClickNotLoggedButton() {
+        onClickListener.onNotLoggedButtonClicked();
+    }
+
+    private void setViews() {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+        accountDateView.setText(fmt.format(account.getRenewDate()));
+    }
+
+    private void loadAccount() {
+
+        Observable<Account> getAccountObservable = mssService
+                .getAccountDetails()
+                .compose(RxUtils.<Account>applySchedulers());
+        addSubscription(getAccountObservable.subscribe(getAccountObserver));
+    }
+
+    private void showNotLoggedView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(notLoggedView));
+    }
+
+    private void showContentView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(contentView));
+    }
 }
