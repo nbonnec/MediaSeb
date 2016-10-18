@@ -1,8 +1,8 @@
 # MediaSeb
 
-[!screenshot-news](screenshots/sc-news.png?raw=true)
-[!screenshot-search](screenshots/sc-search.png?raw=true)
-[!screenshot-details](screenshots/sc-details.png?raw=true)
+![screenshot-news](screenshots/sc-news.png?raw=true)
+![screenshot-search](screenshots/sc-search.png?raw=true)
+![screenshot-details](screenshots/sc-details.png?raw=true)
 
 Application Android permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
 Créée pour apprendre le développement Android.
