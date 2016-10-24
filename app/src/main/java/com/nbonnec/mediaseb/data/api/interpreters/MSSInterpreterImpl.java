@@ -35,12 +35,15 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class MSSInterpreterImpl implements MSSInterpreter {
 
-    MSSEndpoints endpoints;
+    private MSSEndpoints endpoints;
 
+    @Inject
     public MSSInterpreterImpl(MSSEndpoints mssEndpoints) {
         this.endpoints = mssEndpoints;
     }
@@ -273,7 +276,8 @@ public class MSSInterpreterImpl implements MSSInterpreter {
     public Account interpretAccountFromHtml(String html) {
         final String DATE_ELEMENT = "tr:contains(Date de renouvellement) td:eq(3)";
 
-        final Account account = DefaultFactory.Account.constructDefaultInstance();
+        Account.Builder account = Account.builder();
+        account.setName("GRIMES");
 
         Document parseHtml = Jsoup.parse(html);
         Element date = parseHtml.select(DATE_ELEMENT).first();
@@ -284,6 +288,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 
+
             try {
                 account.setRenewDate(fmt.parse(renewDate));
             } catch (ParseException e) {
@@ -291,7 +296,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
             }
         }
 
-        return account;
+        return account.build();
     }
 
     /**

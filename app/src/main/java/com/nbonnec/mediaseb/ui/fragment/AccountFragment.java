@@ -150,7 +150,7 @@ public class AccountFragment extends BaseFragment {
 
     private void setViews() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-        accountDateView.setText(fmt.format(account.getRenewDate()));
+        accountDateView.setText(fmt.format(account.renewDate()));
     }
 
     private void loadAccount() {

@@ -16,49 +16,66 @@
 
 package com.nbonnec.mediaseb.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
 
 import java.util.Date;
 
-public class Account implements Parcelable {
-    private Date renewDate;
+@AutoValue
+public abstract class Account {
+    public abstract String name();
+    @Nullable
+    public abstract String surname();
+    @Nullable
+    public abstract String address();
+    @Nullable
+    public abstract String postalCode();
+    @Nullable
+    public abstract String city();
+    @Nullable
+    public abstract String birthDate();
+    @Nullable
+    public abstract String mail();
+    @Nullable
+    public abstract String phoneNumber();
+    @Nullable
+    public abstract String loanNumber();
+    @Nullable
+    public abstract String reservation();
+    @Nullable
+    public abstract String availableReservation();
+    @Nullable
+    public abstract String cardNumber();
+    @Nullable
+    public abstract String fare();
+    @Nullable
+    public abstract String balance();
+    @Nullable
+    public abstract Date renewDate();
+    @Nullable
 
-    public Account() {
+    public static Builder builder() {
+        return new AutoValue_Account.Builder();
     }
 
-    protected Account(Parcel in) {
-        renewDate = new Date(in.readLong());
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder setName(String value);
+        public abstract Builder setSurname(String value);
+        public abstract Builder setAddress(String value);
+        public abstract Builder setPostalCode(String value);
+        public abstract Builder setCity(String value);
+        public abstract Builder setBirthDate(String value);
+        public abstract Builder setMail(String value);
+        public abstract Builder setPhoneNumber(String value);
+        public abstract Builder setLoanNumber(String value);
+        public abstract Builder setReservation(String value);
+        public abstract Builder setAvailableReservation(String value);
+        public abstract Builder setCardNumber(String value);
+        public abstract Builder setFare(String value);
+        public abstract Builder setBalance(String value);
+        public abstract Builder setRenewDate(Date value);
+        public abstract Account build();
     }
-
-    public static final Creator<Account> CREATOR = new Creator<Account>() {
-        @Override
-        public Account createFromParcel(Parcel in) {
-            return new Account(in);
-        }
-
-        @Override
-        public Account[] newArray(int size) {
-            return new Account[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(renewDate.getTime());
-    }
-
-    public Date getRenewDate() {
-        return renewDate;
-    }
-
-    public void setRenewDate(Date renewDate) {
-        this.renewDate = renewDate;
-    }
-
 }

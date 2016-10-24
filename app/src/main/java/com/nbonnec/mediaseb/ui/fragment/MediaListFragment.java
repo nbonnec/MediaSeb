@@ -52,8 +52,6 @@ import timber.log.Timber;
 
 @FragmentWithArgs
 public class MediaListFragment extends BaseFragment implements MediasAdapter.OnItemClickListener {
-    // TODO hasFixedSize
-    private static final String TAG = MediaListFragment.class.getSimpleName();
 
     private static final String STATE_MEDIALIST = "state_medialist";
     private static final String STATE_PAGE_LOADED = "page_loaded";

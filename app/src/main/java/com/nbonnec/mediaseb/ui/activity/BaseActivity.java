@@ -83,7 +83,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
 
         getAccount();
@@ -91,7 +91,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         subscriptions.unsubscribe();
     }

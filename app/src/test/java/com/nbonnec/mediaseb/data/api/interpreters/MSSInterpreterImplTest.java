@@ -204,6 +204,6 @@ public class MSSInterpreterImplTest extends BaseTestCase {
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 
-        assertThat(account.getRenewDate()).isEqualTo(fmt.parse("24/08/2016"));
+        assertThat(account.renewDate()).isEqualTo(fmt.parse("24/08/2016"));
     }
 }
