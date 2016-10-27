@@ -14,29 +14,7 @@
  * limitations under the License.
  */
 
-package com.nbonnec.mediaseb.di.modules;
+package com.nbonnec.mediaseb.ui.event;
 
-import com.nbonnec.mediaseb.data.Rx.RxUtils;
-import com.squareup.otto.Bus;
-
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
-@Module(
-        library = true
-)
-public class ContextModule {
-    public static final String TAG = ContextModule.class.getSimpleName();
-
-    @Provides @Singleton
-    Bus provideBus() {
-        return new Bus();
-    }
-
-    @Provides @Singleton
-    RxUtils provideRxUtils() {
-        return new RxUtils();
-    }
+public class LoginSuccessEvent {
 }

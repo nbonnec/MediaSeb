@@ -43,6 +43,9 @@ public class LoginActivity extends BaseActivity {
     @Inject
     MSSService mssService;
 
+    @Inject
+    RxUtils rxUtils;
+
     @Bind(R.id.name)
     TextInputEditText nameView;
     @Bind(R.id.card_number)
@@ -121,7 +124,7 @@ public class LoginActivity extends BaseActivity {
             hideSoftKeyboard();
             showProgress(true);
             addSubscription(mssService.login(name, cardNumber)
-                    .compose(RxUtils.<Boolean>applySchedulers())
+                    .compose(rxUtils.<Boolean>applySchedulers())
                     .subscribe(new Observer<Boolean>() {
                         @Override
                         public void onCompleted() {

@@ -37,9 +37,12 @@ import android.view.Window;
 import com.nbonnec.mediaseb.MediasebApp;
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.account.AccountGeneral;
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.misc.PermissionUtils;
 import com.nbonnec.mediaseb.misc.Utils;
+import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +51,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import rx.Observer;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -63,6 +67,12 @@ public class BaseActivity extends AppCompatActivity {
 
     @Inject
     MSSService mssService;
+
+    @Inject
+    Bus bus;
+
+    @Inject
+    RxUtils rxUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +96,8 @@ public class BaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        getAccount();
         subscriptions = new CompositeSubscription();
+        getAccount();
     }
 
     @Override
@@ -224,7 +234,26 @@ public class BaseActivity extends AppCompatActivity {
             if (accounts.length > 0) {
                 Timber.d("Using '%s' account.", accounts[0].name);
                 signIn = true;
-                mssService.login(accounts[0].name, am.getPassword(accounts[0]));
+                addSubscription(mssService.login(accounts[0].name, am.getPassword(accounts[0]))
+                        .compose(rxUtils.<Boolean>applySchedulers())
+                        .subscribe(new Observer<Boolean>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Timber.d("Can not login !");
+                            }
+
+                            @Override
+                            public void onNext(Boolean login) {
+                                if (login) {
+                                    bus.post(new LoginSuccessEvent());
+                                }
+                            }
+                        }));
             } else {
                 Timber.d("No account.");
                 signIn = false;

@@ -16,11 +16,20 @@
 
 package com.nbonnec.mediaseb.data.Rx;
 
+import java.util.concurrent.Executors;
+
 import rx.Observable;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class RxUtils {
+    private Scheduler scheduler;
+
+    public RxUtils() {
+        this.scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+    }
+
     /**
      * Helper method to apply a common set of scheduling operators on an Observable. Here, the
      * {@code Observable} will run on an IO thread, while the result will be posted back to the
@@ -28,11 +37,11 @@ public class RxUtils {
      *
      * Thanks to Dan Lew for his great article on this subject : http://blog.danlew.net/2015/03/02/dont-break-the-chain/
      */
-    public static <T> Observable.Transformer<T, T> applySchedulers() {
+    public <T> Observable.Transformer<T, T> applySchedulers() {
         return new Observable.Transformer<T, T>() {
             @Override
             public Observable<T> call(Observable<T> observable) {
-                return observable.subscribeOn(Schedulers.io())
+                return observable.subscribeOn(scheduler)
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };

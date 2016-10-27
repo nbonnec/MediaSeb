@@ -51,7 +51,7 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
             savedPosition = 0;
         }
 
-        initializeTabs(MainActivityPageAdapter.TAB_MIN + (isSignIn() ? 1 : 0));
+        initializeTabs(MainActivityPageAdapter.TAB_MIN);
     }
 
     @Override
@@ -63,11 +63,13 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     protected void onResume() {
         super.onResume();
 
+        /*
         if (mainActivityPageAdapter.getCount() == 2 && isSignIn()) {
             initializeTabs(MainActivityPageAdapter.TAB_MIN + 1);
         } else if (mainActivityPageAdapter.getCount() == 3 && !isSignIn()) {
             initializeTabs(MainActivityPageAdapter.TAB_MIN);
         }
+        */
     }
 
     @Override

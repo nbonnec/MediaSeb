@@ -16,7 +16,6 @@
 
 package com.nbonnec.mediaseb.ui.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -61,6 +60,9 @@ public class DetailsFragment extends BaseFragment {
 
     @Inject
     MSSEndpoints mssEndpoints;
+
+    @Inject
+    RxUtils rxUtils;
 
     @Bind(R.id.details_background)      ImageView imageViewBack;
     @Bind(R.id.details_image)           ImageView imageView;
@@ -158,7 +160,7 @@ public class DetailsFragment extends BaseFragment {
 
         Observable<Media> getMediasObservable = mssService
                 .getMediaDetails(page)
-                .compose(RxUtils.<Media>applySchedulers());
+                .compose(rxUtils.<Media>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getNoticeObserver));
     }
 

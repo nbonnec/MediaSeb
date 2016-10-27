@@ -30,6 +30,8 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Account;
+import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -41,11 +43,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.Observer;
+import timber.log.Timber;
 
 public class AccountFragment extends BaseFragment {
 
     @Inject
     MSSService mssService;
+
+    @Inject
+    RxUtils rxUtils;
 
     @Bind(R.id.account_flipper_view)
     ViewFlipper viewFlipper;
@@ -104,7 +110,6 @@ public class AccountFragment extends BaseFragment {
         super.onResume();
 
         if (onIsSignedInListener.onIsSignedIn()) {
-            loadAccount();
             showContentView();
         } else {
             showNotLoggedView();
@@ -148,16 +153,21 @@ public class AccountFragment extends BaseFragment {
         onClickListener.onNotLoggedButtonClicked();
     }
 
+    @Subscribe
+    public void onLoginSuccessEvent(LoginSuccessEvent event) {
+        loadAccount();
+    }
+
     private void setViews() {
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
         accountDateView.setText(fmt.format(account.renewDate()));
     }
 
     private void loadAccount() {
-
+        Timber.d("Loading account infos.");
         Observable<Account> getAccountObservable = mssService
                 .getAccountDetails()
-                .compose(RxUtils.<Account>applySchedulers());
+                .compose(rxUtils.<Account>applySchedulers());
         addSubscription(getAccountObservable.subscribe(getAccountObserver));
     }
 
