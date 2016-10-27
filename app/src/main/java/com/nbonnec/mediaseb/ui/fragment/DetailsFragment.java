@@ -121,7 +121,6 @@ public class DetailsFragment extends BaseFragment {
 
         yearView.setText(media.getYear());
 
-        // TODO
         Picasso.with(getActivity())
                 .load(media.getImageUrl())
                 .into(imageViewBack);

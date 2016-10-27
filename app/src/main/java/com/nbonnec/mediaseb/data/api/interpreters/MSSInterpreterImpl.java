@@ -39,6 +39,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+// TODO get rid off all these objects.
 public class MSSInterpreterImpl implements MSSInterpreter {
 
     private MSSEndpoints endpoints;
@@ -274,17 +275,111 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
     @Override
     public Account interpretAccountFromHtml(String html) {
-        final String DATE_ELEMENT = "tr:contains(Date de renouvellement) td:eq(3)";
+        final String ACCOUNT_DIV = "div.pagect.opac.moncompte";
+        final String SURNAME_ELEMENT = "td:matches(Nom\\b) + td";
+        final String NAME_ELEMENT = "td:matches(Prénom\\b) + td";
+        final String ADDRESS_ELEMENT = "td:matches(Adresse 1) + td";
+        final String POSTAL_CODE_ELEMENT = "td:matches(Code postal) + td";
+        final String CITY_ELEMENT = "td:matches(Ville\\b) + td";
+        final String PHONE_NUMBER_ELEMENT = "td:matches(Tél) + td";
+        final String BIRTH_DATE_ELEMENT = "td:matches(Né\\(e\\) le) + td";
+        final String MAIL_ELEMENT = "td:matches(Email\\b) + td";
+        final String LOANS_NUMBER_ELEMENT = "td:matches(Nombre total de prêts) + td";
+        final String RESARVATION_NUMBER_ELEMENT = "td:matches(Réservations en attente) + td";
+        final String AVAILABLE_RESERVATION_ELEMENT = "td:matches(Réservations disponibles) + td";
+        final String CARD_NUMBER_ELEMENT = "td:matches(Numéro de carte) + td";
+        final String RENEW_DATE_ELEMENT = "td:matches(Date de renouvellement) + td";
+        final String FARE_ELEMENT = "td:matches(Tarif) + td";
+        final String BALANCE_ELEMENT = "td:matches(Solde) + td";
 
         Account.Builder account = Account.builder();
-        account.setName("GRIMES");
 
-        Document parseHtml = Jsoup.parse(html);
-        Element date = parseHtml.select(DATE_ELEMENT).first();
+        Elements parseAccount = Jsoup.parse(html).select(ACCOUNT_DIV);
+        Element element;
 
-        if(date != null) {
+        // surname
+        element = parseAccount.select(SURNAME_ELEMENT).first();
+        if (element != null) {
+            account.setSurname(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // name
+        element = parseAccount.select(NAME_ELEMENT).first();
+        if (element != null) {
+            account.setName(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // address
+        element = parseAccount.select(ADDRESS_ELEMENT).first();
+        if (element != null) {
+            account.setAddress(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // postal code
+        element = parseAccount.select(POSTAL_CODE_ELEMENT).first();
+        if (element != null) {
+            account.setPostalCode(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // city
+        element = parseAccount.select(CITY_ELEMENT).first();
+        if (element != null) {
+            account.setCity(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // phone number
+        element = parseAccount.select(PHONE_NUMBER_ELEMENT).first();
+        if (element != null) {
+            account.setPhoneNumber(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // birth date
+        element = parseAccount.select(BIRTH_DATE_ELEMENT).first();
+        if (element != null) {
+            account.setBirthDate(element.text().replaceAll("\\u00a0", ""));
+        }
+        // mail
+        element = parseAccount.select(MAIL_ELEMENT).first();
+        if (element != null) {
+            account.setMail(element.text().replaceAll("\\u00a0", ""));
+        }
+        // loans number
+        element = parseAccount.select(LOANS_NUMBER_ELEMENT).first();
+        if (element != null) {
+            account.setLoanNumber(element.text().replaceAll("\\u00a0", ""));
+        }
+        // reservation number
+        element = parseAccount.select(RESARVATION_NUMBER_ELEMENT).first();
+        if (element != null) {
+            account.setReservation(element.text().replaceAll("\\u00a0", ""));
+        }
+        // available reservations
+        element = parseAccount.select(AVAILABLE_RESERVATION_ELEMENT).first();
+        if (element != null) {
+            account.setAvailableReservation(element.text().replaceAll("\\u00a0", ""));
+        }
+        // card number
+        element = parseAccount.select(CARD_NUMBER_ELEMENT).first();
+        if (element != null) {
+            account.setCardNumber(element.text().replaceAll("\\u00a0", ""));
+        }
+        // fare
+        element = parseAccount.select(FARE_ELEMENT).first();
+        if (element != null) {
+            account.setFare(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // balance
+        element = parseAccount.select(BALANCE_ELEMENT).first();
+        if (element != null) {
+            account.setBalance(element.text().replaceAll("\\u00a0", ""));
+        }
+
+        // date
+        element = parseAccount.select(RENEW_DATE_ELEMENT).first();
+        if(element != null) {
             // Remove &nbsp;
-            final String renewDate = date.text().replaceAll("\\u00a0", "");
+            final String renewDate = element.text().replaceAll("\\u00a0", "");
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 

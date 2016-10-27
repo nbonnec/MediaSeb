@@ -204,6 +204,21 @@ public class MSSInterpreterImplTest extends BaseTestCase {
 
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 
+        assertThat(account.surname()).isEqualTo("GRIMES");
+        assertThat(account.name()).isEqualTo("Rick");
+        assertThat(account.address()).isEqualTo("18 rue de la garillère");
+        assertThat(account.postalCode()).isEqualTo("44230");
+        assertThat(account.city()).isEqualTo("SAINT-SEBASTIEN-SUR-LOIRE");
+        assertThat(account.phoneNumber()).isEqualTo("");
+        assertThat(account.birthDate()).isEqualTo("24/04/1989");
+        assertThat(account.mail()).isEqualTo("rick.grimes@gmail.com");
+        assertThat(account.loanNumber()).isEqualTo("1");
+        assertThat(account.reservation()).isEqualTo("0");
+        assertThat(account.availableReservation()).isEqualTo("0");
+        assertThat(account.cardNumber()).isEqualTo("12345678901234");
+        assertThat(account.cardNumber()).isEqualTo("12345678901234");
         assertThat(account.renewDate()).isEqualTo(fmt.parse("24/08/2016"));
+        assertThat(account.fare()).isEqualTo("01 Gratuit");
+        assertThat(account.balance()).isEqualTo("0.00");
     }
 }
