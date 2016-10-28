@@ -37,40 +37,34 @@ public class AccountUtilsTest extends BaseTestCase {
 
     @Test
     public void test_isCardNumberTooShort() throws IOException {
-        StringToBoolean stb = new StringToBoolean() {
-            @Override
-            public boolean func(String s) {
-                return AccountUtils.isCardNumberTooShort(s);
-            }
-        };
-
-        Scanner s = new Scanner(readAssetFile("text/card-number-too-short.txt"));
-        loopTestStringToBoolean(s, true, stb);
-
-        s = new Scanner(readAssetFile(("text/card-number-good-length.txt")));
-        loopTestStringToBoolean(s, false, stb);
+        Scanner s = new Scanner(readAssetFile(("text/card-number-too-short.txt")));
+        loopTestStringToBoolean(s,
+                new StringToBoolean() {
+                    @Override
+                    public boolean func(String s) {
+                        return AccountUtils.isCardNumberTooShort(s);
+                    }
+                });
     }
 
     @Test
     public void test_isCardNumberCorrect() throws IOException {
-        StringToBoolean stb = new StringToBoolean() {
-            @Override
-            public boolean func(String s) {
-                return AccountUtils.isCardNumberCorrect(s);
-            }
-        };
-
-        Scanner s = new Scanner(readAssetFile("text/card-number-bad-numbers.txt"));
-        loopTestStringToBoolean(s, false, stb);
-
-        s = new Scanner(readAssetFile("text/card-number-good-numbers.txt"));
-        loopTestStringToBoolean(s, true, stb);
+        Scanner s = new Scanner(readAssetFile("text/card-number-correct.txt"));
+        loopTestStringToBoolean(s,
+                new StringToBoolean() {
+                    @Override
+                    public boolean func(String s) {
+                        return AccountUtils.isCardNumberCorrect(s);
+                    }
+                });
     }
 
-    private void loopTestStringToBoolean(Scanner s, boolean expectedResult, StringToBoolean stb) {
+    private void loopTestStringToBoolean(Scanner s, StringToBoolean stb) {
         while (s.hasNext()) {
-            String cardNumber = s.nextLine();
-            assertThat(stb.func(cardNumber)).as("Testing %s", cardNumber).isEqualTo(expectedResult);
+            String[] cardNumber = s.nextLine().split(",\\s");
+            assertThat(stb.func(cardNumber[0]))
+                    .as("Testing %s", cardNumber[0])
+                    .isEqualTo(Boolean.parseBoolean(cardNumber[1]));
         }
     }
 
