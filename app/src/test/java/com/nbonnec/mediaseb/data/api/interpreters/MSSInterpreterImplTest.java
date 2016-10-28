@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
 public class MSSInterpreterImplTest extends BaseTestCase {
-    MSSEndpoints mssEndpoints;
+    private MSSEndpoints mssEndpoints;
 
     public MSSInterpreterImplTest() {
         this.mssEndpoints = new MSSEndpointsImpl();
@@ -215,7 +215,6 @@ public class MSSInterpreterImplTest extends BaseTestCase {
         assertThat(account.loanNumber()).isEqualTo("1");
         assertThat(account.reservation()).isEqualTo("0");
         assertThat(account.availableReservation()).isEqualTo("0");
-        assertThat(account.cardNumber()).isEqualTo("12345678901234");
         assertThat(account.cardNumber()).isEqualTo("12345678901234");
         assertThat(account.renewDate()).isEqualTo(fmt.parse("24/08/2016"));
         assertThat(account.fare()).isEqualTo("01 Gratuit");

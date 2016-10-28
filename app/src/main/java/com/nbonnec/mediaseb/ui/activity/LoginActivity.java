@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.account.AccountGeneral;
+import com.nbonnec.mediaseb.account.AccountUtils;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.misc.Utils;
@@ -97,11 +98,11 @@ public class LoginActivity extends BaseActivity {
         View focusView = null;
 
         // Check for a card number, if the user entered one.
-        if (isCardNumberTooShort(cardNumber)) {
+        if (AccountUtils.isCardNumberTooShort(cardNumber)) {
             cardNumberView.setError(getString(R.string.error_invalid_card_number));
             focusView = cardNumberView;
             cancel = true;
-        } else if (!isCardNumberCorrect(cardNumber)) {
+        } else if (!AccountUtils.isCardNumberCorrect(cardNumber)) {
             cardNumberView.setError(getString(R.string.error_incorrect_card_number));
             focusView = cardNumberView;
             cancel = true;
@@ -151,24 +152,6 @@ public class LoginActivity extends BaseActivity {
                         }
                     }));
         }
-    }
-
-    /**
-     * Card number must be 14 character length.
-     * @param cardNumber card number.
-     * @return true if too short.
-     */
-    private boolean isCardNumberTooShort(String cardNumber) {
-        return cardNumber.length() < 14;
-    }
-
-    /**
-     * Only numbers.
-     * @param cardNumber card number.
-     * @return true if correct.
-     */
-    private boolean isCardNumberCorrect(String cardNumber) {
-        return cardNumber.matches("[0-9]+");
     }
 
     private void hideSoftKeyboard() {
