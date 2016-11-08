@@ -32,7 +32,12 @@
     <string name="details_section">Section :</string>
     <string name="details_location">Localisation :</string>
     <string name="details_rating">Cote :</string>
+
     <string name="account_not_logged_text">Vous n\'êtes pas connecté</string>
+    <string name="account_loans">Prêts</string>
+    <string name="account_reservations">Réservations</string>
+    <string name="account_available_reservations">Réservations disponibles</string>
+    <string name="account_details">Détails</string>
 
     <!-- Transitions -->
     <string name="transition_name_image" translatable="false">image</string>

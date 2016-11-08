@@ -33,4 +33,8 @@
     <string name="permission_get_accounts_denied">You will not be able to access your account.</string>
     <string name="account_not_logged_text">You are not connected</string>
     <string name="loans">Loans</string>
+    <string name="account_available_reservations">Available reservations</string>
+    <string name="account_loans">Loans</string>
+    <string name="account_reservations">Reservations</string>
+    <string name="account_details">Details</string>
 </resources>

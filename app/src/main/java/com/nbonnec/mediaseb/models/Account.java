@@ -53,7 +53,6 @@ public abstract class Account {
     public abstract String balance();
     @Nullable
     public abstract Date renewDate();
-    @Nullable
 
     public static Builder builder() {
         return new AutoValue_Account.Builder();

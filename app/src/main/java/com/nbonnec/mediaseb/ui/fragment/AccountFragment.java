@@ -62,8 +62,50 @@ public class AccountFragment extends BaseFragment {
     @Bind(R.id.account_not_logged_layout)
     View notLoggedView;
 
+    @Bind(R.id.account_name)
+    TextView accountNameView;
+
+    @Bind(R.id.account_surname)
+    TextView accountSurnameView;
+
+    @Bind(R.id.account_address)
+    TextView accountAddressView;
+
+    @Bind(R.id.account_postal_code)
+    TextView accountPostalCodeView;
+
+    @Bind(R.id.account_city)
+    TextView accountCityView;
+
+    @Bind(R.id.account_birthdate)
+    TextView accountBirthdateView;
+
+    @Bind(R.id.account_mail)
+    TextView accountMailView;
+
+    @Bind(R.id.account_phone_number)
+    TextView accountPhoneNumberView;
+
+    @Bind(R.id.account_loan_number)
+    TextView accountLoanNumberView;
+
+    @Bind(R.id.account_reservation_number)
+    TextView accountReservationView;
+
+    @Bind(R.id.account_available_reservation_number)
+    TextView accountAvailableReservationView;
+
+    @Bind(R.id.account_card_number)
+    TextView accountCardNumberView;
+
+    @Bind(R.id.account_fare)
+    TextView accountFareView;
+
+    @Bind(R.id.account_balance)
+    TextView accountBalanceView;
+
     @Bind(R.id.account_renew_date)
-    TextView accountDateView;
+    TextView accountRenewDateView;
 
     private Account account;
 
@@ -159,8 +201,23 @@ public class AccountFragment extends BaseFragment {
     }
 
     private void setViews() {
+        accountNameView.setText(account.name());
+        accountSurnameView.setText(account.surname());
+        accountAddressView.setText(account.address());
+        accountPostalCodeView.setText(account.postalCode());
+        accountCityView.setText(account.city());
+        accountBirthdateView.setText(account.birthDate());
+        accountMailView.setText(account.mail());
+        accountPhoneNumberView.setText(account.phoneNumber());
+        accountLoanNumberView.setText(account.loanNumber());
+        accountReservationView.setText(account.reservation());
+        accountAvailableReservationView.setText(account.availableReservation());
+        accountCardNumberView.setText(account.cardNumber());
+        accountFareView.setText(account.fare());
+        accountBalanceView.setText(account.balance());
+
         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-        accountDateView.setText(fmt.format(account.renewDate()));
+        accountRenewDateView.setText(fmt.format(account.renewDate()));
     }
 
     private void loadAccount() {
