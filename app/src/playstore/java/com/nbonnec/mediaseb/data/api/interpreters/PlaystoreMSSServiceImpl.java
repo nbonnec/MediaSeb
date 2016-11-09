@@ -26,6 +26,7 @@ import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.models.MediaStatus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -76,8 +77,24 @@ public class PlaystoreMSSServiceImpl implements MSSService {
 
     @Override
     public Observable<Account> getAccountDetails() {
-        return Observable.error(new NetworkErrorException(TAG +
-                ": getAccountDetails - Simulated Bad Network Request"));
+        Account account = Account.builder()
+                .setSurname("MARTIN")
+                .setName("Matthieu")
+                .setCardNumber("12345678901234")
+                .setBirthDate("25/12/1990")
+                .setMail("mm@mail.com")
+                .setAddress("18 rue des Accacias")
+                .setPostalCode("56000")
+                .setCity("Paris")
+                .setPhoneNumber("0297860000")
+                .setRenewDate(new Date())
+                .setReservation("3")
+                .setLoanNumber("14")
+                .setAvailableReservation("1")
+                .setFare("Gratuit")
+                .setBalance("0.00")
+                .build();
+        return Observable.just(account);
     }
 
     @Override
