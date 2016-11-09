@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.models;
 
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -23,7 +24,7 @@ import com.google.auto.value.AutoValue;
 import java.util.Date;
 
 @AutoValue
-public abstract class Account {
+public abstract class Account implements Parcelable{
     public abstract String name();
     @Nullable
     public abstract String surname();

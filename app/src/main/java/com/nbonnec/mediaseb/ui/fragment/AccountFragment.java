@@ -47,6 +47,9 @@ import timber.log.Timber;
 
 public class AccountFragment extends BaseFragment {
 
+    private static final String STATE_ACCOUNT = "state_account";
+    private static final String STATE_PAGE_LOADED = "state_page_loaded";
+
     @Inject
     MSSService mssService;
 
@@ -109,6 +112,8 @@ public class AccountFragment extends BaseFragment {
 
     private Account account;
 
+    private boolean pageLoaded;
+
     private OnClickListener onClickListener;
 
     private OnIsSignedInListener onIsSignedInListener;
@@ -125,6 +130,7 @@ public class AccountFragment extends BaseFragment {
         @Override
         public void onNext(Account a) {
             account = a;
+            pageLoaded = true;
             setViews();
         }
 
@@ -136,6 +142,18 @@ public class AccountFragment extends BaseFragment {
 
     public interface OnIsSignedInListener {
         boolean onIsSignedIn();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            account = savedInstanceState.getParcelable(STATE_ACCOUNT);
+            pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+        } else {
+            pageLoaded = false;
+        }
     }
 
     @Override
@@ -153,6 +171,9 @@ public class AccountFragment extends BaseFragment {
 
         if (onIsSignedInListener.onIsSignedIn()) {
             showContentView();
+            if (pageLoaded) {
+                setViews();
+            }
         } else {
             showNotLoggedView();
         }
@@ -188,16 +209,26 @@ public class AccountFragment extends BaseFragment {
 
         onClickListener = null;
         onIsSignedInListener = null;
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+
+        saveInstanceState.putParcelable(STATE_ACCOUNT, account);
+        saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
     }
 
-    @OnClick(R.id.account_not_logged_button)
+        @OnClick(R.id.account_not_logged_button)
     public void onClickNotLoggedButton() {
         onClickListener.onNotLoggedButtonClicked();
     }
 
     @Subscribe
     public void onLoginSuccessEvent(LoginSuccessEvent event) {
-        loadAccount();
+        if (!pageLoaded) {
+            loadAccount();
+        }
     }
 
     private void setViews() {
