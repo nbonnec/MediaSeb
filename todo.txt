@@ -31,3 +31,6 @@ Si fail réseau, afficher des médias si possible !
 
 Use of :
 build flavors,
+
+
+Gérer le double écran nougat 7.1

@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.ui.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -53,7 +54,7 @@ public class ToolbarActivity extends BaseActivity {
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView =
-                (SearchView) menu.findItem(R.id.item_search).getActionView();
+                (SearchView) MenuItemCompat.getActionView(searchMenuItem);
 
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));

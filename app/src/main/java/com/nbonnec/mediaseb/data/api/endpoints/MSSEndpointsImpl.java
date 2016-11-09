@@ -27,6 +27,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     private static final Pattern AUTHORIZED_CHAR = Pattern.compile("[a-zA-Z0-9 ]*");
 
     private static final String LAYOUT = "ligne";
+    // TODO replace with pull tolerance
     private static final int RESULTS_SIZE = 10;
     private static final int SEARCH_STRING_CHAR_MAX = 40;
 

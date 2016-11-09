@@ -40,11 +40,14 @@ import timber.log.Timber;
 public class MSSServiceImpl implements MSSService {
     public static final String TAG = MSSServiceImpl.class.getSimpleName();
 
-    @Inject MSSEndpoints mssEndpoints;
+    @Inject
+    MSSEndpoints mssEndpoints;
 
-    @Inject OkHttpClient client;
+    @Inject
+    OkHttpClient client;
 
-    @Inject MSSInterpreter interpreter;
+    @Inject
+    MSSInterpreter interpreter;
 
     @Override
     public Observable<MediaList> getResults(String search) {
@@ -114,6 +117,7 @@ public class MSSServiceImpl implements MSSService {
                 try {
                     Response response = client.newCall(request).execute();
                     subscriber.onNext(response.body().string());
+                    response.body().close();
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);
@@ -141,9 +145,10 @@ public class MSSServiceImpl implements MSSService {
 
     /**
      * Try to login.
-     * @param name name of the user.
+     *
+     * @param name       name of the user.
      * @param cardNumber card number of the user.
-     * @param inputs HTML inputs to post (including token).
+     * @param inputs     HTML inputs to post (including token).
      * @return true if login succeeded.
      */
     private Observable<Boolean> loginWithToken(final String name, final String cardNumber, final Hashtable<String, String> inputs) {
@@ -152,6 +157,15 @@ public class MSSServiceImpl implements MSSService {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
                 Timber.d("Logging in user '%s', card '%s'", name, cardNumber);
+
+                /*
+                 * Early return.
+                 */
+                if (inputs.get("task").equals("logout")) {
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                    return;
+                }
 
                 FormEncodingBuilder formEncodingBuilder = new FormEncodingBuilder();
 
@@ -171,9 +185,12 @@ public class MSSServiceImpl implements MSSService {
                         .post(formBody)
                         .build();
                 try {
+                    Timber.d("Request login !");
                     Response response = client.newCall(request).execute();
                     boolean loginSuccess = interpreter.interpretLoginFromHtml(response.body().string());
+                    response.body().close();
 
+                    Timber.d("Finish request !");
                     if (response.isSuccessful() && loginSuccess) {
                         Timber.d("User '%s' was successfully logged in", name);
                         subscriber.onNext(true);

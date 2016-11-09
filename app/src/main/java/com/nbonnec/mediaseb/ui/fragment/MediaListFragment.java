@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,8 +51,6 @@ import timber.log.Timber;
 
 @FragmentWithArgs
 public class MediaListFragment extends BaseFragment implements MediasAdapter.OnItemClickListener {
-    // TODO hasFixedSize
-    private static final String TAG = MediaListFragment.class.getSimpleName();
 
     private static final String STATE_MEDIALIST = "state_medialist";
     private static final String STATE_PAGE_LOADED = "page_loaded";
@@ -72,6 +69,9 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     @Inject
     MSSService mssService;
+
+    @Inject
+    RxUtils rxUtils;
 
     @Bind(R.id.media_list_flipper_view)
     ViewFlipper flipperView;
@@ -268,7 +268,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
         getMediasObservable = mssService
                 .getMediaList(savedPage)
-                .compose(RxUtils.<MediaList>applySchedulers());
+                .compose(rxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 
@@ -277,7 +277,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
      * for example), we need ask the fisrt page.
      */
     private void getContextBack() {
-        addSubscription(mssService.getHtml(savedPage).compose(RxUtils.<String>applySchedulers())
+        addSubscription(mssService.getHtml(savedPage).compose(rxUtils.<String>applySchedulers())
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
@@ -307,7 +307,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
         getMediasObservable = mssService
                 .getMediaList(mediaList.getNextPageUrl())
-                .compose(RxUtils.<MediaList>applySchedulers());
+                .compose(rxUtils.<MediaList>applySchedulers());
         addSubscription(getMediasObservable.subscribe(getMediasObserver));
     }
 

@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.di.modules;
 
+import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -32,5 +33,10 @@ public class ContextModule {
     @Provides @Singleton
     Bus provideBus() {
         return new Bus();
+    }
+
+    @Provides @Singleton
+    RxUtils provideRxUtils() {
+        return new RxUtils();
     }
 }

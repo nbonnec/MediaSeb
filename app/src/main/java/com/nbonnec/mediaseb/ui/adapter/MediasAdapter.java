@@ -46,8 +46,14 @@ import rx.subscriptions.CompositeSubscription;
 public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder> {
     private static final String TAG = MediasAdapter.class.getSimpleName();
 
-    @Inject Bus bus;
-    @Inject MSSService mssService;
+    @Inject
+    Bus bus;
+
+    @Inject
+    MSSService mssService;
+
+    @Inject
+    RxUtils rxUtils;
 
     private Context context;
     private List<Media> medias;
@@ -128,7 +134,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
             }
             subscriptions.add(mssService
                     .getMediaLoadedImageUrl(media.getImageUrl())
-                    .compose(RxUtils.<String>applySchedulers())
+                    .compose(rxUtils.<String>applySchedulers())
                     .subscribe(new Action1<String>() {
                         @Override
                         public void call(String s) {

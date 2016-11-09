@@ -20,7 +20,7 @@ import com.nbonnec.mediaseb.models.MediaStatus;
 
 import java.util.ArrayList;
 import java.util.Date;
-// TODO use dagger for that
+
 public class DefaultFactory {
     public static final String TAG = DefaultFactory.class.getSimpleName();
 
@@ -84,16 +84,6 @@ public class DefaultFactory {
             temporaryInstance.setStatus(MediaStatus.NONE);
             temporaryInstance.setReturnDate(new Date());
             temporaryInstance.setLoanDate(new Date());
-
-            return temporaryInstance;
-        }
-    }
-
-    public static final class Account {
-        public static com.nbonnec.mediaseb.models.Account constructDefaultInstance() {
-            final com.nbonnec.mediaseb.models.Account temporaryInstance = new com.nbonnec.mediaseb.models.Account();
-
-            temporaryInstance.setRenewDate(new Date());
 
             return temporaryInstance;
         }

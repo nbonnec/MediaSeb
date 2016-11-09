@@ -50,13 +50,26 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         } else {
             savedPosition = 0;
         }
+
+        initializeTabs(MainActivityPageAdapter.TAB_MIN);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
     @Override
     protected void onResume() {
         super.onResume();
 
-        initializeTabs(MainActivityPageAdapter.TAB_MIN + (isSignIn() ? 1 : 0));
+        /*
+        if (mainActivityPageAdapter.getCount() == 2 && isSignIn()) {
+            initializeTabs(MainActivityPageAdapter.TAB_MIN + 1);
+        } else if (mainActivityPageAdapter.getCount() == 3 && !isSignIn()) {
+            initializeTabs(MainActivityPageAdapter.TAB_MIN);
+        }
+        */
     }
 
     @Override
