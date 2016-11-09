@@ -29,13 +29,20 @@
     </style>
 
     <style name="AccountCounterText">
-        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_width">110dp</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
+
+    <style name="AccountDetailsImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">26dp</item>
+        <item name="android:tint">@android:color/darker_gray</item>
+    </style>
+
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
