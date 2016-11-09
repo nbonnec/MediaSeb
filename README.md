@@ -1,5 +1,7 @@
 # MediaSeb
 
+![screenshot-3](screenshots/3-screens.png?raw=true)
+
 Application Android permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
 Créée pour apprendre le développement Android.
 
@@ -9,6 +11,9 @@ Utilisation de :
 * [Dagger 1](http://square.github.io/dagger/),
 * [Butterknife](http://jakewharton.github.io/butterknife/),
 * [RxAndroid](http://reactivex.io/),
+* [OkHttp](http://square.github.io/okhttp/),
+* [AutoValuel](https://github.com/google/auto/tree/master/value),
+* [Otto](http://square.github.io/otto/),
 * [JSoup](http://jsoup.org/),
 * [Roboelectric](http://robolectric.org/),
 * [Picasso](http://square.github.io/picasso/),
