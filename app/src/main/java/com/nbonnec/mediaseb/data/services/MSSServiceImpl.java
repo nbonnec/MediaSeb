@@ -143,6 +143,23 @@ public class MSSServiceImpl implements MSSService {
                 });
     }
 
+    @Override
+    public Observable<Boolean> logout() {
+        return getHtml(mssEndpoints.loginUrl())
+                .map(new Func1<String, Hashtable<String, String>>() {
+                    @Override
+                    public Hashtable<String, String> call(String s) {
+                        return interpreter.interpretTokenFromHtml(s);
+                    }
+                })
+                .flatMap(new Func1<Hashtable<String, String>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(Hashtable<String, String> table) {
+                        return logoutWithToken(table);
+                    }
+                });
+    }
+
     /**
      * Try to login.
      *
@@ -162,6 +179,7 @@ public class MSSServiceImpl implements MSSService {
                  * Early return.
                  */
                 if (inputs.get("task").equals("logout")) {
+                    Timber.d("Already logged in!");
                     subscriber.onNext(true);
                     subscriber.onCompleted();
                     return;
@@ -196,6 +214,61 @@ public class MSSServiceImpl implements MSSService {
                         subscriber.onNext(true);
                     } else {
                         Timber.e("Failed to log in user '%s'", name);
+                        subscriber.onNext(false);
+                    }
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+    /**
+     * Try to logout.
+     *
+     * @param inputs     HTML inputs to post (including token).
+     * @return true if logout succeeded.
+     */
+    private Observable<Boolean> logoutWithToken(final Hashtable<String, String> inputs) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                /*
+                 * Early return.
+                 */
+                if (inputs.get("task").equals("login")) {
+                    Timber.d("Already logged out!");
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                    return;
+                }
+
+                FormEncodingBuilder formEncodingBuilder = new FormEncodingBuilder();
+
+                for (Hashtable.Entry<String, String> entry : inputs.entrySet()) {
+                    formEncodingBuilder.add(entry.getKey(), entry.getValue());
+
+                    Timber.d("name : '%s', value : '%s'", entry.getKey(), entry.getValue());
+                }
+
+                RequestBody formBody = formEncodingBuilder.build();
+
+                Request request = new Request.Builder()
+                        .url(mssEndpoints.loginUrl())
+                        .post(formBody)
+                        .build();
+
+                try {
+                    Timber.d("Request login !");
+                    Response response = client.newCall(request).execute();
+                    response.body().close();
+
+                    Timber.d("Finish request !");
+                    if (response.isSuccessful()) {
+                        Timber.d("User was successfully logged out.");
+                        subscriber.onNext(true);
+                    } else {
+                        Timber.e("Failed to log out.");
                         subscriber.onNext(false);
                     }
                     subscriber.onCompleted();

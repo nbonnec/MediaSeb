@@ -19,10 +19,12 @@ package com.nbonnec.mediaseb.ui.activity;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -60,10 +62,15 @@ public class BaseActivity extends AppCompatActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
 
     public static final int PERMISSION_GET_ACCOUNTS = 0;
+    public static final int PERMISSION_ADD_ACCOUNT_UPDATED_LISTENER = 1;
 
     private CompositeSubscription subscriptions;
 
     private boolean signIn;
+
+    private AccountManager am;
+
+    private Account[] copyAccounts;
 
     @Inject
     MSSService mssService;
@@ -74,6 +81,47 @@ public class BaseActivity extends AppCompatActivity {
     @Inject
     RxUtils rxUtils;
 
+    private OnAccountsUpdateListener accountsUpdateListener = new OnAccountsUpdateListener() {
+        @Override
+        public void onAccountsUpdated(Account[] accounts) {
+            Timber.d("Account updated.");
+
+            if (copyAccounts == null) {
+                copyAccounts = accounts;
+                return;
+            }
+
+            for (Account currAccount : copyAccounts) {
+                boolean accountExists = false;
+                for (Account account : accounts) {
+                    if (account.equals(currAccount)) {
+                        accountExists = true;
+                    }
+                }
+                if (!accountExists) {
+                    addSubscription(mssService.logout()
+                    .compose(rxUtils.<Boolean>applySchedulers())
+                    .subscribe(new Observer<Boolean>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.d("Can not log out!");
+                        }
+
+                        @Override
+                        public void onNext(Boolean b) {
+                            Timber.d("Log out '%s'", b ? "successful!" : "failed!");
+                        }
+                    }));
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +131,9 @@ public class BaseActivity extends AppCompatActivity {
         app.inject(this);
 
         signIn = false;
+
+        am = AccountManager.get(this);
+        addAccountUpdatedListener();
     }
 
     @Override
@@ -104,6 +155,12 @@ public class BaseActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         subscriptions.unsubscribe();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        am.removeOnAccountsUpdatedListener(accountsUpdateListener);
     }
 
     /**
@@ -162,13 +219,17 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (requestCode != PERMISSION_GET_ACCOUNTS) {
-            return;
-        }
-
         if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                 Manifest.permission.GET_ACCOUNTS)) {
-            getAccount();
+            switch (requestCode) {
+                case PERMISSION_GET_ACCOUNTS:
+                    getAccount();
+                    break;
+                case PERMISSION_ADD_ACCOUNT_UPDATED_LISTENER:
+                    addAccountUpdatedListener();
+                    break;
+                default:
+            }
         }
     }
 
@@ -220,6 +281,17 @@ public class BaseActivity extends AppCompatActivity {
         subscriptions.add(s);
     }
 
+    private void addAccountUpdatedListener() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            Timber.d("Requesting GET_ACCOUNTS permission.");
+            PermissionUtils.requestPermission(this, PERMISSION_ADD_ACCOUNT_UPDATED_LISTENER,
+                    Manifest.permission.GET_ACCOUNTS, false);
+        } else {
+            am.addOnAccountsUpdatedListener(accountsUpdateListener, new Handler(), true);
+        }
+    }
+
     private void getAccount() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) !=
@@ -228,7 +300,6 @@ public class BaseActivity extends AppCompatActivity {
             PermissionUtils.requestPermission(this, PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS, false);
         } else {
-            AccountManager am = AccountManager.get(this);
             Account[] accounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
             if (accounts.length > 0) {
@@ -244,7 +315,7 @@ public class BaseActivity extends AppCompatActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                Timber.d("Can not login !");
+                                Timber.d("Can not login!");
                             }
 
                             @Override

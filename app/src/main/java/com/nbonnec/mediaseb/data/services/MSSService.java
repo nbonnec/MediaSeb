@@ -27,6 +27,7 @@ public interface MSSService {
     Observable<MediaList> getResults(String pattern);
     Observable<MediaList> getNews();
     Observable<Boolean> login(String name, String cardNumber);
+    Observable<Boolean> logout();
     Observable<Account> getAccountDetails();
     Observable<String> getHtml(final String url);
 }
