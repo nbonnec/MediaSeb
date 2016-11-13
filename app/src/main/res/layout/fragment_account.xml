@@ -159,8 +159,8 @@
 
                         <ImageView
                             android:id="@+id/account_address_image"
-                            android:src="@drawable/ic_location_on_black"
-                            style="@style/AccountDetailsImage"/>
+                            style="@style/AccountDetailsImage"
+                            android:src="@drawable/ic_location_on_black" />
 
                         <TextView
                             android:id="@+id/account_address"
@@ -194,8 +194,8 @@
 
                         <ImageView
                             android:id="@+id/account_birthdate_image"
-                            android:src="@drawable/ic_cake_black"
-                            style="@style/AccountDetailsImage" />
+                            style="@style/AccountDetailsImage"
+                            android:src="@drawable/ic_cake_black" />
 
                         <TextView
                             android:id="@+id/account_birthdate"
@@ -212,8 +212,8 @@
 
                         <ImageView
                             android:id="@+id/account_mail_image"
-                            android:src="@drawable/ic_mail_black"
-                            style="@style/AccountDetailsImage" />
+                            style="@style/AccountDetailsImage"
+                            android:src="@drawable/ic_mail_black" />
 
                         <TextView
                             android:id="@+id/account_mail"
@@ -230,8 +230,8 @@
 
                         <ImageView
                             android:id="@+id/account_phone_image"
-                            android:src="@drawable/ic_phone_black"
-                            style="@style/AccountDetailsImage" />
+                            style="@style/AccountDetailsImage"
+                            android:src="@drawable/ic_phone_black" />
 
                         <TextView
                             android:id="@+id/account_phone_number"
@@ -239,7 +239,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:tint="@android:color/darker_gray"
-                            tools:text="0298833800"/>
+                            tools:text="0298833800" />
                     </LinearLayout>
 
                     <RelativeLayout
@@ -249,8 +249,8 @@
 
                         <ImageView
                             android:id="@+id/account_price_image"
-                            android:src="@drawable/ic_euro_symbol_black"
-                            style="@style/AccountDetailsImage" />
+                            style="@style/AccountDetailsImage"
+                            android:src="@drawable/ic_euro_symbol_black" />
 
                         <TextView
                             android:id="@+id/account_fare"
@@ -293,6 +293,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_sign_in" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/account_progress_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/account_progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
         </LinearLayout>
 
     </ViewFlipper>

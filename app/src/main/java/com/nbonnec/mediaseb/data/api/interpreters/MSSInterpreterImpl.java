@@ -300,86 +300,86 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         // surname
         element = parseAccount.select(SURNAME_ELEMENT).first();
         if (element != null) {
-            account.setSurname(element.text().replaceAll("\\u00a0", ""));
+            account.setSurname(cleanAccountDetails(element.text()));
         }
 
         // name
         element = parseAccount.select(NAME_ELEMENT).first();
         if (element != null) {
-            account.setName(element.text().replaceAll("\\u00a0", ""));
+            account.setName(cleanAccountDetails(element.text()));
         }
 
         // address
         element = parseAccount.select(ADDRESS_ELEMENT).first();
         if (element != null) {
-            account.setAddress(element.text().replaceAll("\\u00a0", ""));
+            account.setAddress(cleanAccountDetails(element.text()));
         }
 
         // postal code
         element = parseAccount.select(POSTAL_CODE_ELEMENT).first();
         if (element != null) {
-            account.setPostalCode(element.text().replaceAll("\\u00a0", ""));
+            account.setPostalCode(cleanAccountDetails(element.text()));
         }
 
         // city
         element = parseAccount.select(CITY_ELEMENT).first();
         if (element != null) {
-            account.setCity(element.text().replaceAll("\\u00a0", ""));
+            account.setCity(cleanAccountDetails(element.text()));
         }
 
         // phone number
         element = parseAccount.select(PHONE_NUMBER_ELEMENT).first();
         if (element != null) {
-            account.setPhoneNumber(element.text().replaceAll("\\u00a0", ""));
+            account.setPhoneNumber(cleanAccountDetails(element.text()));
         }
 
         // birth date
         element = parseAccount.select(BIRTH_DATE_ELEMENT).first();
         if (element != null) {
-            account.setBirthDate(element.text().replaceAll("\\u00a0", ""));
+            account.setBirthDate(cleanAccountDetails(element.text()));
         }
         // mail
         element = parseAccount.select(MAIL_ELEMENT).first();
         if (element != null) {
-            account.setMail(element.text().replaceAll("\\u00a0", ""));
+            account.setMail(cleanAccountDetails(element.text()));
         }
         // loans number
         element = parseAccount.select(LOANS_NUMBER_ELEMENT).first();
         if (element != null) {
-            account.setLoanNumber(element.text().replaceAll("\\u00a0", ""));
+            account.setLoanNumber(cleanAccountDetails(element.text()));
         }
         // reservation number
         element = parseAccount.select(RESARVATION_NUMBER_ELEMENT).first();
         if (element != null) {
-            account.setReservation(element.text().replaceAll("\\u00a0", ""));
+            account.setReservation(cleanAccountDetails(element.text()));
         }
         // available reservations
         element = parseAccount.select(AVAILABLE_RESERVATION_ELEMENT).first();
         if (element != null) {
-            account.setAvailableReservation(element.text().replaceAll("\\u00a0", ""));
+            account.setAvailableReservation(cleanAccountDetails(element.text()));
         }
         // card number
         element = parseAccount.select(CARD_NUMBER_ELEMENT).first();
         if (element != null) {
-            account.setCardNumber(element.text().replaceAll("\\u00a0", ""));
+            account.setCardNumber(cleanAccountDetails(element.text()));
         }
         // fare
         element = parseAccount.select(FARE_ELEMENT).first();
         if (element != null) {
-            account.setFare(element.text().replaceAll("\\u00a0", ""));
+            account.setFare(cleanAccountDetails(element.text()));
         }
 
         // balance
         element = parseAccount.select(BALANCE_ELEMENT).first();
         if (element != null) {
-            account.setBalance(element.text().replaceAll("\\u00a0", ""));
+            account.setBalance(cleanAccountDetails(element.text()));
         }
 
         // date
         element = parseAccount.select(RENEW_DATE_ELEMENT).first();
         if(element != null) {
             // Remove &nbsp;
-            final String renewDate = element.text().replaceAll("\\u00a0", "");
+            final String renewDate = cleanAccountDetails(element.text());
 
             SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 
@@ -421,5 +421,11 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
     private String cleanTitle(String s) {
        return s.replaceAll("[\\[\\]{}]", "");
+    }
+
+    private String cleanAccountDetails(String s) {
+        s = s.replaceAll("\\u00a0", "");
+        s = s.replaceAll("^\\s+", "");
+        return s;
     }
 }

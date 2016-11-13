@@ -31,6 +31,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
@@ -47,6 +48,9 @@ import timber.log.Timber;
 
 public class AccountFragment extends BaseFragment {
 
+    private static final String STATE_ACCOUNT = "state_account";
+    private static final String STATE_PAGE_LOADED = "state_page_loaded";
+
     @Inject
     MSSService mssService;
 
@@ -61,6 +65,9 @@ public class AccountFragment extends BaseFragment {
 
     @Bind(R.id.account_not_logged_layout)
     View notLoggedView;
+
+    @Bind(R.id.account_progress_bar_layout)
+    View loadingView;
 
     @Bind(R.id.account_name)
     TextView accountNameView;
@@ -109,6 +116,8 @@ public class AccountFragment extends BaseFragment {
 
     private Account account;
 
+    private boolean pageLoaded;
+
     private OnClickListener onClickListener;
 
     private OnIsSignedInListener onIsSignedInListener;
@@ -125,7 +134,9 @@ public class AccountFragment extends BaseFragment {
         @Override
         public void onNext(Account a) {
             account = a;
+            pageLoaded = true;
             setViews();
+            showContentView();
         }
 
     };
@@ -136,6 +147,18 @@ public class AccountFragment extends BaseFragment {
 
     public interface OnIsSignedInListener {
         boolean onIsSignedIn();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            account = savedInstanceState.getParcelable(STATE_ACCOUNT);
+            pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+        } else {
+            pageLoaded = false;
+        }
     }
 
     @Override
@@ -152,7 +175,12 @@ public class AccountFragment extends BaseFragment {
         super.onResume();
 
         if (onIsSignedInListener.onIsSignedIn()) {
-            showContentView();
+            if (pageLoaded) {
+                setViews();
+                showContentView();
+            } else {
+                showLoadingView();
+            }
         } else {
             showNotLoggedView();
         }
@@ -188,16 +216,35 @@ public class AccountFragment extends BaseFragment {
 
         onClickListener = null;
         onIsSignedInListener = null;
+
+    }
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+
+        saveInstanceState.putParcelable(STATE_ACCOUNT, account);
+        saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
     }
 
-    @OnClick(R.id.account_not_logged_button)
+        @OnClick(R.id.account_not_logged_button)
     public void onClickNotLoggedButton() {
         onClickListener.onNotLoggedButtonClicked();
     }
 
     @Subscribe
     public void onLoginSuccessEvent(LoginSuccessEvent event) {
-        loadAccount();
+        if (!pageLoaded) {
+            showLoadingView();
+            loadAccount();
+        } else {
+            setViews();
+            showContentView();
+        }
+    }
+
+    @Subscribe
+    public void onLogoutSuccessEvent(LogoutSuccessEvent event) {
+        showNotLoggedView();
     }
 
     private void setViews() {
@@ -226,6 +273,10 @@ public class AccountFragment extends BaseFragment {
                 .getAccountDetails()
                 .compose(rxUtils.<Account>applySchedulers());
         addSubscription(getAccountObservable.subscribe(getAccountObserver));
+    }
+
+    private void showLoadingView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(loadingView));
     }
 
     private void showNotLoggedView() {

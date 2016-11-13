@@ -66,6 +66,12 @@ public class BadGetMSSServiceImpl implements MSSService {
     }
 
     @Override
+    public Observable<Boolean> logout() {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": logout - Simulated Bad Network Request"));
+    }
+
+    @Override
     public Observable<Account> getAccountDetails() {
         return Observable.error(new NetworkErrorException(TAG +
                 ": login - Simulated Bad Network Request"));

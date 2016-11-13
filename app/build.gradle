@@ -30,13 +30,13 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.nbonnec.mediaseb"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 2
-        versionName "0.1.0"
+        versionCode 3
+        versionName "0.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "mediaseb-$versionName")
 
@@ -92,6 +92,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+    // autovalue
     compile 'com.google.auto.value:auto-value:1.2'
     apt 'com.google.auto.value:auto-value:1.2'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
 }
