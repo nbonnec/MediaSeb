@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hint">Search in catalog</string>
-    <string name="search">Search</string>
+    <string name="menu_search">Search</string>
     <string name="news">News</string>
     <string name="empty_results">No results</string>
     <string name="network_error">Network error</string>
@@ -37,4 +37,6 @@
     <string name="account_loans">Loans</string>
     <string name="account_reservations">Reservations</string>
     <string name="account_details">Details</string>
+    <string name="menu_log_in">Log in</string>
+    <string name="menu_log_out">Log out</string>
 </resources>

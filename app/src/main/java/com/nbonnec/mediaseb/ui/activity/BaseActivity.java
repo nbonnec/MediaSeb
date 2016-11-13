@@ -44,6 +44,7 @@ import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.misc.PermissionUtils;
 import com.nbonnec.mediaseb.misc.Utils;
 import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class BaseActivity extends AppCompatActivity {
 
     private AccountManager am;
 
+    private Account account;
+
     private Account[] copyAccounts;
 
     @Inject
@@ -81,6 +84,7 @@ public class BaseActivity extends AppCompatActivity {
     @Inject
     RxUtils rxUtils;
 
+    /* clean up when deleting account from account phone menu */
     private OnAccountsUpdateListener accountsUpdateListener = new OnAccountsUpdateListener() {
         @Override
         public void onAccountsUpdated(Account[] accounts) {
@@ -99,26 +103,35 @@ public class BaseActivity extends AppCompatActivity {
                     }
                 }
                 if (!accountExists) {
+                    Timber.d("Deleting account.");
+
                     addSubscription(mssService.logout()
-                    .compose(rxUtils.<Boolean>applySchedulers())
-                    .subscribe(new Observer<Boolean>() {
-                        @Override
-                        public void onCompleted() {
+                            .compose(rxUtils.<Boolean>applySchedulers())
+                            .subscribe(new Observer<Boolean>() {
+                                @Override
+                                public void onCompleted() {
 
-                        }
+                                }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.d("Can not log out!");
-                        }
+                                @Override
+                                public void onError(Throwable e) {
+                                    Timber.d("Can not log out!");
+                                }
 
-                        @Override
-                        public void onNext(Boolean b) {
-                            Timber.d("Log out '%s'", b ? "successful!" : "failed!");
-                        }
-                    }));
+                                @Override
+                                public void onNext(Boolean b) {
+                                    Timber.d("Log out '%s'", b ? "successful!" : "failed!");
+                                    if (b) {
+                                        signIn = false;
+                                        bus.post(new LogoutSuccessEvent());
+                                    }
+                                }
+                            }));
+
                 }
             }
+
+            copyAccounts = accounts;
         }
     };
 
@@ -271,6 +284,13 @@ public class BaseActivity extends AppCompatActivity {
         return signIn;
     }
 
+    public void logout() {
+        if (account != null) {
+            /* OnUpdatedAccountListener will be called after that */
+            am.removeAccount(account, null, null);
+        }
+    }
+
     /**
      * Add a RxJava subscription.
      * This subscription will be handled on onStop().
@@ -303,9 +323,10 @@ public class BaseActivity extends AppCompatActivity {
             Account[] accounts = am.getAccountsByType(AccountGeneral.ACCOUNT_TYPE);
 
             if (accounts.length > 0) {
-                Timber.d("Using '%s' account.", accounts[0].name);
+                account = accounts[0];
+                Timber.d("Using '%s' account.", account.name);
                 signIn = true;
-                addSubscription(mssService.login(accounts[0].name, am.getPassword(accounts[0]))
+                addSubscription(mssService.login(account.name, am.getPassword(account))
                         .compose(rxUtils.<Boolean>applySchedulers())
                         .subscribe(new Observer<Boolean>() {
                             @Override

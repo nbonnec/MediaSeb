@@ -18,6 +18,7 @@ package com.nbonnec.mediaseb.ui.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +50,7 @@ public class ToolbarActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.options_menu, menu);
 
-        searchMenuItem = menu.findItem(R.id.item_search);
+        searchMenuItem = menu.findItem(R.id.menu_search);
 
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -79,6 +80,33 @@ public class ToolbarActivity extends BaseActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final MenuItem menuItem = menu.findItem(R.id.menu_log_in_out);
+
+        if (menuItem != null) {
+            int stringId = isSignIn() ? R.string.menu_log_out : R.string.menu_log_in;
+            menuItem.setTitle(stringId);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_log_in_out:
+                if (isSignIn()) {
+                    logout();
+                } else {
+                    Intent intent = new Intent(ToolbarActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public Toolbar getActionBarToolbar() {

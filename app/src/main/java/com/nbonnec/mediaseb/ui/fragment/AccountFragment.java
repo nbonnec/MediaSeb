@@ -31,6 +31,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.squareup.otto.Subscribe;
 
 import java.text.SimpleDateFormat;
@@ -64,6 +65,9 @@ public class AccountFragment extends BaseFragment {
 
     @Bind(R.id.account_not_logged_layout)
     View notLoggedView;
+
+    @Bind(R.id.account_progress_bar_layout)
+    View loadingView;
 
     @Bind(R.id.account_name)
     TextView accountNameView;
@@ -132,6 +136,7 @@ public class AccountFragment extends BaseFragment {
             account = a;
             pageLoaded = true;
             setViews();
+            showContentView();
         }
 
     };
@@ -170,9 +175,11 @@ public class AccountFragment extends BaseFragment {
         super.onResume();
 
         if (onIsSignedInListener.onIsSignedIn()) {
-            showContentView();
             if (pageLoaded) {
                 setViews();
+                showContentView();
+            } else {
+                showLoadingView();
             }
         } else {
             showNotLoggedView();
@@ -227,8 +234,17 @@ public class AccountFragment extends BaseFragment {
     @Subscribe
     public void onLoginSuccessEvent(LoginSuccessEvent event) {
         if (!pageLoaded) {
+            showLoadingView();
             loadAccount();
+        } else {
+            setViews();
+            showContentView();
         }
+    }
+
+    @Subscribe
+    public void onLogoutSuccessEvent(LogoutSuccessEvent event) {
+        showNotLoggedView();
     }
 
     private void setViews() {
@@ -257,6 +273,10 @@ public class AccountFragment extends BaseFragment {
                 .getAccountDetails()
                 .compose(rxUtils.<Account>applySchedulers());
         addSubscription(getAccountObservable.subscribe(getAccountObserver));
+    }
+
+    private void showLoadingView() {
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(loadingView));
     }
 
     private void showNotLoggedView() {

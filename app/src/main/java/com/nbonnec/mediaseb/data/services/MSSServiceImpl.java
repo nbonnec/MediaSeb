@@ -259,7 +259,7 @@ public class MSSServiceImpl implements MSSService {
                         .build();
 
                 try {
-                    Timber.d("Request login !");
+                    Timber.d("Request logout !");
                     Response response = client.newCall(request).execute();
                     response.body().close();
 
