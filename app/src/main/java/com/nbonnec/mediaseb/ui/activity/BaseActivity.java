@@ -23,6 +23,7 @@ import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -288,6 +289,20 @@ public class BaseActivity extends AppCompatActivity {
         if (account != null) {
             /* OnUpdatedAccountListener will be called after that */
             am.removeAccount(account, null, null);
+        }
+    }
+
+
+    /**
+     * Send an email to app contact.
+     */
+    public void composeEmailContact() {
+        String[] emails = {getString(R.string.contact_mail)};
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, emails);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
         }
     }
 
