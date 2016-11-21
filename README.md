@@ -2,10 +2,10 @@
 
 ![screenshot-3](screenshots/3-screens.png?raw=true)
 
-Application Android permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
+Application Android, non officielle, permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
 Créée pour apprendre le développement Android.
 
-![playstore](screenshots/google-play-badge.png?raw=true)
+[![playstore](screenshots/google-play-badge.png?raw=true)](https://play.google.com/store/apps/details?id=com.nbonnec.mediaseb&hl=fr)
 
 Utilisation de :
 * [Fragments](http://developer.android.com/guide/components/fragments.html),
