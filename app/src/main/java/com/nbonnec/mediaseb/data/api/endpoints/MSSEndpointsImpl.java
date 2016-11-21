@@ -16,6 +16,7 @@
 
 package com.nbonnec.mediaseb.data.api.endpoints;
 
+import com.nbonnec.mediaseb.di.modules.ApiModule;
 import com.squareup.phrase.Phrase;
 
 import java.util.regex.Matcher;
@@ -27,8 +28,6 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     private static final Pattern AUTHORIZED_CHAR = Pattern.compile("[a-zA-Z0-9 ]*");
 
     private static final String LAYOUT = "ligne";
-    // TODO replace with pull tolerance
-    private static final int RESULTS_SIZE = 10;
     private static final int SEARCH_STRING_CHAR_MAX = 40;
 
     private static final String API_URL = "http://mediatheque.saintsebastien.fr";
@@ -66,7 +65,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
                 .put("api_url", API_URL)
                 .put("search", search)
                 .put("layout", LAYOUT)
-                .put("limit", String.valueOf(RESULTS_SIZE))
+                .put("limit", String.valueOf(ApiModule.PULL_TOLERANCE))
                 .format()
                 .toString();
     }
@@ -95,7 +94,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
         return Phrase.from(NEWS_URL)
                 .put("api_url", API_URL)
                 .put("layout", LAYOUT)
-                .put("limit", RESULTS_SIZE)
+                .put("limit", ApiModule.PULL_TOLERANCE)
                 .format()
                 .toString();
     }

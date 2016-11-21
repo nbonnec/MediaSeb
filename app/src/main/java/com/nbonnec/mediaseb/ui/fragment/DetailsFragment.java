@@ -130,7 +130,6 @@ public class DetailsFragment extends BaseFragment {
                 .into(imageView);
 
         // Necessary on orientation changes.
-        // TODO reset position in the scrollview.
         setExtrasViews();
 
         if (Utils.isLollipopOrLater()) {

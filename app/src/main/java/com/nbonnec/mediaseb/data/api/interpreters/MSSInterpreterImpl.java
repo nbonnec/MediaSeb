@@ -39,7 +39,6 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-// TODO get rid off all these objects.
 public class MSSInterpreterImpl implements MSSInterpreter {
 
     private MSSEndpoints endpoints;
@@ -68,36 +67,41 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         Elements lines = parseHtml.select(LINE_ELEMENT);
 
         for (Element e : lines) {
-            Element title = e.select(TITLE_ELEMENT).first();
-            Element author = e.select(AUTHOR_ELEMENT).first();
-            Element editor = e.select(EDITOR_ELEMENT).first();
-            Element year = e.select(YEAR_ELEMENT).first();
-            Element collection = e.select(COLLECTION_ELEMENT).first();
-            Element coverLoadUrl = e.select(COVER_LOAD_ELEMENT).first();
-            Element imageUrl = e.select("img").first();
+            Element element;
 
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
 
-            if (title != null) {
-                /* Delete brackets. */
-                String t = cleanTitle(title.text());
+            element = e.select(TITLE_ELEMENT).first();
+            if (element != null) {
+                String t = cleanTitle(element.text());
                 currentMedia.setTitle(t);
-                currentMedia.setNoticeUrl(endpoints.baseUrl() + title.select("a").attr("href"));
+                currentMedia.setNoticeUrl(endpoints.baseUrl() + element.select("a").attr("href"));
             }
-            if (author != null) {
-                currentMedia.setAuthor(author.text());
+
+            element = e.select(AUTHOR_ELEMENT).first();
+            if (element != null) {
+                currentMedia.setAuthor(element.text());
             }
-            if (editor != null) {
-                currentMedia.setEditor(editor.text());
+
+            element = e.select(EDITOR_ELEMENT).first();
+            if (element != null) {
+                currentMedia.setEditor(element.text());
             }
-            if (collection != null) {
-                currentMedia.setCollection(collection.text());
+
+            element = e.select(COLLECTION_ELEMENT).first();
+            if (element != null) {
+                currentMedia.setCollection(element.text());
             }
-            if (year != null) {
-                currentMedia.setYear(year.text().replaceAll("[^\\d]", ""));
+
+            element = e.select(YEAR_ELEMENT).first();
+            if (element != null) {
+                currentMedia.setYear(element.text().replaceAll("[^\\d]", ""));
             }
-            if (coverLoadUrl != null) {
-                currentMedia.setImageUrl(endpoints.imageUrl("/" + coverLoadUrl.val()));
+
+            element = e.select(COVER_LOAD_ELEMENT).first();
+            Element imageUrl = e.select("img").first();
+            if (element != null) {
+                currentMedia.setImageUrl(endpoints.imageUrl("/" + element.val()));
                 if (imageUrl != null) {
                     currentMedia.setLoadingImageUrl(endpoints.imageUrl(imageUrl.attr("src")));
                 }
@@ -135,31 +139,37 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         Element details = parseHtml.select(DETAILS_ELEMENT).first();
 
         if (details != null) {
-            Element summary = details.select(SUMMURAY_ELEMENT).select(TEXT_ELEMENT).first();
-            Element type = details.select(COPY_DETAILS_ELEMENT).get(TYPE_INDEX);
-            Element section = details.select(COPY_DETAILS_ELEMENT).get(SECTION_INDEX);
-            Element location = details.select(COPY_DETAILS_ELEMENT).get(LOCATION_INDEX);
-            Element rating = details.select(COPY_DETAILS_ELEMENT).get(RATING_INDEX);
-            Element situation = details.select(COPY_DETAILS_ELEMENT).get(SITUATION_INDEX);
-            Element returnDate = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
+            Element element;
 
-            if (summary != null) {
-                media.setSummary(summary.text());
+            element = details.select(SUMMURAY_ELEMENT).select(TEXT_ELEMENT).first();
+            if (element != null) {
+                media.setSummary(element.text());
             }
-            if (type != null) {
-                media.setType(type.text());
+
+            element = details.select(COPY_DETAILS_ELEMENT).get(TYPE_INDEX);
+            if (element != null) {
+                media.setType(element.text());
             }
-            if (section != null) {
-                media.setSection(section.text());
+
+            element = details.select(COPY_DETAILS_ELEMENT).get(SECTION_INDEX);
+            if (element != null) {
+                media.setSection(element.text());
             }
-            if (location != null) {
-                media.setLocation(location.text());
+
+            element = details.select(COPY_DETAILS_ELEMENT).get(LOCATION_INDEX);
+            if (element != null) {
+                media.setLocation(element.text());
             }
-            if (rating != null) {
-                media.setRating(rating.text());
+
+            element = details.select(COPY_DETAILS_ELEMENT).get(RATING_INDEX);
+            if (element != null) {
+                media.setRating(element.text());
             }
-            if (situation != null) {
-                media.setStatus(getStatus(situation.text()));
+
+            element = details.select(COPY_DETAILS_ELEMENT).get(SITUATION_INDEX);
+            if (element != null) {
+                media.setStatus(getStatus(element.text()));
+                Element returnDate = details.select(COPY_DETAILS_ELEMENT).get(RETURN_DATE_INDEX);
                 if (media.getStatus() == MediaStatus.LOANED && returnDate != null) {
                     SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
                     try {
@@ -206,30 +216,33 @@ public class MSSInterpreterImpl implements MSSInterpreter {
 
         for (Element loan : loans) {
             Media currentMedia = DefaultFactory.Media.constructDefaultInstance();
+            Element element;
 
-            Element title = loan.select(LOAN_ELEMENT).get(TITLE_INDEX);
-            Element author = loan.select(LOAN_ELEMENT).get(AUTHOR_INDEX);
-            Element returnDate = loan.select(LOAN_ELEMENT).get(RETURN_DATE_INDEX);
-            Element loanDate = loan.select(LOAN_ELEMENT).get(LOAN_DATE_INDEX);
+            element = loan.select(LOAN_ELEMENT).get(TITLE_INDEX);
+            if (element != null) {
+                currentMedia.setTitle(cleanTitle(element.text()));
+            }
 
-            if (title != null) {
-                currentMedia.setTitle(cleanTitle(title.text()));
+            element = loan.select(LOAN_ELEMENT).get(AUTHOR_INDEX);
+            if (element != null) {
+                currentMedia.setAuthor(element.text());
             }
-            if (author != null) {
-                currentMedia.setAuthor(author.text());
-            }
-            if (returnDate != null) {
+
+            element = loan.select(LOAN_ELEMENT).get(RETURN_DATE_INDEX);
+            if (element != null) {
                 SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
                 try {
-                    currentMedia.setReturnDate(fmt.parse(returnDate.text()));
+                    currentMedia.setReturnDate(fmt.parse(element.text()));
                 } catch (ParseException e) {
                     Timber.d("Exception : can not parse return date !");
                 }
             }
-            if (loanDate != null) {
+
+            element = loan.select(LOAN_ELEMENT).get(LOAN_DATE_INDEX);
+            if (element != null) {
                 SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
                 try {
-                    currentMedia.setLoanDate(fmt.parse(loanDate.text()));
+                    currentMedia.setLoanDate(fmt.parse(element.text()));
                 } catch (ParseException e) {
                     Timber.d("Exception : can not parse loan date !");
                 }
@@ -419,6 +432,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         return mediaStatus;
     }
 
+    /** Delete brackets. */
     private String cleanTitle(String s) {
        return s.replaceAll("[\\[\\]{}]", "");
     }
