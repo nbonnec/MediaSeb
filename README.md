@@ -5,6 +5,8 @@
 Application Android permettant de visualiser le catalogue de la médiathèque de Saint-Sébastient-Sur-Loire.
 Créée pour apprendre le développement Android.
 
+![playstore](screenshots/google-play-badge.png?raw=true)
+
 Utilisation de :
 * [Fragments](http://developer.android.com/guide/components/fragments.html),
 * [Recyclerview](http://developer.android.com/training/material/lists-cards.html),
