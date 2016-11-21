@@ -16,5 +16,14 @@
 
 package com.nbonnec.mediaseb.ui.event;
 
-public class LoginSuccessEvent {
+public class LoginEvent {
+    private boolean success;
+
+    public LoginEvent(boolean success) {
+        this.success = success;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
 }
