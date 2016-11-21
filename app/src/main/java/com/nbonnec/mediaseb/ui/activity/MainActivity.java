@@ -90,6 +90,12 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     }
 
     @Override
+    public void onReloadButtonClicked() {
+        /* try to log in again */
+        login();
+    }
+
+    @Override
     public boolean onIsSignedIn() {
         return isSignIn();
     }

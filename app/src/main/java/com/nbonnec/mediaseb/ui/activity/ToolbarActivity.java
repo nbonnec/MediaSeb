@@ -105,6 +105,9 @@ public class ToolbarActivity extends BaseActivity {
                     startActivity(intent);
                 }
                 return true;
+            case R.id.menu_contact:
+                composeEmailContact();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
@@ -34,6 +35,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.factories.DefaultFactory;
 import com.nbonnec.mediaseb.data.factories.InitialFactory;
 import com.nbonnec.mediaseb.data.services.MSSService;
+import com.nbonnec.mediaseb.di.modules.ApiModule;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
@@ -113,8 +115,12 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         public void onError(Throwable e) {
             getMediasObservable = null;
             isLoading = false;
-            // TODO if page already loaded -> snackbar
-            showErrorView();
+
+            if (mediasAdapter == null || mediasAdapter.getMedias().isEmpty()) {
+                showErrorView();
+            } else {
+                Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -299,7 +305,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private boolean canPullNextMedias(int position) {
         return !isLoading && mediaList != null &&
                 !mediaList.getNextPageUrl().equals(DefaultFactory.MediaList.EMPTY_FIELD_NEXT_PAGE_URL) &&
-                position > (mediasAdapter.getItemCount() - 10);
+                position > (mediasAdapter.getItemCount() - ApiModule.PULL_TOLERANCE);
     }
 
     private void pullNextMedias() {

@@ -30,7 +30,7 @@ import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Account;
-import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.nbonnec.mediaseb.ui.event.LoginEvent;
 import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.squareup.otto.Subscribe;
 
@@ -58,7 +58,7 @@ public class AccountFragment extends BaseFragment {
     RxUtils rxUtils;
 
     @Bind(R.id.account_flipper_view)
-    ViewFlipper viewFlipper;
+    ViewFlipper flipperView;
 
     @Bind(R.id.account_content_layout)
     View contentView;
@@ -68,6 +68,9 @@ public class AccountFragment extends BaseFragment {
 
     @Bind(R.id.account_progress_bar_layout)
     View loadingView;
+
+    @Bind(R.id.account_error_layout)
+    View errorView;
 
     @Bind(R.id.account_name)
     TextView accountNameView;
@@ -129,6 +132,7 @@ public class AccountFragment extends BaseFragment {
 
         @Override
         public void onError(Throwable e) {
+            showErrorView();
         }
 
         @Override
@@ -143,6 +147,7 @@ public class AccountFragment extends BaseFragment {
 
     public interface OnClickListener {
         void onNotLoggedButtonClicked();
+        void onReloadButtonClicked();
     }
 
     public interface OnIsSignedInListener {
@@ -178,7 +183,7 @@ public class AccountFragment extends BaseFragment {
             if (pageLoaded) {
                 setViews();
                 showContentView();
-            } else {
+            } else if (errorView.getVisibility() == View.GONE){
                 showLoadingView();
             }
         } else {
@@ -218,6 +223,7 @@ public class AccountFragment extends BaseFragment {
         onIsSignedInListener = null;
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle saveInstanceState) {
         super.onSaveInstanceState(saveInstanceState);
@@ -226,19 +232,27 @@ public class AccountFragment extends BaseFragment {
         saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
     }
 
-        @OnClick(R.id.account_not_logged_button)
+    @OnClick(R.id.account_not_logged_button)
     public void onClickNotLoggedButton() {
         onClickListener.onNotLoggedButtonClicked();
     }
 
+    @OnClick(R.id.account_reload_button)
+    public void onClickReloadButton() {
+        showLoadingView();
+        onClickListener.onReloadButtonClicked();
+    }
+
     @Subscribe
-    public void onLoginSuccessEvent(LoginSuccessEvent event) {
-        if (!pageLoaded) {
+    public void onLoginSuccessEvent(LoginEvent event) {
+        if (pageLoaded) {
+            setViews();
+            showContentView();
+        } else if (event.isSuccess()) {
             showLoadingView();
             loadAccount();
         } else {
-            setViews();
-            showContentView();
+            showErrorView();
         }
     }
 
@@ -276,14 +290,21 @@ public class AccountFragment extends BaseFragment {
     }
 
     private void showLoadingView() {
-        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(loadingView));
+        Timber.d("Showing loading view '%s'", this.toString());
+        flipperView.setDisplayedChild(flipperView.indexOfChild(loadingView));
     }
 
     private void showNotLoggedView() {
-        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(notLoggedView));
+        flipperView.setDisplayedChild(flipperView.indexOfChild(notLoggedView));
     }
 
     private void showContentView() {
-        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(contentView));
+        Timber.d("Showing content view '%s'", this.toString());
+        flipperView.setDisplayedChild(flipperView.indexOfChild(contentView));
+    }
+
+    private void showErrorView() {
+        Timber.d("Showing error view '%s'", this.toString());
+        flipperView.setDisplayedChild(flipperView.indexOfChild(errorView));
     }
 }

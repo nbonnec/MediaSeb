@@ -8,7 +8,9 @@
 
     <style name="AppTheme" parent="AppTheme.Base" />
 
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorHint">@color/whiteTransparent</item>
+    </style>
 
     <style name="Details">
         <item name="android:layout_width">wrap_content</item>

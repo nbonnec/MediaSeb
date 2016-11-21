@@ -23,6 +23,7 @@ import android.accounts.OnAccountsUpdateListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -43,7 +44,7 @@ import com.nbonnec.mediaseb.data.Rx.RxUtils;
 import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.misc.PermissionUtils;
 import com.nbonnec.mediaseb.misc.Utils;
-import com.nbonnec.mediaseb.ui.event.LoginSuccessEvent;
+import com.nbonnec.mediaseb.ui.event.LoginEvent;
 import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.squareup.otto.Bus;
 
@@ -291,6 +292,41 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void login() {
+        addSubscription(mssService.login(account.name, am.getPassword(account))
+                .compose(rxUtils.<Boolean>applySchedulers())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.d("Error logging in!");
+                        bus.post(new LoginEvent(false));
+                    }
+
+                    @Override
+                    public void onNext(Boolean login) {
+                        bus.post(new LoginEvent(login));
+                    }
+                }));
+    }
+
+    /**
+     * Send an email to app contact.
+     */
+    public void composeEmailContact() {
+        String[] emails = {getString(R.string.contact_mail)};
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, emails);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
     /**
      * Add a RxJava subscription.
      * This subscription will be handled on onStop().
@@ -326,26 +362,7 @@ public class BaseActivity extends AppCompatActivity {
                 account = accounts[0];
                 Timber.d("Using '%s' account.", account.name);
                 signIn = true;
-                addSubscription(mssService.login(account.name, am.getPassword(account))
-                        .compose(rxUtils.<Boolean>applySchedulers())
-                        .subscribe(new Observer<Boolean>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Timber.d("Can not login!");
-                            }
-
-                            @Override
-                            public void onNext(Boolean login) {
-                                if (login) {
-                                    bus.post(new LoginSuccessEvent());
-                                }
-                            }
-                        }));
+                login();
             } else {
                 Timber.d("No account.");
                 signIn = false;
