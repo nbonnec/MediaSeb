@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -81,6 +82,9 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
+    @Bind(R.id.media_list_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Bind(R.id.media_list_content_layout)
     View contentView;
 
@@ -104,41 +108,6 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     private MediaList mediaList;
 
     private Observable<MediaList> getMediasObservable;
-    private Observer<MediaList> getMediasObserver = new Observer<MediaList>() {
-        @Override
-        public void onCompleted() {
-            getMediasObservable = null;
-            isLoading = false;
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            getMediasObservable = null;
-            isLoading = false;
-
-            if (mediasAdapter == null || mediasAdapter.getMedias().isEmpty()) {
-                showErrorView();
-            } else {
-                Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        public void onNext(MediaList nextList) {
-            mediaList.setNextPageUrl(nextList.getNextPageUrl());
-            if (mediasAdapter != null) {
-                mediasAdapter.addMedias(nextList.getMedias());
-                mediaList.setMedias(mediasAdapter.getMedias());
-            }
-
-            pageLoaded = true;
-            if (mediaList.getMedias().isEmpty()) {
-                showNoContentView();
-            } else {
-                showContentView();
-            }
-        }
-    };
 
     public interface OnClickedListener {
         void onItemClicked(View view, Media media);
@@ -169,6 +138,14 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         recyclerView.setAdapter(mediasAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
         recyclerView.setHasFixedSize(true);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadPage(savedPage);
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         switch (visibleLayout) {
             case CONTENT_LAYOUT:
@@ -280,10 +257,14 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             public void onCompleted() {
                 getMediasObservable = null;
                 isLoading = false;
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onError(Throwable e) {
+                getMediasObservable = null;
+                isLoading = false;
+                swipeRefreshLayout.setRefreshing(false);
                 if (mediasAdapter.getMedias().isEmpty()) {
                     showErrorView();
                 } else {
