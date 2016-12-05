@@ -218,6 +218,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         super.onResume();
 
         if (!isLoading && !pageLoaded) {
+            showLoadingView();
             loadPage(savedPage);
         } else {
             getContextBack();
@@ -256,12 +257,13 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     @OnClick(R.id.error_reload_button)
     public void onClickLoadPage() {
+        showLoadingView();
         loadPage(page);
     }
 
     /**
      * Load a new page.
-     * Reset UI, no more list on screen.
+     *
      * @param page page to load (URL).
      *
      * TODO refactor. Maybe use the bundle to change the arg of the fragment.
@@ -269,13 +271,85 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     public void loadPage(String page) {
         savedPage = page;
         isLoading = true;
-        resetAdapters();
-        showLoadingView();
 
         getMediasObservable = mssService
                 .getMediaList(savedPage)
                 .compose(rxUtils.<MediaList>applySchedulers());
-        addSubscription(getMediasObservable.subscribe(getMediasObserver));
+        addSubscription(getMediasObservable.subscribe(new Observer<MediaList>() {
+            @Override
+            public void onCompleted() {
+                getMediasObservable = null;
+                isLoading = false;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (mediasAdapter.getMedias().isEmpty()) {
+                    showErrorView();
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(MediaList nextList) {
+                mediasAdapter.setMedias(nextList.getMedias());
+                mediaList.setMedias(mediasAdapter.getMedias());
+                mediaList.setNextPageUrl(nextList.getNextPageUrl());
+
+                pageLoaded = true;
+
+                if (mediaList.getMedias().isEmpty()) {
+                    showNoContentView();
+                } else {
+                    showContentView();
+                }
+            }
+        }));
+    }
+
+    /**
+     * Load a next page.
+     *
+     * @param page page to load (URL).
+     */
+    public void loadNextPage(String page) {
+        isLoading = true;
+
+        getMediasObservable = mssService
+                .getMediaList(page)
+                .compose(rxUtils.<MediaList>applySchedulers());
+        addSubscription(getMediasObservable.subscribe(new Observer<MediaList>() {
+            @Override
+            public void onCompleted() {
+                getMediasObservable = null;
+                isLoading = false;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (mediasAdapter.getMedias().isEmpty()) {
+                    showErrorView();
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNext(MediaList nextList) {
+                mediasAdapter.addMedias(nextList.getMedias());
+                mediaList.setMedias(mediasAdapter.getMedias());
+                mediaList.setNextPageUrl(nextList.getNextPageUrl());
+
+                pageLoaded = true;
+
+                if (mediaList.getMedias().isEmpty()) {
+                    showNoContentView();
+                } else {
+                    showContentView();
+                }
+            }
+        }));
     }
 
     /**
@@ -283,6 +357,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
      * for example), we need ask the fisrt page.
      */
     private void getContextBack() {
+        Timber.d("Getting context back");
         addSubscription(mssService.getHtml(savedPage).compose(rxUtils.<String>applySchedulers())
                 .subscribe(new Observer<String>() {
                     @Override
@@ -310,11 +385,7 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
 
     private void pullNextMedias() {
         isLoading = true;
-
-        getMediasObservable = mssService
-                .getMediaList(mediaList.getNextPageUrl())
-                .compose(rxUtils.<MediaList>applySchedulers());
-        addSubscription(getMediasObservable.subscribe(getMediasObserver));
+        loadNextPage(mediaList.getNextPageUrl());
     }
 
     private void initAdapters() {
@@ -352,12 +423,5 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     @Override
     public void onItemClick(View itemView, Media media) {
         listener.onItemClicked(itemView, media);
-    }
-
-    private void resetAdapters() {
-        mediaList = InitialFactory.MediaList.constructInitialInstance();
-        if (mediasAdapter != null) {
-            mediasAdapter.clearMedias();
-        }
     }
 }

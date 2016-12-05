@@ -175,6 +175,11 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
         notifyItemRangeInserted(currentSize, amountInserted);
     }
 
+    public void setMedias(List<Media> medias) {
+        this.medias = medias;
+        notifyDataSetChanged();
+    }
+
     public void clearMedias() {
         int size = medias.size();
         medias.clear();
