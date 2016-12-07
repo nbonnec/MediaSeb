@@ -139,13 +139,13 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
         recyclerView.setHasFixedSize(true);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadPage(savedPage);
             }
         });
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         switch (visibleLayout) {
             case CONTENT_LAYOUT:

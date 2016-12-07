@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,9 @@ public class AccountFragment extends BaseFragment {
 
     @Bind(R.id.account_flipper_view)
     ViewFlipper flipperView;
+
+    @Bind(R.id.account_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Bind(R.id.account_content_layout)
     View contentView;
@@ -125,35 +129,6 @@ public class AccountFragment extends BaseFragment {
 
     private OnIsSignedInListener onIsSignedInListener;
 
-    private Observer<Account> getAccountObserver = new Observer<Account>() {
-        @Override
-        public void onCompleted() {
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            showErrorView();
-        }
-
-        @Override
-        public void onNext(Account a) {
-            account = a;
-            pageLoaded = true;
-            setViews();
-            showContentView();
-        }
-
-    };
-
-    public interface OnClickListener {
-        void onNotLoggedButtonClicked();
-        void onReloadButtonClicked();
-    }
-
-    public interface OnIsSignedInListener {
-        boolean onIsSignedIn();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +147,14 @@ public class AccountFragment extends BaseFragment {
 
         ButterKnife.bind(this, rootView);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadAccount();
+            }
+        });
+
         return rootView;
     }
 
@@ -183,7 +166,7 @@ public class AccountFragment extends BaseFragment {
             if (pageLoaded) {
                 setViews();
                 showContentView();
-            } else if (errorView.getVisibility() == View.GONE){
+            } else if (errorView.getVisibility() == View.GONE) {
                 showLoadingView();
             }
         } else {
@@ -286,7 +269,27 @@ public class AccountFragment extends BaseFragment {
         Observable<Account> getAccountObservable = mssService
                 .getAccountDetails()
                 .compose(rxUtils.<Account>applySchedulers());
-        addSubscription(getAccountObservable.subscribe(getAccountObserver));
+        addSubscription(getAccountObservable.subscribe(new Observer<Account>() {
+            @Override
+            public void onCompleted() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                swipeRefreshLayout.setRefreshing(false);
+                showErrorView();
+            }
+
+            @Override
+            public void onNext(Account a) {
+                account = a;
+                pageLoaded = true;
+                setViews();
+                showContentView();
+            }
+
+        }));
     }
 
     private void showLoadingView() {
@@ -300,11 +303,21 @@ public class AccountFragment extends BaseFragment {
 
     private void showContentView() {
         Timber.d("Showing content view '%s'", this.toString());
-        flipperView.setDisplayedChild(flipperView.indexOfChild(contentView));
+        flipperView.setDisplayedChild(flipperView.indexOfChild(swipeRefreshLayout));
     }
 
     private void showErrorView() {
         Timber.d("Showing error view '%s'", this.toString());
         flipperView.setDisplayedChild(flipperView.indexOfChild(errorView));
+    }
+
+    public interface OnClickListener {
+        void onNotLoggedButtonClicked();
+
+        void onReloadButtonClicked();
+    }
+
+    public interface OnIsSignedInListener {
+        boolean onIsSignedIn();
     }
 }
