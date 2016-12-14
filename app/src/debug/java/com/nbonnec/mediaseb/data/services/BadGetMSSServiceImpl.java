@@ -22,41 +22,50 @@ import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
+import java.util.List;
+
 import rx.Observable;
 
 public class BadGetMSSServiceImpl implements MSSService {
     public static final String TAG = BadGetMSSServiceImpl.class.getSimpleName();
 
-    public BadGetMSSServiceImpl() { }
+    public BadGetMSSServiceImpl() {
+    }
 
     @Override
     public Observable<MediaList> getMediaList(String url) {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getMedialistFromUrl() - Simulated Bad Network Request"));
+                ": getMedialistFromUrl() - Simulated Bad Network Request"));
     }
 
     @Override
     public Observable<Media> getMediaDetails(String url) {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getMediaDetails - Simulated Bad Network Request"));
+                ": getMediaDetails - Simulated Bad Network Request"));
+    }
+
+    @Override
+    public Observable<List<Media>> getLoans(String url) {
+        return Observable.error(new NetworkErrorException(TAG +
+                ": getLoans - Simulated Bad Network Request"));
     }
 
     @Override
     public Observable<String> getMediaLoadedImageUrl(String url) {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getMediaLoadedImageUrl - Simulated Bad Network Request"));
+                ": getMediaLoadedImageUrl - Simulated Bad Network Request"));
     }
 
     @Override
     public Observable<MediaList> getResults(String pattern) {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getResults - Simulated Bad Network Request"));
+                ": getResults - Simulated Bad Network Request"));
     }
 
     @Override
     public Observable<MediaList> getNews() {
         return Observable.error(new NetworkErrorException(TAG +
-        ": getNews - Simulated Bad Network Request"));
+                ": getNews - Simulated Bad Network Request"));
     }
 
     @Override

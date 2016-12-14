@@ -18,11 +18,14 @@ import com.nbonnec.mediaseb.models.Account;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.models.MediaList;
 
+import java.util.List;
+
 import rx.Observable;
 
 public interface MSSService {
     Observable<MediaList> getMediaList(String url);
     Observable<Media> getMediaDetails(String url);
+    Observable<List<Media>> getLoans(String url);
     Observable<String> getMediaLoadedImageUrl(String url);
     Observable<MediaList> getResults(String pattern);
     Observable<MediaList> getNews();

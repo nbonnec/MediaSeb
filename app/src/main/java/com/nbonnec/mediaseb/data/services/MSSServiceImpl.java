@@ -29,6 +29,7 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -77,6 +78,17 @@ public class MSSServiceImpl implements MSSService {
                     @Override
                     public Media call(String s) {
                         return interpreter.interpretNoticeFromHtml(s);
+                    }
+                });
+    }
+
+    @Override
+    public Observable<List<Media>> getLoans(String url) {
+        return getHtml(url)
+                .map(new Func1<String, List<Media>>() {
+                    @Override
+                    public List<Media> call(String s) {
+                        return interpreter.interpretLoansFromHtml(s);
                     }
                 });
     }

@@ -143,6 +143,7 @@ public class BaseActivity extends AppCompatActivity {
         // Inject dependencies
         MediasebApp app = MediasebApp.get(getApplicationContext());
         app.inject(this);
+        bus.register(this);
 
         signIn = false;
 
