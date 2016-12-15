@@ -17,7 +17,9 @@
 package com.nbonnec.mediaseb.ui.fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import com.nbonnec.mediaseb.data.services.MSSService;
 import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.adapter.LoansAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,19 +60,25 @@ public class LoansFragment extends BaseFragment {
     @Inject
     RxUtils rxUtils;
 
-    @Bind(R.id.loan_list_recyclerview)
+    @Bind(R.id.media_list_recycler_view)
     RecyclerView recyclerView;
 
-    @Bind(R.id.loan_view_flipper)
+    @Bind(R.id.media_list_flipper_view)
     ViewFlipper viewFlipper;
 
-    @Bind(R.id.loan_list_no_content_layout)
+    @Bind(R.id.media_list_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @Bind(R.id.media_list_content_layout)
+    View contentView;
+
+    @Bind(R.id.media_list_no_content_layout)
     View noContentView;
 
-    @Bind(R.id.loan_list_error_layout)
+    @Bind(R.id.media_list_error_layout)
     View errorView;
 
-    @Bind(R.id.loan_list_progress_bar_layout)
+    @Bind(R.id.media_list_progress_bar_layout)
     View loadingView;
 
     private LoansAdapter loansAdapter;
@@ -81,6 +90,14 @@ public class LoansFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            loans = savedInstanceState.getParcelableArrayList(STATE_LOANS_LIST);
+            pageLoaded = savedInstanceState.getBoolean(STATE_PAGE_LOADED);
+        } else {
+            pageLoaded = false;
+        }
+
         initAdapters();
     }
 
@@ -88,13 +105,21 @@ public class LoansFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =
                 LayoutInflater.from(getActivity())
-                        .inflate(R.layout.fragment_loan_list, container, false);
+                        .inflate(R.layout.fragment_media_list, container, false);
 
         ButterKnife.bind(this, rootView);
 
         recyclerView.setAdapter(loansAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadLoans();
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         return rootView;
     }
@@ -103,7 +128,21 @@ public class LoansFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        loadLoans();
+        if (pageLoaded) {
+            showContentView();
+        } else if (errorView.getVisibility() == View.GONE) {
+            showLoadingView();
+            loadLoans();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+
+        saveInstanceState.putParcelableArrayList(STATE_LOANS_LIST,
+                (ArrayList<? extends Parcelable>) loans);
+        saveInstanceState.putBoolean(STATE_PAGE_LOADED, pageLoaded);
     }
 
     public void loadLoans() {
@@ -114,16 +153,19 @@ public class LoansFragment extends BaseFragment {
             @Override
             public void onCompleted() {
                 getLoansObservable = null;
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onError(Throwable e) {
                 getLoansObservable = null;
                 showErrorView();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onNext(List<Media> medias) {
+                pageLoaded = true;
                 loansAdapter.setMedias(medias);
                 loans = medias;
 
@@ -152,7 +194,7 @@ public class LoansFragment extends BaseFragment {
 
     private void showContentView() {
         Timber.d("Showing content view '%s'", this.toString());
-        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(recyclerView));
+        viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(contentView));
     }
 
     private void showNoContentView() {
