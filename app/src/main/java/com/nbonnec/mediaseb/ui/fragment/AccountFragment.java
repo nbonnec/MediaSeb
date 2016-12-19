@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,9 @@ public class AccountFragment extends BaseFragment {
 
     @Bind(R.id.account_flipper_view)
     ViewFlipper flipperView;
+
+    @Bind(R.id.account_swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Bind(R.id.account_content_layout)
     View contentView;
@@ -128,10 +132,12 @@ public class AccountFragment extends BaseFragment {
     private Observer<Account> getAccountObserver = new Observer<Account>() {
         @Override
         public void onCompleted() {
+            swipeRefreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onError(Throwable e) {
+            swipeRefreshLayout.setRefreshing(false);
             showErrorView();
         }
 
@@ -171,6 +177,14 @@ public class AccountFragment extends BaseFragment {
         View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_account, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadAccount();
+            }
+        });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         return rootView;
     }
@@ -300,7 +314,7 @@ public class AccountFragment extends BaseFragment {
 
     private void showContentView() {
         Timber.d("Showing content view '%s'", this.toString());
-        flipperView.setDisplayedChild(flipperView.indexOfChild(contentView));
+        flipperView.setDisplayedChild(flipperView.indexOfChild(swipeRefreshLayout));
     }
 
     private void showErrorView() {

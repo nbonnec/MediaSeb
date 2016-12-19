@@ -35,7 +35,6 @@ import com.nbonnec.mediaseb.models.Media;
 import com.nbonnec.mediaseb.ui.adapter.LoansAdapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -67,7 +66,10 @@ public class LoansFragment extends BaseFragment {
     ViewFlipper viewFlipper;
 
     @Bind(R.id.media_list_swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout contentSwipeRefresh;
+
+    @Bind(R.id.medial_list_no_content_swipe_refresh)
+    SwipeRefreshLayout noContentSwipeRefresh;
 
     @Bind(R.id.media_list_content_layout)
     View contentView;
@@ -82,7 +84,7 @@ public class LoansFragment extends BaseFragment {
     View loadingView;
 
     private LoansAdapter loansAdapter;
-    private List<Media> loans = Collections.emptyList();
+    private List<Media> loans = new ArrayList<>();
     private boolean pageLoaded;
 
     private Observable<List<Media>> getLoansObservable;
@@ -113,13 +115,18 @@ public class LoansFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadLoans();
             }
-        });
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+        };
+
+        contentSwipeRefresh.setOnRefreshListener(onRefreshListener);
+        contentSwipeRefresh.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+
+        noContentSwipeRefresh.setOnRefreshListener(onRefreshListener);
+        noContentSwipeRefresh.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         return rootView;
     }
@@ -129,7 +136,11 @@ public class LoansFragment extends BaseFragment {
         super.onResume();
 
         if (pageLoaded) {
-            showContentView();
+            if (loans.isEmpty()) {
+                showNoContentView();
+            } else {
+                showContentView();
+            }
         } else if (errorView.getVisibility() == View.GONE) {
             showLoadingView();
             loadLoans();
@@ -153,14 +164,16 @@ public class LoansFragment extends BaseFragment {
             @Override
             public void onCompleted() {
                 getLoansObservable = null;
-                swipeRefreshLayout.setRefreshing(false);
+                contentSwipeRefresh.setRefreshing(false);
+                noContentSwipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onError(Throwable e) {
                 getLoansObservable = null;
                 showErrorView();
-                swipeRefreshLayout.setRefreshing(false);
+                contentSwipeRefresh.setRefreshing(false);
+                noContentSwipeRefresh.setRefreshing(false);
             }
 
             @Override

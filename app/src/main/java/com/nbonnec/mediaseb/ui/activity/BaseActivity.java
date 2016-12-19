@@ -349,6 +349,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Try to retrieve an account.
+     */
     private void getAccount() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) !=
