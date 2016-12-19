@@ -6,6 +6,7 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -145,6 +146,8 @@ public class LoginActivity extends BaseActivity {
                                 Timber.d("Adding '%s', '%s'", name, cardNumber);
                                 accountManager.addAccountExplicitly(account, cardNumber, null);
                                 accountManager.setAuthToken(account, cardNumber, null);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
                                 finish();
                             } else {
                                 showLoginError();

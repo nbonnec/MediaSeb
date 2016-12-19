@@ -16,15 +16,21 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.nbonnec.mediaseb.R;
 import com.nbonnec.mediaseb.data.api.endpoints.MSSEndpoints;
 import com.nbonnec.mediaseb.models.Media;
+import com.nbonnec.mediaseb.ui.event.LogoutSuccessEvent;
 import com.nbonnec.mediaseb.ui.fragment.AccountFragment;
+import com.nbonnec.mediaseb.ui.fragment.LoansFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragmentBuilder;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 
 public class MainActivity extends ToolbarActivity implements MediaListFragment.OnClickedListener,
@@ -51,31 +57,28 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
             savedPosition = 0;
         }
 
-        initializeTabs(MainActivityPageAdapter.TAB_MIN);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        /*
-        if (mainActivityPageAdapter.getCount() == 2 && isSignIn()) {
-            initializeTabs(MainActivityPageAdapter.TAB_MIN + 1);
-        } else if (mainActivityPageAdapter.getCount() == 3 && !isSignIn()) {
-            initializeTabs(MainActivityPageAdapter.TAB_MIN);
+        if (mainActivityPageAdapter != null) {
+            if (mainActivityPageAdapter.getCount() == 2 && isSignIn()) {
+                initializeTabs(MainActivityPageAdapter.TAB_MIN + 1);
+            } else if (mainActivityPageAdapter.getCount() == 3 && !isSignIn()) {
+                initializeTabs(MainActivityPageAdapter.TAB_MIN);
+            }
+        } else {
+            initializeTabs(MainActivityPageAdapter.TAB_MIN + (isSignIn() ? 1 : 0));
         }
-        */
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(POSITION, tabLayout.getSelectedTabPosition());
+        Timber.d("Is signed in : '%s'", String.valueOf(isSignIn()));
     }
 
     @Override
@@ -98,6 +101,12 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
     @Override
     public boolean onIsSignedIn() {
         return isSignIn();
+    }
+
+    @Subscribe
+    public void onLogoutSuccess(LogoutSuccessEvent event) {
+        mainActivityPageAdapter.removeLoansFragment();
+        recreate();
     }
 
     private void loadMedia(View view, Media media) {
@@ -135,8 +144,8 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         mainActivityPageAdapter = new MainActivityPageAdapter(getSupportFragmentManager(), tabCount);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.main_pager);
-        viewPager.setAdapter(mainActivityPageAdapter);
         viewPager.clearOnPageChangeListeners();
+        viewPager.setAdapter(mainActivityPageAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -161,6 +170,8 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         viewPager.setOffscreenPageLimit(tabCount - 1);
 
         setActionBarTitle(viewPager.getCurrentItem());
+
+        mainActivityPageAdapter.notifyDataSetChanged();
     }
 
     private class MainActivityPageAdapter extends FragmentStatePagerAdapter {
@@ -169,6 +180,7 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         final static int TAB_ACCOUNT_POSITION = 2;
         final static int TAB_MIN = 2;
 
+        private Fragment loansFragment;
         private int count;
 
         MainActivityPageAdapter(FragmentManager fm, int tabCount) {
@@ -182,11 +194,22 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
                 case TAB_NEWS_POSITION:
                     return new MediaListFragmentBuilder(mssEndpoints.newsUrl()).build();
                 case TAB_LOANS_POSITION:
-                    return new MediaListFragmentBuilder(mssEndpoints.simpleSearchUrl("lol")).build();
+                    return new LoansFragment();
                 case TAB_ACCOUNT_POSITION:
                     return new AccountFragment();
             }
             return null;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fm = (Fragment) super.instantiateItem(container, position);
+
+            if (getVirtualPosition(position) == TAB_LOANS_POSITION) {
+                loansFragment = fm;
+            }
+
+            return fm;
         }
 
         @Override
@@ -217,6 +240,17 @@ public class MainActivity extends ToolbarActivity implements MediaListFragment.O
         @Override
         public int getCount() {
             return count;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        public void removeLoansFragment() {
+            if (loansFragment != null) {
+                getSupportFragmentManager().beginTransaction().remove(loansFragment).commit();
+            }
         }
 
         /* virtually always 3 tabs */

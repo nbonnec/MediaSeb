@@ -59,9 +59,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
         final String NEXT_URL_ELEMENT = "a[title=Page:Suivant]";
         final String COVER_LOAD_ELEMENT ="div.couverture input[name=\"ntc_url\"]";
 
-        final MediaList mediaResults = DefaultFactory.MediaList.constructDefaultInstance();
         List<Media> medias = new ArrayList<>();
-        Element nextPageUrl;
 
         Document parseHtml = Jsoup.parse(html);
         Elements lines = parseHtml.select(LINE_ELEMENT);
@@ -112,11 +110,13 @@ public class MSSInterpreterImpl implements MSSInterpreter {
             medias.add(currentMedia);
         }
 
+        final MediaList mediaResults = DefaultFactory.MediaList.constructDefaultInstance();
         mediaResults.setMedias(medias);
 
-        nextPageUrl = parseHtml.select(NEXT_URL_ELEMENT).first();
-        if (nextPageUrl != null)
+        Element nextPageUrl = parseHtml.select(NEXT_URL_ELEMENT).first();
+        if (nextPageUrl != null) {
             mediaResults.setNextPageUrl(endpoints.nextUrl(nextPageUrl.attr("href")));
+        }
 
         return mediaResults;
     }
@@ -201,6 +201,7 @@ public class MSSInterpreterImpl implements MSSInterpreter {
     public List<Media> interpretLoansFromHtml(String html) {
         final String LOANS_LIST = "div#div_result tr[class]";
         final String LOAN_ELEMENT = "td";
+        final String NEXT_URL = "a[title=Page:Suivant]";
         final int EXTEND_LOAN_INDEX = 0;
         final int TYPE_INDEX = 1;
         final int TITLE_INDEX = 2;

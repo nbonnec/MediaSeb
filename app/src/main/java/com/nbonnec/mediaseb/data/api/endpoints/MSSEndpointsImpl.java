@@ -36,7 +36,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     private static final String SIMPLE_SEARCH_URL =
             "{api_url}/recherche/facettes/{search}/{layout}?limit={limit}";
     private static final String NEXT_URL = "{api_url}{next_url}";
-    private static final String LOAN_URL = "{api_url}/mon-compte/mes-prets?view=Prets&task=ListePrets";
+    private static final String LOAN_URL = "{api_url}/mon-compte/mes-prets?task=ListePrets&layout=default&no=0&filtre=0&scrit=&opt_rsv=0&date_deb=&date_fin=&limit=0&tri=-1&ordre=1";
     private static final String ACCOUNT_URL = "{api_url}/mon-compte";
     /* choose an URL fast to load to login quickly */
     private static final String LOGIN_URL = "{api_url}/mon-compte";

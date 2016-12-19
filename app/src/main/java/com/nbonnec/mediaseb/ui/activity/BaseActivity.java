@@ -143,6 +143,7 @@ public class BaseActivity extends AppCompatActivity {
         // Inject dependencies
         MediasebApp app = MediasebApp.get(getApplicationContext());
         app.inject(this);
+        bus.register(this);
 
         signIn = false;
 
@@ -348,6 +349,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Try to retrieve an account.
+     */
     private void getAccount() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) !=

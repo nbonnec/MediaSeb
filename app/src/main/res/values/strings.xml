@@ -9,6 +9,8 @@
     <string name="network_error">Erreur réseau</string>
     <string name="available">Disponible</string>
     <string name="title_activity_login">S\'identifier</string>
+    <string name="no_result">Pas de résultat</string>
+    <string name="no_loans">Pas d\'articles</string>
 
     <!-- Strings related to login -->
     <string name="prompt_name">Nom</string>
@@ -21,7 +23,6 @@
     <string name="error_field_required">Ce champ est requis</string>
     <string name="error_one_account_allowed">Seul un compte est authorisé</string>
     <string name="reload_page">Recharger la page</string>
-    <string name="no_result">Pas de résultat</string>
     <string name="error_ids">"Identifiants incorrects"</string>
 
     <!-- Layouts -->

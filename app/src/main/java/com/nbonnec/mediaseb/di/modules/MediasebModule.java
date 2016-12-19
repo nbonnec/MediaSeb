@@ -26,6 +26,7 @@ import com.nbonnec.mediaseb.ui.activity.SearchActivity;
 import com.nbonnec.mediaseb.ui.adapter.MediasAdapter;
 import com.nbonnec.mediaseb.ui.fragment.AccountFragment;
 import com.nbonnec.mediaseb.ui.fragment.DetailsFragment;
+import com.nbonnec.mediaseb.ui.fragment.LoansFragment;
 import com.nbonnec.mediaseb.ui.fragment.MediaListFragment;
 
 import javax.inject.Singleton;
@@ -47,6 +48,7 @@ import dagger.Provides;
                 MediaListFragment.class,
                 DetailsFragment.class,
                 AccountFragment.class,
+                LoansFragment.class,
                 MediasAdapter.class,
         }
 )
