@@ -101,7 +101,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_list_item, parent, false));
+                .inflate(R.layout.list_item_media, parent, false));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class MediasAdapter extends RecyclerView.Adapter<MediasAdapter.ViewHolder
 
         bus.post(new MediasLatestPositionEvent(position));
 
-        if (!media.getTitle().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {
+        if (!media.getTitle().equals(DefaultFactory.Media.EMPTY_FIELD_TITLE)) {
             holder.title.setText(media.getTitle());
         }
         if (!media.getAuthor().equals(DefaultFactory.Media.EMPTY_FIELD_AUTHOR)) {

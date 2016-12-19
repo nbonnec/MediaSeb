@@ -83,7 +83,10 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
     RecyclerView recyclerView;
 
     @Bind(R.id.media_list_swipe_refresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout contentSwipeRefresh;
+
+    @Bind(R.id.medial_list_no_content_swipe_refresh)
+    SwipeRefreshLayout noContentSwipeRefresh;
 
     @Bind(R.id.media_list_content_layout)
     View contentView;
@@ -139,13 +142,15 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.cast_grid_view_columns)));
         recyclerView.setHasFixedSize(true);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        contentSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadPage(savedPage);
             }
         });
+        contentSwipeRefresh.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
+
+        noContentSwipeRefresh.setEnabled(false);
 
         switch (visibleLayout) {
             case CONTENT_LAYOUT:
@@ -257,14 +262,14 @@ public class MediaListFragment extends BaseFragment implements MediasAdapter.OnI
             public void onCompleted() {
                 getMediasObservable = null;
                 isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
+                contentSwipeRefresh.setRefreshing(false);
             }
 
             @Override
             public void onError(Throwable e) {
                 getMediasObservable = null;
                 isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
+                contentSwipeRefresh.setRefreshing(false);
                 if (mediasAdapter.getMedias().isEmpty()) {
                     showErrorView();
                 } else {

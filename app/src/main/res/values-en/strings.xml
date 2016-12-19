@@ -40,4 +40,5 @@
     <string name="menu_log_in">Log in</string>
     <string name="menu_log_out">Log out</string>
     <string name="menu_contact">Contact</string>
+    <string name="no_loans">No articles.</string>
 </resources>

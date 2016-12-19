@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.nbonnec.mediaseb.di.modules.Modules;
 import com.nbonnec.mediaseb.log.CrashlyticsTree;
@@ -35,9 +36,7 @@ public class MediasebApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CrashlyticsCore core = new CrashlyticsCore.Builder()
-                .build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+        Fabric.with(this, new Crashlytics(), new Answers());
 
         // Error logs are sent to the cloud with Crashlytics
         if (BuildConfig.DEBUG) {

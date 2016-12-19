@@ -129,6 +129,37 @@ public class AccountFragment extends BaseFragment {
 
     private OnIsSignedInListener onIsSignedInListener;
 
+    private Observer<Account> getAccountObserver = new Observer<Account>() {
+        @Override
+        public void onCompleted() {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            swipeRefreshLayout.setRefreshing(false);
+            showErrorView();
+        }
+
+        @Override
+        public void onNext(Account a) {
+            account = a;
+            pageLoaded = true;
+            setViews();
+            showContentView();
+        }
+
+    };
+
+    public interface OnClickListener {
+        void onNotLoggedButtonClicked();
+        void onReloadButtonClicked();
+    }
+
+    public interface OnIsSignedInListener {
+        boolean onIsSignedIn();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,13 +178,13 @@ public class AccountFragment extends BaseFragment {
 
         ButterKnife.bind(this, rootView);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadAccount();
             }
         });
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent);
 
         return rootView;
     }
@@ -309,15 +340,5 @@ public class AccountFragment extends BaseFragment {
     private void showErrorView() {
         Timber.d("Showing error view '%s'", this.toString());
         flipperView.setDisplayedChild(flipperView.indexOfChild(errorView));
-    }
-
-    public interface OnClickListener {
-        void onNotLoggedButtonClicked();
-
-        void onReloadButtonClicked();
-    }
-
-    public interface OnIsSignedInListener {
-        boolean onIsSignedIn();
     }
 }

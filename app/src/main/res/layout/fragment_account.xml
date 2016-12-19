@@ -6,16 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Content -->
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/account_swipe_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <!-- Content -->
+
         <ScrollView
             android:id="@+id/account_content_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
