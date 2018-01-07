@@ -30,13 +30,13 @@ android {
         }
     }
     compileSdkVersion 25
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.nbonnec.mediaseb"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 5
-        versionName "0.3.0"
+        versionCode 6
+        versionName "0.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "mediaseb-$versionName")
 
@@ -54,11 +54,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // android support
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:recyclerview-v7:25.0.0'
-    compile 'com.android.support:cardview-v7:25.0.0'
-    compile 'com.android.support:support-annotations:25.0.0'
-    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:cardview-v7:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.0'
+    compile 'com.android.support:design:25.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     // html
     compile 'com.squareup.okhttp:okhttp:2.7.0'
@@ -90,7 +90,7 @@ dependencies {
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
     apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
+        transitive = true
     }
     // autovalue
     compile 'com.google.auto.value:auto-value:1.2'
