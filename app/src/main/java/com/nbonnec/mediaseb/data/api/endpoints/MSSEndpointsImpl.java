@@ -30,7 +30,7 @@ public class MSSEndpointsImpl implements MSSEndpoints {
     private static final String LAYOUT = "ligne";
     private static final int SEARCH_STRING_CHAR_MAX = 40;
 
-    private static final String API_URL = "http://mediatheque.saintsebastien.fr";
+    private static final String API_URL = "https://mediatheque.saintsebastien.fr";
     private static final String NEWS_URL =
             "{api_url}/catalogue/nouveautes?layout={layout}&scrit=&task=rechnouveautes&limit={limit}";
     private static final String SIMPLE_SEARCH_URL =
